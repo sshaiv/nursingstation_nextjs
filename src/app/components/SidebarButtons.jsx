@@ -4,6 +4,7 @@ import { FiActivity, FiBox, FiCalendar, FiClipboard, FiFileText, FiHeart, FiHome
 import { GiScissors, GiFizzingFlask } from 'react-icons/gi';
 import { FaStethoscope } from 'react-icons/fa';
 import InitialAssessmentForm from './InitialAssessment';
+import ClinicalExamination from './ClinicalExamination';
 
 const buttons = [
     { label: "Nursing Services", color: "#1999A1", shadow: "#14767D", icon: FiActivity },
@@ -20,16 +21,22 @@ const buttons = [
     { label: "Investigation", color: "#48BCD1", shadow: "#359EB0", icon: GiFizzingFlask },
 ];
 
-export default function ButtonGrid() {
+export default function ButtonGrid( { visitid, gssuhid, empid,
+    // reldropdowndata
+ } ) {
+   
     const [showModal, setShowModal] = useState(false);
     const [modalContent, setModalContent] = useState(null);
 
+ 
     const handleButtonClick = (label) => {
         if (label === "Initial Assessment") {
-            setModalContent(<InitialAssessmentForm />);  // Replace with the actual component when ready
+            setModalContent(<InitialAssessmentForm visitid={visitid} gssuhid={gssuhid} empid={empid} 
+                // reldropdowndata={reldropdowndata} 
+                />);  // Replace with the actual component when ready
             setShowModal(true);
-        } else if (label === "Nutritional Assessment") {
-            setModalContent(<div>Placeholder for Nutritional Assessment</div>);  // Replace with the actual component when ready
+        } else if (label === "Clinical Examination") {
+            setModalContent(<ClinicalExamination visitid={visitid} gssuhid={gssuhid} empid={empid} />);  // Replace with the actual component when ready
             setShowModal(true);
         } else if (label === "Doctor Visit") {
             setModalContent(<div>Placeholder for Doctor Visit</div>);  // Replace with the actual component when ready

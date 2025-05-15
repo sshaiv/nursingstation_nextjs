@@ -13,6 +13,10 @@ export default function PatientInfoCard({
     billingGroup,
     phone,
 }) {
+
+
+   
+
     return (
        
             <div className="border-1  border-blue-200  bg-gradient-to-r from-blue-50 via-green-50 to-yellow-50 shadow-xl rounded-lg p-4 flex flex-col gap-4 cursor-zoom-in transition-transform duration-150 transform hover:scale-101 hover:shadow-2xl hover:bg-gray-100">
