@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 
-const ReusableInputField = ({ id, label, width = 'w-24', value, onChange }) => {
+const ReusableInputField = ({ id, label, width = 'w-24', value, onChange , className = '', }) => {
   const [focusedOrFilled, setFocusedOrFilled] = useState(false);
 
   useEffect(() => {
@@ -19,14 +19,16 @@ const ReusableInputField = ({ id, label, width = 'w-24', value, onChange }) => {
         onChange={onChange}
         onFocus={() => setFocusedOrFilled(true)}
         onBlur={(e) => setFocusedOrFilled(e.target.value !== '')}
-        className="peer mb-2 h-8 w-full border-b-2  border-gray-500 rounded-2xl  text-sm  text-center font-semibold text-gray-500 placeholder-transparent focus:outline-none focus:border-black"
+        className={`peer mb-2 h-8 w-full border-b-2  border-gray-500 rounded-2xl  text-sm  text-center font-semibold text-gray-500 placeholder-transparent focus:outline-none focus:border-black ${className}`}
         placeholder={label}
       />
       <label
         htmlFor={id}
-        className={`absolute left-1/2 transform -translate-x-1/2 transition-all
-          ${focusedOrFilled ? '-top-3.5 text-xs text-blue-900' : 'top-2 text-sm text-gray-400'}
-        `}
+        className={`
+    absolute left-8 transition-all bg-white px-1  
+    ${focusedOrFilled || value ? '-top-2 text-[7px] text-gray-600' : 'top-2 text-[6px] text-gray-600'}
+    sm:text-[6px] md:text-[7px] lg:text-[8px]
+  `}
       >
         {label}
       </label>
@@ -35,3 +37,4 @@ const ReusableInputField = ({ id, label, width = 'w-24', value, onChange }) => {
 };
 
 export default ReusableInputField;
+

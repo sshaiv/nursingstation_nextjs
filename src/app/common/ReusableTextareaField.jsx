@@ -1,4 +1,6 @@
 
+
+
 import { useState } from 'react';
 
 const ReusableTextareaField = ({
@@ -7,7 +9,7 @@ const ReusableTextareaField = ({
   width = 'w-full',
   value,
   onChange,
-   className = '',
+  className = '',
 }) => {
   const [focusedOrFilled, setFocusedOrFilled] = useState(false);
 
@@ -15,21 +17,34 @@ const ReusableTextareaField = ({
     <div className={`relative ${width}`}>
       <textarea
         id={id}
-        rows={3}
+        rows={1} // smaller default height
         value={value}
         onChange={onChange}
         onFocus={() => setFocusedOrFilled(true)}
         onBlur={(e) => setFocusedOrFilled(e.target.value !== '')}
-        className={`peer w-full border-b-2 rounded-2xl border-gray-500 text-sm  placeholder-transparent p-2 resize-none focus:outline-none focus:border-black overflow-y-auto max-h-[50px]  ${className}`}
+        className={`
+          peer w-full border-b-2 rounded-lg border-gray-500 text-xs
+          placeholder-transparent p-1 resize-none
+          focus:outline-none focus:border-black
+          overflow-y-auto
+          h-10 md:h-8 sm:h-6
+          max-h-12
+          ${className}
+        `}
         placeholder={label}
       />
+
       <label
         htmlFor={id}
-        className={`absolute left-2 transition-all bg-white px-1
-          ${focusedOrFilled || value ? '-top-2 text-xs text-gray-600' : 'top-2 text-sm text-gray-400'}`}
+        className={`
+    absolute left-2 transition-all bg-white px-1 
+    ${focusedOrFilled || value ? '-top-2 text-[8px] text-gray-600' : 'top-2 text-[7px] text-gray-400'}
+    sm:text-[7px] md:text-[8px] lg:text-[9px]
+  `}
       >
         {label}
       </label>
+
     </div>
   );
 };

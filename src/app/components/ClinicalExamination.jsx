@@ -169,7 +169,7 @@ export default function ClinicalExamination({ visitid, gssuhid, empid }) {
         { id: 'temperature', Label: 'Temperature', onChange: setTemperture, value: temperture },
         { id: 'pulse', Label: 'Pulse (min)', onChange: setPulse, value: pulse },
         { id: 'bp', Label: 'BP (mmHg)', onChange: setBp, value: bp },
-        { id: 'respiratoryRate', Label: 'Respiratory Rate/min', onChange: setRespiratory, value: respiratory },
+        { id: 'respiratoryRate', Label: 'RR/min', onChange: setRespiratory, value: respiratory },
         { id: 'spo2', Label: 'SPO2 (%)', onChange: setSpo2, value: spo2 },
     ];
 
@@ -271,18 +271,20 @@ export default function ClinicalExamination({ visitid, gssuhid, empid }) {
                             { score: 10, emoji: "😵", Label: "Worst Pain" },
                         ].map((item) => (
                             <div key={item.score} className="flex flex-col items-center w-20 text-center">
-                                <span className="text-sm font-medium text-gray-800">{item.score}</span>
-                                <span className="text-3xl">{item.emoji}</span>
-                                <span className="text-xs text-gray-600">{item.Label}</span>
+                                <Label>{item.score}</Label>                                
+                                <Label className="text-2xl">{item.emoji}</Label>
+                                <Label>{item.Label}</Label>
+                               
                             </div>
                         ))}
                     </div>
 
                     <div className="text-sm flex justify-center items-center text-gray-600 mt-2 text-center space-x-2">
-                        <span>Pain Score:</span>
+                        <H3>Pain Score</H3>
                         <ReusableInputField
                             id="painscore"
                             value={painscore}
+                            className='rounded-lg border-2  '
                             onChange={(e) => setPainscore(e.target.value)}
                             width="w-20"
                         />
@@ -291,10 +293,11 @@ export default function ClinicalExamination({ visitid, gssuhid, empid }) {
             </div>
 
             {/* Vitals Section */}
-            <div className="grid grid-cols-2 md:grid-cols-6 gap-2 mt-4 ">
+            <div className="grid grid-cols-2 md:grid-cols-8 gap-2 mt-4 ">
                 {fields.map((field) => (
                     <ReusableInputField
                         key={field.id}
+                        className="border-2 rounded-lg "
                         id={field.id}
                         label={field.Label}
                         width="w-full"

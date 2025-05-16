@@ -1,12 +1,20 @@
 "use client"; 
-import { FaSave } from 'react-icons/fa'; // import the save icon from react-icons
+import { FaSave } from 'react-icons/fa'; 
 
-
-// insert
-export  function ActionButton ({ label, onClick }) {
+export function ActionButton({ label, onClick }) {
   return (
     <button
-      className={`btn-xs  text-sm text-white px-2 py-1 rounded-lg bg-blue-700 hover:bg-blue-300`} // Default background for the "Add" button
+      className="
+        text-xs 
+        sm:text-xs md:text-sm  
+        text-white 
+        px-1.5 py-0.5 
+        rounded-lg 
+        bg-blue-500 
+        hover:bg-blue-700 
+        transition-colors 
+        duration-200
+      "
       onClick={onClick}
     >
       {label}
@@ -15,27 +23,32 @@ export  function ActionButton ({ label, onClick }) {
 };
 
 
-// save
+
+
+
 export function SaveButton({ label, onClick }) {
   return (
     <button
       onClick={onClick}
       className="
+        w-full                 
+        max-w-[800px]          
+        md:w-[400px]           
         text-white 
         text-lg 
         font-medium 
         bg-blue-600 
         hover:bg-blue-500 
-        px-8 
+        px-6 
         py-2 
         rounded-xl 
-        min-w-[800px] 
         shadow-md 
         transition-all 
         duration-200
         flex 
         items-center 
         justify-center
+        mx-auto                 /* Center horizontally */
       "
     >
       <FaSave className="mr-2" /> 
@@ -43,5 +56,6 @@ export function SaveButton({ label, onClick }) {
     </button>
   );
 }
+
 
 
