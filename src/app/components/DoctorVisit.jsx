@@ -10,7 +10,7 @@ import API_ENDPOINTS from '../constants/api_url';
 import DropdownSelect from '../common/DropdownSelect';
 import ReusableInputField from '../common/SmallInputfields';
 
-export default function NursingServices({ visitid, gssuhid, empid }) {
+export default function DoctorVisit({ visitid, gssuhid, empid }) {
     const [vitals, setVitals] = useState([]);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [time, setTime] = useState("");
@@ -19,9 +19,15 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
     const [nursingService, setNursingService] = useState("");
     const [doctorName, setDoctorName] = useState("");
     const [performedBy, setPerformedBy] = useState("");
-    const [quantity, setQuantity] = useState("");
-
-
+    const [issueNo, setIssueNo] = useState("");
+    const [store, setStore] = useState("");
+    const [itemName, setItemName] = useState("");
+    const [bundleName, setBundleName] = useState("");
+    const [barcode, setBarcode] = useState("");
+    const [indentQty, setIndentQty] = useState("");
+    const [issueQty, setIssueQty] = useState("");
+    const [remarks, setRemarks] = useState("");
+    const [isEmergency, setIsEmergency] = useState(false); // New state for emergency
 
     // Options for Nursing Service
     const [options, setOptions] = useState([]);
@@ -54,25 +60,35 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
         const formattedDate = `${selectedDate.toLocaleDateString()} ${time}`;
         const newEntry = {
             date: formattedDate,
-            bp: nursingService,
-            pulse: doctorName,
-            temp: performedBy,
-            spo2: quantity,
-            weight: '-',
-            height: '-',
-            rr: '-',
-            painScore: '-',
+            nursingService: nursingService,
+            doctorName: doctorName,
+            performedBy: performedBy,
+            issueNo: issueNo,
+            store: store,
+            itemName: itemName,
+            bundleName: bundleName,
+            barcode: barcode,
+            indentQty: indentQty,
+            issueQty: issueQty,
+            remarks: remarks,
+            isEmergency: isEmergency, // Include emergency status
         };
 
         setVitals([...vitals, newEntry]);
+        // Reset fields
         setNursingService("");
         setDoctorName("");
         setPerformedBy("");
-        setQuantity("");
+        setIssueNo("");
+        setStore("");
+        setItemName("");
+        setBundleName("");
+        setBarcode("");
+        setIndentQty("");
+        setIssueQty("");
+        setRemarks("");
+        setIsEmergency(false); // Reset emergency status
     };
-
- 
-
 
     useEffect(() => {
         const fetchNursingServices = async () => {
@@ -96,7 +112,6 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
             try {
                 const response = await axios.get(API_ENDPOINTS.getAllHeadload);
                 const doctorData = JSON.parse(response.data);
-                console.log("Doctor :", doctorData);
                 if (doctorData && doctorData.Table && Array.isArray(doctorData.Table)) {
                     const formattedDoctors = doctorData.Table.map(item => ({
                         label: item.CNAME,
@@ -115,7 +130,6 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
             try {
                 const response = await axios.get(API_ENDPOINTS.getAllHeadload);
                 const performedByData = JSON.parse(response.data);
-                console.log("Performed :", performedByData);
                 if (performedByData && performedByData.Table && Array.isArray(performedByData.Table)) {
                     const formattedPerformedByUsers = performedByData.Table.map(item => ({
                         label: item.CNAME,
@@ -130,7 +144,6 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
             }
         };
 
-
         const fetchData = async () => {
             await Promise.all([
                 fetchNursingServices(),
@@ -142,12 +155,10 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
         fetchData();
     }, []);
 
-
-
     return (
         <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
             <div className="flex items-center justify-center">
-                <ModalHeading title="Nursing Services" />
+                <ModalHeading title="DoctorVisit" />
             </div>
             <hr className="border-t mt-6 mb-2 border-gray-300" />
 
@@ -169,56 +180,37 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
                         )}
                     </div>
 
-                    {/* Nursing Service Dropdown */}
-                    <DropdownSelect
-                        label="Select Nursing Service"
-                        options={options}
-                        selectedValue={nursingService}
-                        // onSelect={(option) => setNursingService(option.label)}
-                        onSelect={(option) => {
-                            setNursingService(option.label);
-                            console.log(" Nursing Service :", option.value); // Log the CID
-                        }}
-                        error={errors.nursingService}
-                    />
                     {/* Doctor Name Dropdown */}
                     <DropdownSelect
                         label="Select Doctor Name"
                         options={doctors}
                         selectedValue={doctorName}
-                        // onSelect={(option) => setDoctorName(option.label)}
                         onSelect={(option) => {
                             setDoctorName(option.label);
-                            console.log(" Doctor :", option.value); // Log the CID
+                            console.log("Doctor :", option.value); // Log the CID
                         }}
                         error={errors.doctorName}
                     />
 
-                    {/* Performed By Dropdown */}
-                    <DropdownSelect
-                        label="Select Performed By"
-                        options={performedByUsers}
-                        selectedValue={performedBy}
-                        // onSelect={(option) => setPerformedBy(option.label)}
-                        onSelect={(option) => {
-                            setPerformedBy(option.label);
-                            console.log(" Performed By :", option.value); // Log the CID
-                        }}
-                        error={errors.performedBy}
+                    <ReusableInputField
+                        className="border-2 rounded-lg"
+                        id="remarks"
+                        label="Remarks"
+                        width="w-full"
+                        value={remarks}
+                        onChange={(e) => setRemarks(e.target.value)}
                     />
 
-
-                    
-                       <ReusableInputField
-                        className="border-2 rounded-lg "
-                        id="quantity" 
-                        label="Quantity"
-                         width="w-full" 
-                         value={quantity}
-                       onChange={(e) => setQuantity(e.target.value)}
-                         />
-
-                  
+                    {/* Emergency Checkbox */}
+                    <div className="flex items-center">
+                        <input
+                            type="checkbox"
+                            checked={isEmergency}
+                            onChange={() => setIsEmergency(!isEmergency)}
+                            className="mr-2"
+                        />
+                        <label className="text-sm">Emergency</label>
+                    </div>
                 </div>
 
                 {/* Insert Button */}
@@ -240,10 +232,9 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
                         <thead className="bg-blue-50 text-gray-800 font-semibold sticky top-0 z-10">
                             <tr>
                                 <TableReuse type="th">Date/Time</TableReuse>
-                                <TableReuse type="th">Nursing Service</TableReuse>
                                 <TableReuse type="th">Doctor Name</TableReuse>
-                                <TableReuse type="th">Performed By</TableReuse>
-                                <TableReuse type="th">Quantity</TableReuse>
+                                <TableReuse type="th">Remarks</TableReuse>
+                                <TableReuse type="th">Emergency</TableReuse>
                                 <TableReuse type="th">Actions</TableReuse>
                             </tr>
                         </thead>
@@ -251,10 +242,9 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
                             {vitals.map((v, idx) => (
                                 <tr key={idx} className="hover:bg-gray-100 border-t">
                                     <TableReuse>{v.date}</TableReuse>
-                                    <TableReuse>{v.bp}</TableReuse>
-                                    <TableReuse>{v.pulse}</TableReuse>
-                                    <TableReuse>{v.temp}</TableReuse>
-                                    <TableReuse>{v.spo2}</TableReuse>
+                                    <TableReuse>{v.doctorName}</TableReuse>
+                                    <TableReuse>{v.remarks}</TableReuse>
+                                    <TableReuse>{v.isEmergency ? "Yes" : "No"}</TableReuse>
                                     <TableReuse>
                                         <div className="flex justify-center space-x-2">
                                             <button
@@ -287,4 +277,3 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
         </div>
     );
 }
-

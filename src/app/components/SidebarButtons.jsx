@@ -8,6 +8,11 @@ import { FaStethoscope } from 'react-icons/fa';
 import InitialAssessmentForm from './InitialAssessment';
 import ClinicalExamination from './ClinicalExamination';
 import NursingServices from './NursingServices';
+import Consumables from './Consumables';
+import DoctorVisit from './DoctorVisit';
+import AdvisedSurgery from './AdvisedSurgery';
+import Implants from './Implants';
+import Investigation from './Investigation';
 
 const buttons = [
     { label: "Nursing Services", color: "#1999A1", shadow: "#14767D", icon: FiActivity },
@@ -41,7 +46,27 @@ export default function ButtonGrid({ visitid, gssuhid, empid }) {
             setModalContent(<NursingServices visitid={visitid} gssuhid={gssuhid} empid={empid} />);
             setShowModal(true);
         }
+        else if (label === "Consumables") {
+            setModalContent(<Consumables visitid={visitid} gssuhid={gssuhid} empid={empid} />);
+            setShowModal(true);
+        }
         else if (label === "Doctor Visit") {
+            setModalContent(<DoctorVisit visitid={visitid} gssuhid={gssuhid} empid={empid} />);
+            setShowModal(true);
+        }
+        else if (label === "Advice Surgery") {
+            setModalContent(<AdvisedSurgery visitid={visitid} gssuhid={gssuhid} empid={empid} />);
+            setShowModal(true);
+        }
+        else if (label === "Implant") {
+            setModalContent(<Implants visitid={visitid} gssuhid={gssuhid} empid={empid} />);
+            setShowModal(true);
+        }
+        else if (label === "Investigation") {
+            setModalContent(<Investigation visitid={visitid} gssuhid={gssuhid} empid={empid} />);
+            setShowModal(true);
+        }
+        else if (label === "xyz") {
             setModalContent(<div>Placeholder for Doctor Visit</div>);
             setShowModal(true);
         }

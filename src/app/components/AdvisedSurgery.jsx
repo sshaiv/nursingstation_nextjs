@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { ModalHeading } from '../common/text';
 import { ActionButton, SaveButton } from '../common/Buttons';
@@ -10,7 +9,7 @@ import API_ENDPOINTS from '../constants/api_url';
 import DropdownSelect from '../common/DropdownSelect';
 import ReusableInputField from '../common/SmallInputfields';
 
-export default function NursingServices({ visitid, gssuhid, empid }) {
+export default function AdviceSurgery({ visitid, gssuhid, empid }) {
     const [vitals, setVitals] = useState([]);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [time, setTime] = useState("");
@@ -21,14 +20,16 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
     const [performedBy, setPerformedBy] = useState("");
     const [quantity, setQuantity] = useState("");
 
-
-
     // Options for Nursing Service
-    const [options, setOptions] = useState([]);
+    const [proposedOptions, setProposedOptions] = useState([]);
+    const [surgeryOptions, setSurgeryOptions] = useState([]);
 
     // Options for Doctors and Performed By Users
     const [doctors, setDoctors] = useState([]);
     const [performedByUsers, setPerformedByUsers] = useState([]);
+
+    // State for radio button (single choice)
+    const [serviceType, setServiceType] = useState(""); // "Proposed" or "Surgery"
 
     const validateForm = () => {
         const newErrors = {};
@@ -37,6 +38,7 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
         if (!doctorName) newErrors.doctorName = "Doctor Name is required.";
         if (!performedBy) newErrors.performedBy = "Performed By is required.";
         if (!selectedDate || !time) newErrors.dateTime = "Date & Time are required.";
+        if (!serviceType) newErrors.serviceType = "Please select Proposed or Surgery.";
 
         return newErrors;
     };
@@ -54,14 +56,11 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
         const formattedDate = `${selectedDate.toLocaleDateString()} ${time}`;
         const newEntry = {
             date: formattedDate,
-            bp: nursingService,
-            pulse: doctorName,
-            temp: performedBy,
-            spo2: quantity,
-            weight: '-',
-            height: '-',
-            rr: '-',
-            painScore: '-',
+            nursingService: nursingService,
+            doctorName: doctorName,
+            performedBy: performedBy,
+            quantity: quantity,
+            serviceType: serviceType,
         };
 
         setVitals([...vitals, newEntry]);
@@ -69,10 +68,8 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
         setDoctorName("");
         setPerformedBy("");
         setQuantity("");
+        setServiceType("");
     };
-
- 
-
 
     useEffect(() => {
         const fetchNursingServices = async () => {
@@ -81,11 +78,16 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
                 const parsedData = JSON.parse(response.data);
                 const relationData = parsedData.Table;
                 if (relationData && Array.isArray(relationData)) {
-                    const formattedOptions = relationData.map((item) => ({
+                    const proposed = relationData.filter(item => item.Type === "Proposed").map(item => ({
                         label: item.CNAME,
                         value: item.CID,
                     }));
-                    setOptions(formattedOptions);
+                    const surgery = relationData.filter(item => item.Type === "Surgery").map(item => ({
+                        label: item.CNAME,
+                        value: item.CID,
+                    }));
+                    setProposedOptions(proposed);
+                    setSurgeryOptions(surgery);
                 }
             } catch (error) {
                 console.error("Error fetching nursing services:", error);
@@ -96,7 +98,6 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
             try {
                 const response = await axios.get(API_ENDPOINTS.getAllHeadload);
                 const doctorData = JSON.parse(response.data);
-                console.log("Doctor :", doctorData);
                 if (doctorData && doctorData.Table && Array.isArray(doctorData.Table)) {
                     const formattedDoctors = doctorData.Table.map(item => ({
                         label: item.CNAME,
@@ -115,7 +116,6 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
             try {
                 const response = await axios.get(API_ENDPOINTS.getAllHeadload);
                 const performedByData = JSON.parse(response.data);
-                console.log("Performed :", performedByData);
                 if (performedByData && performedByData.Table && Array.isArray(performedByData.Table)) {
                     const formattedPerformedByUsers = performedByData.Table.map(item => ({
                         label: item.CNAME,
@@ -130,7 +130,6 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
             }
         };
 
-
         const fetchData = async () => {
             await Promise.all([
                 fetchNursingServices(),
@@ -142,84 +141,118 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
         fetchData();
     }, []);
 
-
-
     return (
         <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
             <div className="flex items-center justify-center">
-                <ModalHeading title="Nursing Services" />
+                <ModalHeading title="Advice Surgery" />
             </div>
             <hr className="border-t mt-6 mb-2 border-gray-300" />
 
             <div className="border border-gray-100 rounded-lg space-y-4">
 
-                {/* Inputs Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end">
-
-                    <div className="flex flex-col w-full">
-                        <DateTimeInput
-                            selectedDate={selectedDate}
-                            onDateChange={setSelectedDate}
-                            time={time}
-                            onTimeChange={(e) => setTime(e.target.value)}
-                            label="Date & Time"
+                {/* Radio buttons for Service Type */}
+                <div className="flex space-x-6 mb-4 text-sm font-medium text-gray-700">
+                    <label className="flex items-center cursor-pointer">
+                        <input
+                            type="radio"
+                            name="serviceType"
+                            value="Proposed"
+                            checked={serviceType === "Proposed"}
+                            onChange={(e) => setServiceType(e.target.value)}
+                            className="mr-2"
                         />
-                        {errors.dateTime && (
-                            <p className="text-red-500 text-[10px] mt-[2px] ml-[2px] col-span-full -mt-2">{errors.dateTime}</p>
-                        )}
-                    </div>
-
-                    {/* Nursing Service Dropdown */}
-                    <DropdownSelect
-                        label="Select Nursing Service"
-                        options={options}
-                        selectedValue={nursingService}
-                        // onSelect={(option) => setNursingService(option.label)}
-                        onSelect={(option) => {
-                            setNursingService(option.label);
-                            console.log(" Nursing Service :", option.value); // Log the CID
-                        }}
-                        error={errors.nursingService}
-                    />
-                    {/* Doctor Name Dropdown */}
-                    <DropdownSelect
-                        label="Select Doctor Name"
-                        options={doctors}
-                        selectedValue={doctorName}
-                        // onSelect={(option) => setDoctorName(option.label)}
-                        onSelect={(option) => {
-                            setDoctorName(option.label);
-                            console.log(" Doctor :", option.value); // Log the CID
-                        }}
-                        error={errors.doctorName}
-                    />
-
-                    {/* Performed By Dropdown */}
-                    <DropdownSelect
-                        label="Select Performed By"
-                        options={performedByUsers}
-                        selectedValue={performedBy}
-                        // onSelect={(option) => setPerformedBy(option.label)}
-                        onSelect={(option) => {
-                            setPerformedBy(option.label);
-                            console.log(" Performed By :", option.value); // Log the CID
-                        }}
-                        error={errors.performedBy}
-                    />
-
-
-                    
-                       <ReusableInputField
-                        className="border-2 rounded-lg "
-                        id="quantity" 
-                        label="Quantity"
-                         width="w-full" 
-                         value={quantity}
-                       onChange={(e) => setQuantity(e.target.value)}
-                         />
-
-                  
+                        Proposed
+                    </label>
+                    <label className="flex items-center cursor-pointer">
+                        <input
+                            type="radio"
+                            name="serviceType"
+                            value="Surgery"
+                            checked={serviceType === "Surgery"}
+                            onChange={(e) => setServiceType(e.target.value)}
+                            className="mr-2"
+                        />
+                        Surgery
+                    </label>
                 </div>
+                {errors.serviceType && (
+                    <p className="text-red-500 text-[10px] mt-[2px] ml-[2px] col-span-full -mt-2">{errors.serviceType}</p>
+                )}
+
+                {/* Inputs Grid */}
+               {/* Inputs Grid */}
+<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end">
+
+    <div className="flex flex-col w-full">
+        <DateTimeInput
+            selectedDate={selectedDate}
+            onDateChange={setSelectedDate}
+            time={time}
+            onTimeChange={(e) => setTime(e.target.value)}
+            label="Date & Time"
+        />
+        {errors.dateTime && (
+            <p className="text-red-500 text-[10px] mt-[2px] ml-[2px] col-span-full -mt-2">{errors.dateTime}</p>
+        )}
+    </div>
+
+    {/* Nursing Service Dropdown */}
+    {serviceType === "Proposed" && (
+        <DropdownSelect
+            label="Proposed Package Name"
+            options={proposedOptions}
+            selectedValue={nursingService}
+            onSelect={(option) => {
+                setNursingService(option.label);
+                console.log("Nursing Service:", option.value); // Log the CID
+            }}
+            error={errors.nursingService}
+        />
+    )}
+    {serviceType === "Surgery" && (
+        <DropdownSelect
+            label="Surgery Name"
+            options={surgeryOptions}
+            selectedValue={nursingService}
+            onSelect={(option) => {
+                setNursingService(option.label);
+                console.log("Surgery:", option.value); // Log the CID
+            }}
+            error={errors.nursingService}
+        />
+    )}
+
+    <DropdownSelect
+        label="Select Doctor Name"
+        options={doctors}
+        selectedValue={doctorName}
+        onSelect={(option) => {
+            setDoctorName(option.label);
+            console.log("Doctor:", option.value); // Log the CID
+        }}
+        error={errors.doctorName}
+    />
+    <DropdownSelect
+        label="Performed By"
+        options={performedByUsers}
+        selectedValue={performedBy}
+        onSelect={(option) => {
+            setPerformedBy(option.label);
+            console.log("Performed By:", option.value); // Log the CID
+        }}
+        error={errors.performedBy}
+    />
+
+    <ReusableInputField
+        className="border-2 rounded-lg"
+        id="quantity" 
+        label="Quantity"
+        width="w-full" 
+        value={quantity}
+        onChange={(e) => setQuantity(e.target.value)}
+    />
+</div>
+
 
                 {/* Insert Button */}
                 <div className="flex justify-end">
@@ -240,10 +273,11 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
                         <thead className="bg-blue-50 text-gray-800 font-semibold sticky top-0 z-10">
                             <tr>
                                 <TableReuse type="th">Date/Time</TableReuse>
-                                <TableReuse type="th">Nursing Service</TableReuse>
+                                <TableReuse type="th">Proposed Package Name</TableReuse>
                                 <TableReuse type="th">Doctor Name</TableReuse>
                                 <TableReuse type="th">Performed By</TableReuse>
                                 <TableReuse type="th">Quantity</TableReuse>
+                                <TableReuse type="th">Service Type</TableReuse>
                                 <TableReuse type="th">Actions</TableReuse>
                             </tr>
                         </thead>
@@ -251,10 +285,11 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
                             {vitals.map((v, idx) => (
                                 <tr key={idx} className="hover:bg-gray-100 border-t">
                                     <TableReuse>{v.date}</TableReuse>
-                                    <TableReuse>{v.bp}</TableReuse>
-                                    <TableReuse>{v.pulse}</TableReuse>
-                                    <TableReuse>{v.temp}</TableReuse>
-                                    <TableReuse>{v.spo2}</TableReuse>
+                                    <TableReuse>{v.nursingService}</TableReuse>
+                                    <TableReuse>{v.doctorName}</TableReuse>
+                                    <TableReuse>{v.performedBy}</TableReuse>
+                                    <TableReuse>{v.quantity}</TableReuse>
+                                    <TableReuse>{v.serviceType}</TableReuse>
                                     <TableReuse>
                                         <div className="flex justify-center space-x-2">
                                             <button
@@ -287,4 +322,3 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
         </div>
     );
 }
-

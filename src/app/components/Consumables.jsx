@@ -10,7 +10,7 @@ import API_ENDPOINTS from '../constants/api_url';
 import DropdownSelect from '../common/DropdownSelect';
 import ReusableInputField from '../common/SmallInputfields';
 
-export default function NursingServices({ visitid, gssuhid, empid }) {
+export default function Consumables({ visitid, gssuhid, empid }) {
     const [vitals, setVitals] = useState([]);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [time, setTime] = useState("");
@@ -19,9 +19,14 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
     const [nursingService, setNursingService] = useState("");
     const [doctorName, setDoctorName] = useState("");
     const [performedBy, setPerformedBy] = useState("");
-    const [quantity, setQuantity] = useState("");
-
-
+    const [issueNo, setIssueNo] = useState("");
+    const [store, setStore] = useState("");
+    const [itemName, setItemName] = useState("");
+    const [bundleName, setBundleName] = useState("");
+    const [barcode, setBarcode] = useState("");
+    const [indentQty, setIndentQty] = useState("");
+    const [issueQty, setIssueQty] = useState("");
+    const [remarks, setRemarks] = useState("");
 
     // Options for Nursing Service
     const [options, setOptions] = useState([]);
@@ -54,25 +59,33 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
         const formattedDate = `${selectedDate.toLocaleDateString()} ${time}`;
         const newEntry = {
             date: formattedDate,
-            bp: nursingService,
-            pulse: doctorName,
-            temp: performedBy,
-            spo2: quantity,
-            weight: '-',
-            height: '-',
-            rr: '-',
-            painScore: '-',
+            nursingService: nursingService,
+            doctorName: doctorName,
+            performedBy: performedBy,
+            issueNo: issueNo,
+            store: store,
+            itemName: itemName,
+            bundleName: bundleName,
+            barcode: barcode,
+            indentQty: indentQty,
+            issueQty: issueQty,
+            remarks: remarks,
         };
 
         setVitals([...vitals, newEntry]);
+        // Reset fields
         setNursingService("");
         setDoctorName("");
         setPerformedBy("");
-        setQuantity("");
+        setIssueNo("");
+        setStore("");
+        setItemName("");
+        setBundleName("");
+        setBarcode("");
+        setIndentQty("");
+        setIssueQty("");
+        setRemarks("");
     };
-
- 
-
 
     useEffect(() => {
         const fetchNursingServices = async () => {
@@ -96,7 +109,6 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
             try {
                 const response = await axios.get(API_ENDPOINTS.getAllHeadload);
                 const doctorData = JSON.parse(response.data);
-                console.log("Doctor :", doctorData);
                 if (doctorData && doctorData.Table && Array.isArray(doctorData.Table)) {
                     const formattedDoctors = doctorData.Table.map(item => ({
                         label: item.CNAME,
@@ -115,7 +127,6 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
             try {
                 const response = await axios.get(API_ENDPOINTS.getAllHeadload);
                 const performedByData = JSON.parse(response.data);
-                console.log("Performed :", performedByData);
                 if (performedByData && performedByData.Table && Array.isArray(performedByData.Table)) {
                     const formattedPerformedByUsers = performedByData.Table.map(item => ({
                         label: item.CNAME,
@@ -130,7 +141,6 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
             }
         };
 
-
         const fetchData = async () => {
             await Promise.all([
                 fetchNursingServices(),
@@ -142,12 +152,10 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
         fetchData();
     }, []);
 
-
-
     return (
         <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
             <div className="flex items-center justify-center">
-                <ModalHeading title="Nursing Services" />
+                <ModalHeading title="Consumables" />
             </div>
             <hr className="border-t mt-6 mb-2 border-gray-300" />
 
@@ -169,56 +177,84 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
                         )}
                     </div>
 
-                    {/* Nursing Service Dropdown */}
-                    <DropdownSelect
-                        label="Select Nursing Service"
-                        options={options}
-                        selectedValue={nursingService}
-                        // onSelect={(option) => setNursingService(option.label)}
-                        onSelect={(option) => {
-                            setNursingService(option.label);
-                            console.log(" Nursing Service :", option.value); // Log the CID
-                        }}
-                        error={errors.nursingService}
+                    <ReusableInputField
+                        className="border-2 rounded-lg"
+                        id="issueNo"
+                        label="Issue No"
+                        width="w-full"
+                        value={issueNo}
+                        onChange={(e) => setIssueNo(e.target.value)}
                     />
+
                     {/* Doctor Name Dropdown */}
                     <DropdownSelect
                         label="Select Doctor Name"
                         options={doctors}
                         selectedValue={doctorName}
-                        // onSelect={(option) => setDoctorName(option.label)}
                         onSelect={(option) => {
                             setDoctorName(option.label);
-                            console.log(" Doctor :", option.value); // Log the CID
+                            console.log("Doctor :", option.value); // Log the CID
                         }}
                         error={errors.doctorName}
                     />
 
-                    {/* Performed By Dropdown */}
-                    <DropdownSelect
-                        label="Select Performed By"
-                        options={performedByUsers}
-                        selectedValue={performedBy}
-                        // onSelect={(option) => setPerformedBy(option.label)}
-                        onSelect={(option) => {
-                            setPerformedBy(option.label);
-                            console.log(" Performed By :", option.value); // Log the CID
-                        }}
-                        error={errors.performedBy}
+                    <ReusableInputField
+                        className="border-2 rounded-lg"
+                        id="store"
+                        label="Store"
+                        width="w-full"
+                        value={store}
+                        onChange={(e) => setStore(e.target.value)}
+                    />
+                    <ReusableInputField
+                        className="border-2 rounded-lg"
+                        id="itemName"
+                        label="Item Name"
+                        width="w-full"
+                        value={itemName}
+                        onChange={(e) => setItemName(e.target.value)}
+                    />
+                    <ReusableInputField
+                        className="border-2 rounded-lg"
+                        id="bundleName"
+                        label="Bundle Name"
+                        width="w-full"
+                        value={bundleName}
+                        onChange={(e) => setBundleName(e.target.value)}
+                    />
+                    <ReusableInputField
+                        className="border-2 rounded-lg"
+                        id="barcode"
+                        label="Barcode"
+                        width="w-full"
+                        value={barcode}
+                        onChange={(e) => setBarcode(e.target.value)}
+                    />
+                    <ReusableInputField
+                        className="border-2 rounded-lg"
+                        id="indentQty"
+                        label="Indent Qty"
+                        width="w-full"
+                        value={indentQty}
+                        onChange={(e) => setIndentQty(e.target.value)}
+                    />
+                    <ReusableInputField
+                        className="border-2 rounded-lg"
+                        id="issueQty"
+                        label="Issue Qty"
+                        width="w-full"
+                        value={issueQty}
+                        onChange={(e) => setIssueQty(e.target.value)}
                     />
 
-
-                    
-                       <ReusableInputField
-                        className="border-2 rounded-lg "
-                        id="quantity" 
-                        label="Quantity"
-                         width="w-full" 
-                         value={quantity}
-                       onChange={(e) => setQuantity(e.target.value)}
-                         />
-
-                  
+                    <ReusableInputField
+                        className="border-2 rounded-lg"
+                        id="remarks"
+                        label="Remarks"
+                        width="w-full"
+                        value={remarks}
+                        onChange={(e) => setRemarks(e.target.value)}
+                    />
                 </div>
 
                 {/* Insert Button */}
@@ -243,7 +279,14 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
                                 <TableReuse type="th">Nursing Service</TableReuse>
                                 <TableReuse type="th">Doctor Name</TableReuse>
                                 <TableReuse type="th">Performed By</TableReuse>
-                                <TableReuse type="th">Quantity</TableReuse>
+                                <TableReuse type="th">Issue No</TableReuse>
+                                <TableReuse type="th">Store</TableReuse>
+                                <TableReuse type="th">Item Name</TableReuse>
+                                <TableReuse type="th">Bundle Name</TableReuse>
+                                <TableReuse type="th">Barcode</TableReuse>
+                                <TableReuse type="th">Indent Qty</TableReuse>
+                                <TableReuse type="th">Issue Qty</TableReuse>
+                                <TableReuse type="th">Remarks</TableReuse>
                                 <TableReuse type="th">Actions</TableReuse>
                             </tr>
                         </thead>
@@ -251,10 +294,17 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
                             {vitals.map((v, idx) => (
                                 <tr key={idx} className="hover:bg-gray-100 border-t">
                                     <TableReuse>{v.date}</TableReuse>
-                                    <TableReuse>{v.bp}</TableReuse>
-                                    <TableReuse>{v.pulse}</TableReuse>
-                                    <TableReuse>{v.temp}</TableReuse>
-                                    <TableReuse>{v.spo2}</TableReuse>
+                                    <TableReuse>{v.nursingService}</TableReuse>
+                                    <TableReuse>{v.doctorName}</TableReuse>
+                                    <TableReuse>{v.performedBy}</TableReuse>
+                                    <TableReuse>{v.issueNo}</TableReuse>
+                                    <TableReuse>{v.store}</TableReuse>
+                                    <TableReuse>{v.itemName}</TableReuse>
+                                    <TableReuse>{v.bundleName}</TableReuse>
+                                    <TableReuse>{v.barcode}</TableReuse>
+                                    <TableReuse>{v.indentQty}</TableReuse>
+                                    <TableReuse>{v.issueQty}</TableReuse>
+                                    <TableReuse>{v.remarks}</TableReuse>
                                     <TableReuse>
                                         <div className="flex justify-center space-x-2">
                                             <button
@@ -287,4 +337,3 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
         </div>
     );
 }
-

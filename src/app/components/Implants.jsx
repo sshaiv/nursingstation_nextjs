@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { ModalHeading } from '../common/text';
 import { ActionButton, SaveButton } from '../common/Buttons';
@@ -10,7 +9,7 @@ import API_ENDPOINTS from '../constants/api_url';
 import DropdownSelect from '../common/DropdownSelect';
 import ReusableInputField from '../common/SmallInputfields';
 
-export default function NursingServices({ visitid, gssuhid, empid }) {
+export default function Implants({ visitid, gssuhid, empid }) {
     const [vitals, setVitals] = useState([]);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [time, setTime] = useState("");
@@ -20,8 +19,11 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
     const [doctorName, setDoctorName] = useState("");
     const [performedBy, setPerformedBy] = useState("");
     const [quantity, setQuantity] = useState("");
-
-
+    const [batchSeries, setBatchSeries] = useState("");
+    const [charges, setCharges] = useState("");
+    const [totalAmt, setTotalAmt] = useState("");
+    const [finalAmt, setFinalAmt] = useState("");
+    const [remark, setRemark] = useState("");
 
     // Options for Nursing Service
     const [options, setOptions] = useState([]);
@@ -54,14 +56,15 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
         const formattedDate = `${selectedDate.toLocaleDateString()} ${time}`;
         const newEntry = {
             date: formattedDate,
-            bp: nursingService,
-            pulse: doctorName,
-            temp: performedBy,
-            spo2: quantity,
-            weight: '-',
-            height: '-',
-            rr: '-',
-            painScore: '-',
+            nursingService,
+            doctorName,
+            performedBy,
+            quantity,
+            batchSeries,
+            charges,
+            totalAmt,
+            finalAmt,
+            remark,
         };
 
         setVitals([...vitals, newEntry]);
@@ -69,10 +72,12 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
         setDoctorName("");
         setPerformedBy("");
         setQuantity("");
+        setBatchSeries("");
+        setCharges("");
+        setTotalAmt("");
+        setFinalAmt("");
+        setRemark("");
     };
-
- 
-
 
     useEffect(() => {
         const fetchNursingServices = async () => {
@@ -96,7 +101,6 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
             try {
                 const response = await axios.get(API_ENDPOINTS.getAllHeadload);
                 const doctorData = JSON.parse(response.data);
-                console.log("Doctor :", doctorData);
                 if (doctorData && doctorData.Table && Array.isArray(doctorData.Table)) {
                     const formattedDoctors = doctorData.Table.map(item => ({
                         label: item.CNAME,
@@ -115,7 +119,6 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
             try {
                 const response = await axios.get(API_ENDPOINTS.getAllHeadload);
                 const performedByData = JSON.parse(response.data);
-                console.log("Performed :", performedByData);
                 if (performedByData && performedByData.Table && Array.isArray(performedByData.Table)) {
                     const formattedPerformedByUsers = performedByData.Table.map(item => ({
                         label: item.CNAME,
@@ -130,7 +133,6 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
             }
         };
 
-
         const fetchData = async () => {
             await Promise.all([
                 fetchNursingServices(),
@@ -142,83 +144,106 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
         fetchData();
     }, []);
 
-
-
     return (
         <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
             <div className="flex items-center justify-center">
-                <ModalHeading title="Nursing Services" />
+                <ModalHeading title="Implants" />
             </div>
             <hr className="border-t mt-6 mb-2 border-gray-300" />
 
             <div className="border border-gray-100 rounded-lg space-y-4">
-
                 {/* Inputs Grid */}
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end">
-
+                    {/* Nursing Service Dropdown */}
+                    <DropdownSelect
+                        label="Item Name:*"
+                        options={options}
+                        selectedValue={nursingService}
+                        onSelect={(option) => {
+                            setNursingService(option.label);
+                        }}
+                        error={errors.nursingService}
+                    />
+                    {/* Doctor Name Dropdown */}
+                    <DropdownSelect
+                        label="Vendor Name*"
+                        options={doctors}
+                        selectedValue={doctorName}
+                        onSelect={(option) => {
+                            setDoctorName(option.label);
+                        }}
+                        error={errors.doctorName}
+                    />
+                    <ReusableInputField
+                        className="border-2 rounded-lg"
+                        id="quantity"
+                        label="Vendor Payment"
+                        width="w-full"
+                        value={quantity}
+                        onChange={(e) => setQuantity(e.target.value)}
+                    />
+                    <ReusableInputField
+                        className="border-2 rounded-lg"
+                        id="batchSeries"
+                        label="Batch Series"
+                        width="w-full"
+                        value={batchSeries}
+                        onChange={(e) => setBatchSeries(e.target.value)}
+                    />
                     <div className="flex flex-col w-full">
                         <DateTimeInput
                             selectedDate={selectedDate}
                             onDateChange={setSelectedDate}
                             time={time}
                             onTimeChange={(e) => setTime(e.target.value)}
-                            label="Date & Time"
+                            label="Expiry Date"
                         />
                         {errors.dateTime && (
                             <p className="text-red-500 text-[10px] mt-[2px] ml-[2px] col-span-full -mt-2">{errors.dateTime}</p>
                         )}
                     </div>
-
-                    {/* Nursing Service Dropdown */}
-                    <DropdownSelect
-                        label="Select Nursing Service"
-                        options={options}
-                        selectedValue={nursingService}
-                        // onSelect={(option) => setNursingService(option.label)}
-                        onSelect={(option) => {
-                            setNursingService(option.label);
-                            console.log(" Nursing Service :", option.value); // Log the CID
-                        }}
-                        error={errors.nursingService}
+                    <ReusableInputField
+                        className="border-2 rounded-lg"
+                        id="charges"
+                        label="Charges"
+                        width="w-full"
+                        value={charges}
+                        onChange={(e) => setCharges(e.target.value)}
                     />
-                    {/* Doctor Name Dropdown */}
-                    <DropdownSelect
-                        label="Select Doctor Name"
-                        options={doctors}
-                        selectedValue={doctorName}
-                        // onSelect={(option) => setDoctorName(option.label)}
-                        onSelect={(option) => {
-                            setDoctorName(option.label);
-                            console.log(" Doctor :", option.value); // Log the CID
-                        }}
-                        error={errors.doctorName}
+                    <ReusableInputField
+                        className="border-2 rounded-lg"
+                        id="totalAmt"
+                        label="Total Amt"
+                        width="w-full"
+                        value={totalAmt}
+                        onChange={(e) => setTotalAmt(e.target.value)}
                     />
-
+                    <ReusableInputField
+                        className="border-2 rounded-lg"
+                        id="finalAmt"
+                        label="Final Amt"
+                        width="w-full"
+                        value={finalAmt}
+                        onChange={(e) => setFinalAmt(e.target.value)}
+                    />
                     {/* Performed By Dropdown */}
                     <DropdownSelect
-                        label="Select Performed By"
+                        label="Performed By*"
                         options={performedByUsers}
                         selectedValue={performedBy}
-                        // onSelect={(option) => setPerformedBy(option.label)}
                         onSelect={(option) => {
                             setPerformedBy(option.label);
-                            console.log(" Performed By :", option.value); // Log the CID
                         }}
                         error={errors.performedBy}
                     />
-
-
-                    
-                       <ReusableInputField
-                        className="border-2 rounded-lg "
-                        id="quantity" 
-                        label="Quantity"
-                         width="w-full" 
-                         value={quantity}
-                       onChange={(e) => setQuantity(e.target.value)}
-                         />
-
-                  
+                    <ReusableInputField
+                        className="border-2 rounded-lg"
+                        id="remark"
+                        label="Remark"
+                        width="w-full"
+                        value={remark}
+                        onChange={(e) => setRemark(e.target.value)}
+                    />
                 </div>
 
                 {/* Insert Button */}
@@ -241,9 +266,14 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
                             <tr>
                                 <TableReuse type="th">Date/Time</TableReuse>
                                 <TableReuse type="th">Nursing Service</TableReuse>
-                                <TableReuse type="th">Doctor Name</TableReuse>
+                                <TableReuse type="th">Vendor Name</TableReuse>
                                 <TableReuse type="th">Performed By</TableReuse>
-                                <TableReuse type="th">Quantity</TableReuse>
+                                <TableReuse type="th">Vendor Payment</TableReuse>
+                                <TableReuse type="th">Batch Series</TableReuse>
+                                <TableReuse type="th">Charges</TableReuse>
+                                <TableReuse type="th">Total Amt</TableReuse>
+                                <TableReuse type="th">Final Amt</TableReuse>
+                                <TableReuse type="th">Remark</TableReuse>
                                 <TableReuse type="th">Actions</TableReuse>
                             </tr>
                         </thead>
@@ -251,10 +281,15 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
                             {vitals.map((v, idx) => (
                                 <tr key={idx} className="hover:bg-gray-100 border-t">
                                     <TableReuse>{v.date}</TableReuse>
-                                    <TableReuse>{v.bp}</TableReuse>
-                                    <TableReuse>{v.pulse}</TableReuse>
-                                    <TableReuse>{v.temp}</TableReuse>
-                                    <TableReuse>{v.spo2}</TableReuse>
+                                    <TableReuse>{v.nursingService}</TableReuse>
+                                    <TableReuse>{v.doctorName}</TableReuse>
+                                    <TableReuse>{v.performedBy}</TableReuse>
+                                    <TableReuse>{v.quantity}</TableReuse>
+                                    <TableReuse>{v.batchSeries}</TableReuse>
+                                    <TableReuse>{v.charges}</TableReuse>
+                                    <TableReuse>{v.totalAmt}</TableReuse>
+                                    <TableReuse>{v.finalAmt}</TableReuse>
+                                    <TableReuse>{v.remark}</TableReuse>
                                     <TableReuse>
                                         <div className="flex justify-center space-x-2">
                                             <button
@@ -287,4 +322,3 @@ export default function NursingServices({ visitid, gssuhid, empid }) {
         </div>
     );
 }
-
