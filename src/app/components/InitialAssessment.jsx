@@ -146,7 +146,7 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
         {/* Allergy Section */}
         <div className="space-y-3">
           <div className="flex items-center gap-4 mb-3">
-            <H3 className="text-[11px] flex-shrink-0">📋 Allergy</H3>
+            <H3 >📋 Allergy</H3>
             <Label className="text-[10px] flex items-center gap-1">
               <input type="radio" name="allergy" checked={allergyYes} onChange={() => setAllergyYes(true)} />
               Yes
@@ -172,7 +172,7 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
 
         {/* History of Present Illness */}
         <div className="space-y-4">
-          <H3 className="text-[11px] mb-3">✅ History of Present Illness</H3>
+          <H3 >✅ History of Present Illness</H3>
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex flex-col gap-3 w-full md:w-1/2">
               <ReusableTextareaField
@@ -226,7 +226,7 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
 
         {/* Presenting Complaint */}
         <div className="space-y-3">
-          <H3 className="text-[11px] mb-2">📋 Presenting Complaint</H3>
+          <H3 >📋 Presenting Complaint</H3>
           <ReusableTextareaField
             className="border w-full  text-[10px]"
             id="presentingcomplaints"
@@ -241,7 +241,7 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
         {/* Family History */}
         <div className="space-y-3">
           <div className="flex items-center gap-4 mb-3 flex-wrap">
-            <H3 className="text-[11px] flex-shrink-0">📋 Family History</H3>
+            <H3 >📋 Family History</H3>
             <Label className="text-[10px] flex items-center gap-1">
               <input type="checkbox" checked={isDM} onChange={() => setIsDM(!isDM)} />
               DM
@@ -269,7 +269,7 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
 
         {/* Past History */}
         <div className="space-y-3">
-          <H3 className="text-[11px] mb-2">📝 Past History</H3>
+          <H3 >📝 Past History</H3>
           <ReusableTextareaField
             className="border text-[10px]"
             id="medical"
@@ -302,7 +302,7 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
         {/* Personal History */}
         <div className="space-y-3">
           <div className="flex items-center gap-4 mb-3 flex-wrap">
-            <H3 className="text-[11px] flex-shrink-0">📋 Personal History</H3>
+            <H3>📋 Personal History</H3>
             <Label className="text-[10px] flex items-center gap-1">
               <input type="checkbox" checked={isAlcohol} onChange={() => setIsAlcohol(!isAlcohol)} />
               Alcohol

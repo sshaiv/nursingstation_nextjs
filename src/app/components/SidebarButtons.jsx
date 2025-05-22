@@ -13,6 +13,7 @@ import DoctorVisit from './DoctorVisit';
 import AdvisedSurgery from './AdvisedSurgery';
 import Implants from './Implants';
 import Investigation from './Investigation';
+import NutritionalAssessmentProfile from './NutritionalAssesmentProfile';
 
 const buttons = [
     { label: "Nursing Services", color: "#1999A1", shadow: "#14767D", icon: FiActivity },
@@ -64,6 +65,10 @@ export default function ButtonGrid({ visitid, gssuhid, empid }) {
         }
         else if (label === "Investigation") {
             setModalContent(<Investigation visitid={visitid} gssuhid={gssuhid} empid={empid} />);
+            setShowModal(true);
+        }
+        else if (label === "Nutritional Assessment") {
+            setModalContent(<NutritionalAssessmentProfile visitid={visitid} gssuhid={gssuhid} empid={empid} />);
             setShowModal(true);
         }
         else if (label === "xyz") {

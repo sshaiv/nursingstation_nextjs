@@ -8,8 +8,21 @@ import axios from "axios";
 import API_ENDPOINTS from '../constants/api_url';
 import DropdownSelect from '../common/DropdownSelect';
 import ReusableInputField from '../common/SmallInputfields';
+import DoctorModal from './DoctorModal';
+import InvestigationModal from './InvestigationModal';
+
+
+
+// ✅ If you have SecondModal component
+
 
 export default function Investigation({ visitid, gssuhid, empid }) {
+    const [showModal, setShowModal] = useState(false);
+    const [isDoctorModalOpen, setDoctorModalOpen] = useState(true);
+    const [showSecondModal, setShowSecondModal] = useState(false);
+    const [doctorData, setDoctorData] = useState(null);
+    const [selectedDoctorId, setSelectedDoctorId] = useState(null);
+
     const [vitals, setVitals] = useState([]);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [time, setTime] = useState("");
@@ -28,10 +41,24 @@ export default function Investigation({ visitid, gssuhid, empid }) {
     const [remarks, setRemarks] = useState("");
     const [isEmergency, setIsEmergency] = useState(false);
 
-    // Options for Nursing Service, Doctors, and Performed By Users
     const [nursingOptions, setNursingOptions] = useState([]);
     const [doctorOptions, setDoctorOptions] = useState([]);
     const [performedByUsers, setPerformedByUsers] = useState([]);
+
+   
+
+    const handleSelectDoctor = (doctorId) => {
+    console.log('Doctor selected in modal:', doctorId);
+
+    const selectedDoctor = doctorOptions.find(doc => doc.value === doctorId);
+    if (selectedDoctor) {
+        setDoctorData(selectedDoctor); 
+    }
+
+    setSelectedDoctorId(doctorId);
+    setShowSecondModal(true);
+    setDoctorModalOpen(false);
+};
 
     const validateForm = () => {
         const newErrors = {};
@@ -68,7 +95,6 @@ export default function Investigation({ visitid, gssuhid, empid }) {
         };
 
         setVitals([...vitals, newEntry]);
-        // Reset fields
         resetFields();
     };
 
@@ -98,8 +124,6 @@ export default function Investigation({ visitid, gssuhid, empid }) {
 
                 const parseData = (data) => {
                     const parsedData = JSON.parse(data);
-                    
-                    
                     return parsedData.Table.map(item => ({
                         label: item.CNAME,
                         value: item.CID,
@@ -110,7 +134,7 @@ export default function Investigation({ visitid, gssuhid, empid }) {
                 setDoctorOptions(parseData(doctorResponse.data));
                 setPerformedByUsers(parseData(performedByResponse.data));
             } catch (error) {
-                console.error("Error fetching data:", error);
+                console.error("Error fetching dropdown data:", error);
             }
         };
 
@@ -120,9 +144,27 @@ export default function Investigation({ visitid, gssuhid, empid }) {
     return (
         <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
             <div className="flex items-center justify-center">
-                <ModalHeading title="Doctor Visit" />
+                <ModalHeading title="Investigation" />
             </div>
+
             <hr className="border-t mt-6 mb-2 border-gray-300" />
+
+            {/* Modals */}
+            {isDoctorModalOpen && (
+                <DoctorModal
+                    isOpen={isDoctorModalOpen}
+                    onClose={() => setDoctorModalOpen(false)}
+                    onSelectDoctor={handleSelectDoctor}
+                />
+            )}
+
+            {showSecondModal && (
+                <InvestigationModal
+                    isOpen={showSecondModal}
+                    onClose={() => setShowSecondModal(false)}
+                    doctorData={doctorData}
+                />
+            )}
 
             <div className="border border-gray-100 rounded-lg space-y-4">
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end">
@@ -140,22 +182,16 @@ export default function Investigation({ visitid, gssuhid, empid }) {
                     </div>
 
                     <DropdownSelect
-                        label="Select Nursing Service*"
-                        options={nursingOptions}
-                        selectedValue={nursingService}
-                        onSelect={(option) => setNursingService(option.label)}
-                        error={errors.nursingService}
-                    />
-                    <DropdownSelect
                         label="Select Doctor Name*"
                         options={doctorOptions}
                         selectedValue={doctorName}
                         onSelect={(option) => setDoctorName(option.label)}
                         error={errors.doctorName}
                     />
+
                     <DropdownSelect
                         label="Investigation Name*"
-                        options={doctorOptions} // Assuming this is the correct source
+                        options={doctorOptions} // Replace if needed
                         selectedValue={itemName}
                         onSelect={(option) => setItemName(option.label)}
                         error={errors.itemName}
@@ -197,9 +233,7 @@ export default function Investigation({ visitid, gssuhid, empid }) {
                                     <TableReuse>{v.remarks}</TableReuse>
                                     <TableReuse>
                                         <div className="flex justify-center space-x-2">
-                                            <button className="text-blue-500 hover:underline">
-                                                Edit
-                                            </button>
+                                            <button className="text-blue-500 hover:underline">Edit</button>
                                             <button
                                                 className="text-red-500 hover:underline"
                                                 onClick={() => setVitals(vitals.filter((_, i) => i !== idx))}
@@ -216,7 +250,6 @@ export default function Investigation({ visitid, gssuhid, empid }) {
             </div>
 
             <hr className="border-t mt-6 mb-2 border-gray-300" />
-
             <div className="flex justify-center ">
                 <SaveButton label="Save" />
             </div>

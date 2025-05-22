@@ -32,8 +32,6 @@ export default function VitalsTable({ title }) {
   });
 
 
-
-
   useEffect(() => {
     loadVitalData();
     setSelectedTime(timeOptions[0]);
@@ -122,8 +120,6 @@ export default function VitalsTable({ title }) {
 
       {/* Inputs */}
       <div className=" flex items-end flex-wrap gap-2">
-
-
         <DateTimeInput
           selectedDate={selectedDate}
           onDateChange={setSelectedDate}
@@ -131,9 +127,6 @@ export default function VitalsTable({ title }) {
           onTimeChange={(e) => setTime(e.target.value)}
           label=" Date & Time"
         />
-
-
-
 
         {[
           { placeholder: "BP", value: bp, setValue: setBp },
@@ -151,7 +144,7 @@ export default function VitalsTable({ title }) {
               type="text"
               value={input.value}
               onChange={(e) => input.setValue(e.target.value)}
-              className={`border rounded w-[40px] text-[9px] h-[18px] px-[2px] py-[1px] focus:outline-none focus:border-blue-500 ${input.value ? "border-blue-500" : "border-gray-300"}`}
+              className={`border rounded w-[35px] text-[9px] h-[18px] px-[2px] py-[1px] focus:outline-none focus:border-blue-500 ${input.value ? "border-blue-500" : "border-gray-300"}`}
             />
           </div>
         ))}

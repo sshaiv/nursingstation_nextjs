@@ -284,9 +284,11 @@ export default function ClinicalExamination({ visitid, gssuhid, empid }) {
                         <ReusableInputField
                             id="painscore"
                             value={painscore}
+                             label="pain score"
                             className='rounded-lg border-2  '
                             onChange={(e) => setPainscore(e.target.value)}
                             width="w-20"
+                           
                         />
                     </div>
                 </div>

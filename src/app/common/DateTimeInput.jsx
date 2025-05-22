@@ -24,7 +24,7 @@ export default function DateTimeInput({ selectedDate, onDateChange, time, onTime
         selected={selectedDate}
         onChange={onDateChange}
         dateFormat="dd-MM-yyyy"
-        className="w-[80px] border-none px-[4px] py-[1px] focus:outline-none"
+        className="w-[52px] border-none px-[3px] py-[1px] focus:outline-none"
     />
     <span className="px-[4px] text-gray-400">|</span>
     <input
@@ -39,3 +39,8 @@ export default function DateTimeInput({ selectedDate, onDateChange, time, onTime
         </div>
     );
 }
+
+
+
+
+
