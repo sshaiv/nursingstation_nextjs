@@ -54,3 +54,6 @@ const useFetchPatientHistory = (visitid, gssuhid, empid) => {
 };
 
 export default useFetchPatientHistory;
+
+
+

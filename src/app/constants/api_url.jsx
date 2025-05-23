@@ -6,13 +6,16 @@ const BASE_URL = "https://doctorapi.medonext.com/API/HMS";
 
 const API_ENDPOINTS = {
 
-  //for get
-  getAllHeadload :`${BASE_URL}/GetAllHeadload`,
-  getPresentIllness: `${BASE_URL}/getPatHistoryofPresentillness`,
+  //Get Api -
+   getPresentIllness: `${BASE_URL}/getPatHistoryofPresentillness`,
   getMedicalHistory: `${BASE_URL}/getPatMedicalHistory`,
   getSurgicalHistory: `${BASE_URL}/getPatSurgicalHistory`,
   getClinicalExamination:`${BASE_URL}/getPatClinicalExamination`,
-  // Add more as needed
+        //for dropdown Get-
+         getAllHeadload :`${BASE_URL}/GetAllHeadload`,
+         getAllDoctor : `${BASE_URL}/GetAllDoctor`,
+         getPatCons :`${BASE_URL}/GetPatCons`,
+         getAdvPatientBed :`${BASE_URL}/GetAdvPatientBed`,
 
 
 

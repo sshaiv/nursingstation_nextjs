@@ -13,10 +13,9 @@ import InvestigationModal from './InvestigationModal';
 
 
 
-// ✅ If you have SecondModal component
-
-
 export default function Investigation({ visitid, gssuhid, empid }) {
+
+
     const [showModal, setShowModal] = useState(false);
     const [isDoctorModalOpen, setDoctorModalOpen] = useState(true);
     const [showSecondModal, setShowSecondModal] = useState(false);
@@ -45,20 +44,20 @@ export default function Investigation({ visitid, gssuhid, empid }) {
     const [doctorOptions, setDoctorOptions] = useState([]);
     const [performedByUsers, setPerformedByUsers] = useState([]);
 
-   
+
 
     const handleSelectDoctor = (doctorId) => {
-    console.log('Doctor selected in modal:', doctorId);
+        console.log('Doctor selected in modal:', doctorId);
 
-    const selectedDoctor = doctorOptions.find(doc => doc.value === doctorId);
-    if (selectedDoctor) {
-        setDoctorData(selectedDoctor); 
-    }
+        const selectedDoctor = doctorOptions.find(doc => doc.value === doctorId);
+        if (selectedDoctor) {
+            setDoctorData(selectedDoctor);
+        }
 
-    setSelectedDoctorId(doctorId);
-    setShowSecondModal(true);
-    setDoctorModalOpen(false);
-};
+        setSelectedDoctorId(doctorId);
+        setShowSecondModal(true);
+        setDoctorModalOpen(false);
+    };
 
     const validateForm = () => {
         const newErrors = {};
@@ -112,34 +111,14 @@ export default function Investigation({ visitid, gssuhid, empid }) {
         setRemarks("");
         setIsEmergency(false);
     };
+const [selectedServices, setSelectedServices] = useState([]);
 
-    useEffect(() => {
-        const fetchOptions = async () => {
-            try {
-                const [nursingResponse, doctorResponse, performedByResponse] = await Promise.all([
-                    axios.get(API_ENDPOINTS.getAllHeadload),
-                    axios.get(API_ENDPOINTS.getAllHeadload),
-                    axios.get(API_ENDPOINTS.getAllHeadload),
-                ]);
+  const handleSelectServices = (selectedIds) => {
+  console.log("modal m aa gy CIDs/ServIDs:", selectedIds);
+  setSelectedServices(selectedIds);
+  setShowSecondModal(false);
+};
 
-                const parseData = (data) => {
-                    const parsedData = JSON.parse(data);
-                    return parsedData.Table.map(item => ({
-                        label: item.CNAME,
-                        value: item.CID,
-                    }));
-                };
-
-                setNursingOptions(parseData(nursingResponse.data));
-                setDoctorOptions(parseData(doctorResponse.data));
-                setPerformedByUsers(parseData(performedByResponse.data));
-            } catch (error) {
-                console.error("Error fetching dropdown data:", error);
-            }
-        };
-
-        fetchOptions();
-    }, []);
 
     return (
         <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
@@ -155,12 +134,16 @@ export default function Investigation({ visitid, gssuhid, empid }) {
                     isOpen={isDoctorModalOpen}
                     onClose={() => setDoctorModalOpen(false)}
                     onSelectDoctor={handleSelectDoctor}
+                    visitid={visitid}
+                    gssuhid={gssuhid}
+                    empid={empid}
                 />
             )}
 
             {showSecondModal && (
                 <InvestigationModal
                     isOpen={showSecondModal}
+                    onSelect={handleSelectServices}
                     onClose={() => setShowSecondModal(false)}
                     doctorData={doctorData}
                 />
@@ -181,21 +164,25 @@ export default function Investigation({ visitid, gssuhid, empid }) {
                         )}
                     </div>
 
-                    <DropdownSelect
-                        label="Select Doctor Name*"
-                        options={doctorOptions}
-                        selectedValue={doctorName}
-                        onSelect={(option) => setDoctorName(option.label)}
-                        error={errors.doctorName}
-                    />
 
-                    <DropdownSelect
-                        label="Investigation Name*"
-                        options={doctorOptions} // Replace if needed
-                        selectedValue={itemName}
-                        onSelect={(option) => setItemName(option.label)}
-                        error={errors.itemName}
-                    />
+
+                    <div className="flex flex-col w-full">
+                        <label className="text-xs font-medium mb-1">Select Doctor Name*</label>
+                        <input
+                            type="text"
+                            readOnly
+                            value={doctorData?.label || ""}
+                            onClick={() => setDoctorModalOpen(true)}
+                            className={`cursor-pointer border px-2 py-1 rounded-md text-sm bg-gray-100 hover:bg-gray-200 focus:outline-none ${errors.doctorName ? 'border-red-500' : 'border-gray-300'
+                                }`}
+                            placeholder=" select doctor"
+                        />
+                        {errors.doctorName && (
+                            <p className="text-red-500 text-[10px] mt-[2px] ml-[2px]">{errors.doctorName}</p>
+                        )}
+                    </div>
+
+
 
                     <ReusableInputField
                         className="border-2 rounded-lg"
@@ -219,7 +206,8 @@ export default function Investigation({ visitid, gssuhid, empid }) {
                             <tr>
                                 <TableReuse type="th">Date/Time</TableReuse>
                                 <TableReuse type="th">Doctor Name</TableReuse>
-                                <TableReuse type="th">Investigation Name</TableReuse>
+                                <TableReuse type="th">Investigation</TableReuse>
+
                                 <TableReuse type="th">Remarks</TableReuse>
                                 <TableReuse type="th">Actions</TableReuse>
                             </tr>
@@ -229,7 +217,8 @@ export default function Investigation({ visitid, gssuhid, empid }) {
                                 <tr key={idx} className="hover:bg-gray-100 border-t">
                                     <TableReuse>{v.date}</TableReuse>
                                     <TableReuse>{v.doctorName}</TableReuse>
-                                    <TableReuse>{v.itemName}</TableReuse>
+                                    <TableReuse>{v.investigation}</TableReuse>
+
                                     <TableReuse>{v.remarks}</TableReuse>
                                     <TableReuse>
                                         <div className="flex justify-center space-x-2">
@@ -256,3 +245,9 @@ export default function Investigation({ visitid, gssuhid, empid }) {
         </div>
     );
 }
+
+
+
+
+
+

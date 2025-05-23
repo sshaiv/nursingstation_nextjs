@@ -4,8 +4,11 @@
 import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 import DateTimeInput from '../common/DateTimeInput';
+import API_ENDPOINTS from '../constants/api_url';
 
-export default function DoctorModal({ isOpen, onClose, onSelectDoctor }) {
+export default function DoctorModal({ isOpen, onClose, onSelectDoctor ,visitid,gssuhid,empid}) {
+    console.log("doc pop",visitid,gssuhid,empid);
+    
     const [selectedDoctor, setSelectedDoctor] = useState('');
     const [doctorList, setDoctorList] = useState([]);
     const [patConsDoctors, setPatConsDoctors] = useState([]);
@@ -16,9 +19,9 @@ export default function DoctorModal({ isOpen, onClose, onSelectDoctor }) {
     useEffect(() => {
         const fetchDoctors = async () => {
             try {
-                const res = await fetch('https://doctorapi.medonext.com/api/HMS/GetAllDoctor');
+                const res = await fetch(API_ENDPOINTS.getAllDoctor);
                 const json = await res.json();
-                const parsed = JSON.parse(json); // Because response is a stringified JSON
+                const parsed = JSON.parse(json); 
                 setDoctorList(parsed.Table || []);
             } catch (error) {
                 console.error('Error fetching doctors:', error);
@@ -27,8 +30,8 @@ export default function DoctorModal({ isOpen, onClose, onSelectDoctor }) {
 
         const fetchPatConsDoctors = async () => {
             try {
-                const visitId = "SNI24250000679";
-                const res = await fetch(`https://doctorapi.medonext.com/api/HMS/GetPatCons?visitid=${visitId}`);
+                const visitId = visitid;
+                const res = await fetch(`${API_ENDPOINTS.getPatCons}?visitid=${visitId}`);
                 const data = await res.json();
                 const parsedData = typeof data === 'string' ? JSON.parse(data) : data;
 

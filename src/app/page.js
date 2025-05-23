@@ -11,7 +11,6 @@ import NotesBox from "./components/NotesBox";
 import Header from "./components/Header";
 import useVisitParams from "./hooks/useVisitParams";
 import useFetchPatientHistory from "./hooks/fetchHistoryData";
-import DoctorModal from "./components/DoctorModal";
 
 function HomeContent() {
   const { visitid, gssuhid, empid } = useVisitParams();
@@ -82,8 +81,10 @@ function HomeContent() {
 export default function Page() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <HomeContent />
-      <DoctorModal/>
+      <HomeContent />     
     </Suspense>
   );
 }
+
+
+

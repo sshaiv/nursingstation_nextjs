@@ -84,7 +84,9 @@ export default function ButtonGrid({ visitid, gssuhid, empid }) {
 
     return (
         <div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-1 gap-3">
+           
+          <div className="w-full max-w-xl mx-auto grid grid-cols-2 md:grid-cols-2 lg:grid-cols-1 gap-3 px-2">
+
                 {buttons.map((button, index) => (
                     <div
                         key={index}
