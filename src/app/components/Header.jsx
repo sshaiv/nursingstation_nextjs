@@ -1,42 +1,55 @@
-
-
-
 "use client";
-
 import { useState, useEffect, useRef } from "react";
 import API_ENDPOINTS from "../constants/api_url";
+import { useRouter } from "next/navigation";
 
-export default function Header({ onVisitIdScanned }) {
+export default function Header() {
   const [showScanner, setShowScanner] = useState(false);
   const html5QrCodeRef = useRef(null);
   const [loading, setLoading] = useState(false);
+  const router = useRouter(); 
 
 
 const fetchPatientBed = async (visitId) => {
-  const cleanedVisitId = visitId.trim(); // ✅ REMOVE extra whitespace or newline
-  console.log(cleanedVisitId);
-  
-  setLoading(true);
-  try {
-    const response = await fetch
-    // (
-    //   `https://doctorapi.medonext.com/api/HMS/GetAdvPatientBed?visitid=${encodeURIComponent(cleanedVisitId)}`
-    // );
-    (`${API_ENDPOINTS.getAdvPatientBed}?visitid=${encodeURIComponent(cleanedVisitId)}`)
-    const data = await response.json();
+    const cleanedVisitId = visitId.trim();
+    console.log("Cleaned visitId:", `"${cleanedVisitId}"`);
 
-    if (response.ok) {
-      console.log("QR Code - Data:", data);
-      if (onVisitIdScanned) onVisitIdScanned(data);
-    } else {
-      alert(`API Error: ${data.message || "Unknown error"}`);
+    setLoading(true);
+    try {
+        const response = await fetch(
+            `${API_ENDPOINTS.getAdvPatientBed}/?visitid=${encodeURIComponent(cleanedVisitId)}`
+        );
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        let data = await response.json();
+
+        if (typeof data === "string") {
+            data = JSON.parse(data);
+        }
+
+        console.log("API response data:", data);
+
+        if (Array.isArray(data) && data.length > 0) {
+            const patient = data[0];
+            // Navigate to nursingstation page with query params
+            router.push(
+                `/nursingstation/?visitid=${encodeURIComponent(patient.visitid)}&gssuhid=${encodeURIComponent(patient.gssuhid)}&empid=${encodeURIComponent(patient.empid)}`
+            );
+
+            
+        } else {
+            alert("No patient data found.");
+        }
+    } catch (error) {
+        console.error("Error fetching patient bed info:", error);
+        alert("Failed to fetch patient bed info: " + error.message);
+    } finally {
+        setLoading(false);
+        setShowScanner(false);
     }
-  } catch (error) {
-    alert("Failed to fetch patient bed info: " + error.message);
-  } finally {
-    setLoading(false);
-    setShowScanner(false);
-  }
 };
 
 
@@ -125,3 +138,6 @@ const fetchPatientBed = async (visitId) => {
     </div>
   );
 }
+
+
+

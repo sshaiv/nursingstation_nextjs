@@ -1,7 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
 import PatientInfoCard from "../components/PatientInfoCard";
 import Header from "../components/Header";
 import VitalsTable from "../components/VitalsTable";
@@ -10,26 +9,25 @@ import NotesBox from "../components/NotesBox";
 import MedicineTable from "../components/MedicineTable";
 import ButtonGrid from "../components/SidebarButtons";
 
-export default function NursingStationPage() {
- const searchParams = useSearchParams();
-const [visitid, setVisitid] = useState(null);
-const [gssuhid, setGssuhid] = useState(null);
-const [empid, setEmpid] = useState(null);
+function NursingStationContent() {
+  const searchParams = useSearchParams();
+  const [visitid, setVisitid] = useState(null);
+  const [gssuhid, setGssuhid] = useState(null);
+  const [empid, setEmpid] = useState(null);
 
-useEffect(() => {
-  const v = searchParams.get("visitid");
-  const g = searchParams.get("gssuhid");
-  const e = searchParams.get("empid");
+  useEffect(() => {
+    const v = searchParams.get("visitid");
+    const g = searchParams.get("gssuhid");
+    const e = searchParams.get("empid");
 
-  console.log("visitid yhn:", v);
-  console.log("gssuhid yhn:", g);
-  console.log("empid yhn:", e);
+    console.log("visitid yhn:", v);
+    console.log("gssuhid yhn:", g);
+    console.log("empid yhn:", e);
 
-  setVisitid(v);
-  setGssuhid(g);
-  setEmpid(e);
-}, [searchParams]);
-
+    setVisitid(v);
+    setGssuhid(g);
+    setEmpid(e);
+  }, [searchParams]);
 
   return (
     <div className="p-4 space-y-4">
@@ -69,6 +67,10 @@ useEffect(() => {
   );
 }
 
-
-
-
+export default function nursingstation() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <NursingStationContent />
+    </Suspense>
+  );
+}

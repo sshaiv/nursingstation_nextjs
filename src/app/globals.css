@@ -43,3 +43,14 @@ body {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+/* Completely hide the black N icon (Next.js overlay indicator) */
+[data-nextjs-dev-overlay] {
+  display: none !important;
+}
+
+#__next-build-watcher,
+#__next-route-announcer {
+  display: none !important;
+}
+
+
