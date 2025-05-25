@@ -192,7 +192,7 @@ function NursingStationContent() {
   }, [searchParams]);
 
   return (
-    <div className="p-4 space-y-4">
+    <div className="p-4 space-y-4 bg-gray-50">
       <NurHeader />
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="md:col-span-3 space-y-4">
