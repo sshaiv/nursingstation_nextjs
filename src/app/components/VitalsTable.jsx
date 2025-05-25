@@ -114,7 +114,7 @@ export default function VitalsTable({ title }) {
   return (
     <div className="bg-gray-50 border border-gray-300 shadow rounded-2xl p-2">
       <div className="flex justify-between items-center mb-1">
-        <MainHeadings title={title} />
+        <MainHeadings title={title} icon="🩺" />
         <ActionButton label="Insert" onClick={handleSave} />
       </div>
 

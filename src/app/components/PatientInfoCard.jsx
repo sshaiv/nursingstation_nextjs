@@ -35,10 +35,19 @@ export default function PatientInfoCard({
 
       {/* Basic Info */}
       <div className="grid grid-cols-2 gap-2 ">
-        <LineItem icon={<FaBed className="text-brown-500" />} label="Bed No" value={bedNo} />
-        <LineItem icon={<FaUserMd className="text-blue-500" />} label="Primary Dr." value={doctor} />
-        <LineItem icon={<FaMoneyBill className="text-blue-900" />} label="Billing Group" value={billingGroup} />
-        <LineItem icon={<FaPhone className="text-purple-900" />} label="Phone" value={phone} />
+        <LineItem 
+        icon="🛏️"
+       
+        label="Bed No" value={bedNo} />
+        <LineItem
+        icon="👨‍⚕️" 
+         label="Primary Dr." value={doctor} />
+        <LineItem
+         icon="📝"
+          label="Billing Group" value={billingGroup} />
+        <LineItem
+         icon="📞"
+          label="Phone" value={phone} />
       </div>
 
       <hr className="border-t border-white" />

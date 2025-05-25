@@ -24,14 +24,14 @@ export default function DateTimeInput({ selectedDate, onDateChange, time, onTime
         selected={selectedDate}
         onChange={onDateChange}
         dateFormat="dd-MM-yyyy"
-        className="w-[52px] border-none px-[3px] py-[1px] focus:outline-none"
+        className="w-[52px] text-black border-none px-[3px] py-[1px] focus:outline-none"
     />
     <span className="px-[4px] text-gray-400">|</span>
     <input
         type="time"
         value={time}
         onChange={onTimeChange}
-        className="w-[75px] border-none px-[4px] py-[1px] focus:outline-none"
+        className="w-[75px] text-black border-none px-[4px] py-[1px] focus:outline-none"
         required
     />
 </div>
