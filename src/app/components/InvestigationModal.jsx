@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { H3, Label } from "../common/text";
 
 export default function InvestigationModal({isOpen, onClose, doctorData, onSelect }) {
   const [visitThrough, setVisitThrough] = useState("Visit");
@@ -91,7 +92,8 @@ export default function InvestigationModal({isOpen, onClose, doctorData, onSelec
 
         <div className="my-2 space-y-2">
           <div className="flex items-center space-x-3">
-            <span className="font-semibold">Visit Through:</span>
+            
+            <span className="font-semibold text-black">Visit Through:</span>
             <label className="flex items-center space-x-1">
               <input
                 type="radio"
@@ -99,7 +101,9 @@ export default function InvestigationModal({isOpen, onClose, doctorData, onSelec
                 checked={visitThrough === "Visit"}
                 onChange={() => setVisitThrough("Visit")}
               />
-              <span>Visit</span>
+             
+              <H3>Visit</H3>
+              
             </label>
             <label className="flex items-center space-x-1">
               <input
@@ -108,7 +112,8 @@ export default function InvestigationModal({isOpen, onClose, doctorData, onSelec
                 checked={visitThrough === "Verbal"}
                 onChange={() => setVisitThrough("Verbal")}
               />
-              <span>Verbal</span>
+              
+              <H3>Verbal</H3>
             </label>
           </div>
 
@@ -122,7 +127,8 @@ export default function InvestigationModal({isOpen, onClose, doctorData, onSelec
                   checked={tab === "COMMON"}
                   onChange={() => setTab("COMMON")}
                 />
-                <span className="ml-1 text-xs">COMMON</span>
+                
+                <span className="ml-1 text-xs text-black">COMMON</span>
               </label>
               <label className="font-semibold">
                 <input
@@ -132,7 +138,7 @@ export default function InvestigationModal({isOpen, onClose, doctorData, onSelec
                   checked={tab === "ALL"}
                   onChange={() => setTab("ALL")}
                 />
-                <span className="ml-1 text-xs">ALL INVESTIGATIONS</span>
+                <span className="ml-1 text-xs text-black">ALL INVESTIGATIONS</span>
               </label>
             </div>
             <input
@@ -175,7 +181,7 @@ export default function InvestigationModal({isOpen, onClose, doctorData, onSelec
                             }}
                           />
                         </td>
-                        <td className="text-xs">
+                        <td className="text-xs text-black">
                           {item.servname} {item.CName}
                         </td>
                       </tr>
@@ -183,7 +189,7 @@ export default function InvestigationModal({isOpen, onClose, doctorData, onSelec
                   })
                 ) : (
                   <tr>
-                    <td colSpan={2} className="text-center py-4 text-xs">
+                    <td colSpan={2} className="text-center text-red-400 py-4 text-xs">
                       No investigations found.
                     </td>
                   </tr>

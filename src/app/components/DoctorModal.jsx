@@ -143,8 +143,8 @@ export default function DoctorModal({ isOpen, onClose, onSelectDoctor ,visitid,g
                         <tbody>
                             {Array.isArray(patConsDoctors) && patConsDoctors.length > 0 ? (
                                 patConsDoctors.map((doc) => (
-                                    <tr key={doc.CID} className="border-t">
-                                        <td className="px-2 py-[2px]">
+                                    <tr key={doc.CID} className="border-t text-black">
+                                        <td className="px-2 py-[2px] text-black">
                                             <input
                                                 type="radio"
                                                 name="doctor"
