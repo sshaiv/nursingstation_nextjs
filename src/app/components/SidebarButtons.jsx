@@ -31,6 +31,8 @@ const buttons = [
 ];
 
 export default function ButtonGrid({ visitid, gssuhid, empid }) {
+    // console.log("btn m",visitid,gssuhid,empid);
+    
     const [showModal, setShowModal] = useState(false);
     const [modalContent, setModalContent] = useState(null);
 

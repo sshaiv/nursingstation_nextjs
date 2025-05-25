@@ -60,7 +60,7 @@ function NursingStationContent() {
           <MedicineTable />
         </div>
         <div>
-          <ButtonGrid />
+          <ButtonGrid visitid={visitid} gssuhid={gssuhid} empid={empid}/>
         </div>
       </div>
     </div>
