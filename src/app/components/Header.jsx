@@ -104,12 +104,29 @@ const fetchPatientBed = async (visitId) => {
 
   return (
     <div className="flex items-center border-2 border-cyan-500 h-14 justify-between bg-gradient-to-r from-cyan-700 via-cyan-800 to-cyan-900 shadow-xl rounded-lg">
-      <img
+      {/* <img
         src="/scan.png"
         alt="Scan"
         className="w-8 h-8 cursor-pointer"
         onClick={() => setShowScanner(true)}
-      />
+      /> */}
+
+      <div className="relative flex items-center cursor-pointer" onClick={() => setShowScanner(true)}>
+  <img
+    src="/scan.png"
+    alt="Scan"
+    className="w-8 h-8 animate- hover:scale-110 transition-transform duration-300"
+  />
+  <span
+    className="absolute -right-2 top-3 animate-ping"
+    style={{ fontSize: "0.75rem" }}
+    aria-label="pointing hand"
+    role="img"
+  >
+    ❮❮
+  </span>
+</div>
+
       <div className="flex items-center gap-2">
         <img
           src="/nurse.jpeg"
