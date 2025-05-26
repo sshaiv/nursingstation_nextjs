@@ -30,8 +30,8 @@ const buttons = [
     { label: "Investigation", color: "#48BCD1", shadow: "#359EB0", icon: GiFizzingFlask },
 ];
 
-export default function ButtonGrid({ visitid, gssuhid, empid }) {
-    // console.log("btn m",visitid,gssuhid,empid);
+export default function ButtonGrid({ visitid, gssuhid, empid ,patientData}) {
+    // console.log("btn m",patientData.Age);
     
     const [showModal, setShowModal] = useState(false);
     const [modalContent, setModalContent] = useState(null);
@@ -66,7 +66,7 @@ export default function ButtonGrid({ visitid, gssuhid, empid }) {
             setShowModal(true);
         }
         else if (label === "Investigation") {
-            setModalContent(<Investigation visitid={visitid} gssuhid={gssuhid} empid={empid} />);
+            setModalContent(<Investigation visitid={visitid} gssuhid={gssuhid} empid={empid} patientData={patientData}/>);
             setShowModal(true);
         }
         else if (label === "Nutritional Assessment") {

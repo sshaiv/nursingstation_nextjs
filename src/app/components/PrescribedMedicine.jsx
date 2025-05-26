@@ -1,29 +1,32 @@
+
+
+
 import React, { useState, useEffect, useRef } from 'react';
 import TableReuse from '../common/TableReuse';
 import { ActionButton } from '../common/Buttons';
 import { H3, Label } from '../common/text';
-import ReactDatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import DateTimeInput from '../common/DateTimeInput';
 import { format } from "date-fns";
 
 const CurrentMedicines = () => {
     const [medicine, setMedicine] = useState('');
-    const [date, setDate] = useState(new Date());
+    const [selectedDate, setSelectedDate] = useState(new Date());
     const [time, setTime] = useState('');
     const [vitals, setVitals] = useState([]);
-    const [selectedDate, setSelectedDate] = useState(new Date());
     const [medicineOptions, setMedicineOptions] = useState(['Aspirin', 'Ibuprofen', 'Paracetamol', 'Amoxicillin', 'Metformin']);
     const [filteredOptions, setFilteredOptions] = useState([]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
 
     useEffect(() => {
-        // Set the current time as default
-        const now = new Date();
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        setTime(`${hours}:${minutes}`);
-    }, []);
+        // Set the current time as default if empty
+        if (!time) {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            setTime(`${hours}:${minutes}`);
+        }
+    }, [time]);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -40,10 +43,8 @@ const CurrentMedicines = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Add the new entry to vitals
         setVitals([...vitals, { medicine, date: format(selectedDate, 'dd-MM-yyyy'), time }]);
         console.log('Submitted:', { medicine, date: format(selectedDate, 'dd-MM-yyyy'), time });
-        // Reset the form fields
         setMedicine('');
         setSelectedDate(new Date());
         setTime('');
@@ -95,7 +96,7 @@ const CurrentMedicines = () => {
                                     <div
                                         key={index}
                                         onClick={() => handleOptionClick(option)}
-                                        className="p-2 hover:bg-gray-200 cursor -pointer"
+                                        className="p-2 hover:bg-gray-200 cursor-pointer"
                                     >
                                         {option}
                                     </div>
@@ -104,25 +105,17 @@ const CurrentMedicines = () => {
                         )}
                     </div>
                 </div>
+
                 <div className="flex-1">
-                    <Label htmlFor="date">Date</Label>
-                    <ReactDatePicker
-                        selected={selectedDate}
-                        onChange={(date) => setSelectedDate(date)}
-                        dateFormat="dd-MM-yyyy"
-                        className="peer border rounded w-full text-[12px] h-10 mr-2 pl-2 focus:outline-none focus:border-blue-500"
+                    <Label>Date & Time</Label>
+                    <DateTimeInput
+                        selectedDate={selectedDate}
+                        onDateChange={setSelectedDate}
+                        time={time}
+                        onTimeChange={(e) => setTime(e.target.value)}
                     />
                 </div>
-                <div className="flex-1">
-                    <Label htmlFor="time">Time</Label>
-                    <input
-                        type="time"
-                        value={time}
-                        onChange={(e) => setTime(e.target.value)}
-                        className="mt-1 block w-full border border-gray-300 rounded-md p-1 text-sm"
-                        required
-                    />
-                </div>
+
                 <ActionButton label="Insert" />
             </form>
 
@@ -151,5 +144,3 @@ const CurrentMedicines = () => {
 };
 
 export default CurrentMedicines;
-
-

@@ -4,19 +4,14 @@ import { ActionButton, SaveButton } from '../common/Buttons';
 import TableReuse from '../common/TableReuse';
 import "react-datepicker/dist/react-datepicker.css";
 import DateTimeInput from '../common/DateTimeInput';
-import axios from "axios";
-import API_ENDPOINTS from '../constants/api_url';
-import DropdownSelect from '../common/DropdownSelect';
 import ReusableInputField from '../common/SmallInputfields';
 import DoctorModal from './DoctorModal';
 import InvestigationModal from './InvestigationModal';
 
 
 
-export default function Investigation({ visitid, gssuhid, empid }) {
+export default function Investigation({ visitid, gssuhid, empid ,patientData}) {
 
-
-    const [showModal, setShowModal] = useState(false);
     const [isDoctorModalOpen, setDoctorModalOpen] = useState(true);
     const [showSecondModal, setShowSecondModal] = useState(false);
     const [doctorData, setDoctorData] = useState(null);
@@ -39,25 +34,45 @@ export default function Investigation({ visitid, gssuhid, empid }) {
     const [issueQty, setIssueQty] = useState("");
     const [remarks, setRemarks] = useState("");
     const [isEmergency, setIsEmergency] = useState(false);
-
-    const [nursingOptions, setNursingOptions] = useState([]);
     const [doctorOptions, setDoctorOptions] = useState([]);
-    const [performedByUsers, setPerformedByUsers] = useState([]);
 
 
+const handleSelectDoctor = (doctor) => {
+  console.log('Doctor in inv:', doctor);
 
-    const handleSelectDoctor = (doctorId) => {
-        console.log('Doctor selected in modal:', doctorId);
+  let selectedDoc = doctor;
 
-        const selectedDoctor = doctorOptions.find(doc => doc.value === doctorId);
-        if (selectedDoctor) {
-            setDoctorData(selectedDoctor);
-        }
+  // If only ID was passed (e.g., from radio selection), find the full doctor object
+  if (typeof doctor === 'string') {
+    selectedDoc = doctorOptions.find(doc => doc.value === doctor);
+  }
 
-        setSelectedDoctorId(doctorId);
-        setShowSecondModal(true);
-        setDoctorModalOpen(false);
-    };
+  console.log("cvbnm", selectedDoc);
+
+  if (selectedDoc) {
+    setDoctorData(selectedDoc);
+    setDoctorName(selectedDoc.label || selectedDoc.CName);
+  }
+
+  setSelectedDoctorId(selectedDoc?.value || doctor);
+  setShowSecondModal(true);
+  setDoctorModalOpen(false);
+};
+
+
+    // const handleSelectDoctor = (doctorId) => {
+    //     console.log('Doctor in inv:', doctorId);
+
+    //     const selectedDoctor = doctorOptions.find(doc => doc.value === doctorId);
+    //     if (selectedDoctor) {
+    //         setDoctorData(selectedDoctor);
+    //     }
+
+    //     setSelectedDoctorId(doctorId);
+    //     setShowSecondModal(true);
+    //     setDoctorModalOpen(false);
+    // };
+
 
     const validateForm = () => {
         const newErrors = {};
@@ -114,7 +129,7 @@ export default function Investigation({ visitid, gssuhid, empid }) {
 const [selectedServices, setSelectedServices] = useState([]);
 
   const handleSelectServices = (selectedIds) => {
-  console.log("modal m aa gy CIDs/ServIDs:", selectedIds);
+  console.log("inv in inv", selectedIds);
   setSelectedServices(selectedIds);
   setShowSecondModal(false);
 };
@@ -145,7 +160,8 @@ const [selectedServices, setSelectedServices] = useState([]);
                     isOpen={showSecondModal}
                     onSelect={handleSelectServices}
                     onClose={() => setShowSecondModal(false)}
-                    doctorData={doctorData}
+                    doctorId={selectedDoctorId}                
+                    patientData={patientData}
                 />
             )}
 
@@ -171,7 +187,7 @@ const [selectedServices, setSelectedServices] = useState([]);
                         <input
                             type="text"
                             readOnly
-                            value={doctorData?.label || ""}
+                            value={doctorName}
                             onClick={() => setDoctorModalOpen(true)}
                             className={`cursor-pointer border px-2 py-1 rounded-md text-sm bg-gray-100 hover:bg-gray-200 focus:outline-none ${errors.doctorName ? 'border-red-500' : 'border-gray-300'
                                 }`}

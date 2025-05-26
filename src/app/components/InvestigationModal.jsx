@@ -2,8 +2,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { H3, Label } from "../common/text";
+import API_ENDPOINTS from "../constants/api_url";
 
-export default function InvestigationModal({isOpen, onClose, doctorData, onSelect }) {
+export default function InvestigationModal({isOpen, onClose, doctorId, onSelect ,patientData}) {
+  console.log("docfst",doctorId?.CID);
+
+
+  
   const [visitThrough, setVisitThrough] = useState("Visit");
   const [tab, setTab] = useState("COMMON");
   const [investigations, setInvestigations] = useState([]);
@@ -17,16 +22,18 @@ export default function InvestigationModal({isOpen, onClose, doctorData, onSelec
 
     if (tab === "COMMON") {
       url =
-        "https://doctorapi.medonext.com/api/HMS/GetDoctorFavInv?doctorid=26&wardcatgid=2&wardtypeid=5&tariffid=1&billgrpid=1&isshowservicewithhospcode=0&isshowservicewithcharges=1";
+      `${API_ENDPOINTS.getDoctorFavInv}?doctorid=${doctorId?.CID}&wardcatgid=${patientData.reqwardcatgid}&wardtypeid=${patientData.wardtypeid}&tariffid=${patientData.terriffid}&billgrpid=${patientData.billgrpid}&isshowservicewithhospcode=0&isshowservicewithcharges=1`
+    
     } else if (tab === "ALL") {
       url =
-        "https://doctorapi.medonext.com/api/HMS/GetAllInv?visitid=SNI24250000679&wardcatgid=2&wardtypeid=5&tariffid=1&billgrpid=1&isshowservicewithhospcode=0&isshowservicewithcharges=1";
-    }
+            `${API_ENDPOINTS.getAllInv}?visitid=${patientData.visitid}&wardcatgid=${patientData.reqwardcatgid}&wardtypeid=${patientData.wardtypeid}&tariffid=${patientData.terriffid}&billgrpid=${patientData.billgrpid}&isshowservicewithhospcode=0&isshowservicewithcharges=1`
+         }
 
     axios
       .get(url)
       .then((res) => {
         let parsedData = [];
+
 
         try {
           if (typeof res.data === "string") {

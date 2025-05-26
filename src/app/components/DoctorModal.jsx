@@ -6,9 +6,9 @@ import Select from 'react-select';
 import DateTimeInput from '../common/DateTimeInput';
 import API_ENDPOINTS from '../constants/api_url';
 
-export default function DoctorModal({ isOpen, onClose, onSelectDoctor ,visitid,gssuhid,empid}) {
-    console.log("doc pop",visitid,gssuhid,empid);
-    
+export default function DoctorModal({ isOpen, onClose, onSelectDoctor, visitid, gssuhid, empid }) {
+    console.log("doc pop", visitid, gssuhid, empid);
+
     const [selectedDoctor, setSelectedDoctor] = useState('');
     const [doctorList, setDoctorList] = useState([]);
     const [patConsDoctors, setPatConsDoctors] = useState([]);
@@ -21,7 +21,7 @@ export default function DoctorModal({ isOpen, onClose, onSelectDoctor ,visitid,g
             try {
                 const res = await fetch(API_ENDPOINTS.getAllDoctor);
                 const json = await res.json();
-                const parsed = JSON.parse(json); 
+                const parsed = JSON.parse(json);
                 setDoctorList(parsed.Table || []);
             } catch (error) {
                 console.error('Error fetching doctors:', error);
@@ -30,17 +30,10 @@ export default function DoctorModal({ isOpen, onClose, onSelectDoctor ,visitid,g
 
         const fetchPatConsDoctors = async () => {
             try {
-                const visitId = visitid;
-                const res = await fetch(`${API_ENDPOINTS.getPatCons}?visitid=${visitId}`);
+                const res = await fetch(`${API_ENDPOINTS.getPatCons}?visitid=${visitid}`);
                 const data = await res.json();
                 const parsedData = typeof data === 'string' ? JSON.parse(data) : data;
-
-                if (Array.isArray(parsedData)) {
-                    setPatConsDoctors(parsedData);
-                } else {
-                    setPatConsDoctors([]);
-                    console.warn('Parsed data is not an array:', parsedData);
-                }
+                setPatConsDoctors(Array.isArray(parsedData) ? parsedData : []);
             } catch (error) {
                 console.error('Error fetching patient consultation doctors:', error);
                 setPatConsDoctors([]);
@@ -54,28 +47,35 @@ export default function DoctorModal({ isOpen, onClose, onSelectDoctor ,visitid,g
     }, [isOpen]);
 
     const handleOkClick = () => {
-        // If dropdown doctor selected, prioritize that
-        const doctorToSend = selectedDoctor || selectedRadio;
-
-
+        let doctorToSend = null;
+        if (selectedDoctor) {
+            const selectedDocObj = doctorList.find((doc) => doc.CID === selectedDoctor);
+            if (selectedDocObj) {
+                doctorToSend = {
+                    CID: selectedDocObj.CID,
+                    CName: selectedDocObj.CName
+                };
+            }
+        } else if (selectedRadio) {
+            const selectedDocObj = patConsDoctors.find((doc) => doc.CID === selectedRadio);
+            if (selectedDocObj) {
+                doctorToSend = {
+                    CID: selectedDocObj.CID,
+                    CName: selectedDocObj.CName
+                };
+            }
+        }
         if (!doctorToSend) {
             alert('Please select a doctor either from dropdown or radio list.');
             return;
         }
-
         console.log('Selected doctor to send:', doctorToSend);
-
-        // Pass selected doctor to parent or handler
         if (onSelectDoctor) {
             onSelectDoctor(doctorToSend);
         }
-
-        // Optionally close modal here or let parent control it
         onClose();
     };
-
     if (!isOpen) return null;
-
     const options = doctorList.map((doc) => ({
         value: doc.CID,
         label: doc.CName,
@@ -101,7 +101,15 @@ export default function DoctorModal({ isOpen, onClose, onSelectDoctor ,visitid,g
                     <div className="flex gap-1">
                         <Select
                             options={options}
-                            onChange={(selectedOption) => setSelectedDoctor(selectedOption?.value || '')}
+                            onChange={(selectedOption) => {
+                                setSelectedDoctor(selectedOption?.value || '');
+                                if (onSelectDoctor && selectedOption) {
+                                    onSelectDoctor({
+                                        CID: selectedOption.value,
+                                        CName: selectedOption.label
+                                    });
+                                }
+                            }}
                             placeholder="Select Doctor"
                             className="w-full text-[7px]"
                             styles={{
@@ -129,7 +137,6 @@ export default function DoctorModal({ isOpen, onClose, onSelectDoctor ,visitid,g
                     </div>
                 </div>
 
-                {/* Table now uses patConsDoctors from API */}
                 <div className="mt-3 overflow-x-auto text-[11px]">
                     <table className="min-w-full border text-left">
                         <thead className="bg-blue-800 text-white text-[11px]">
@@ -138,8 +145,6 @@ export default function DoctorModal({ isOpen, onClose, onSelectDoctor ,visitid,g
                                 <th className="py-1 px-2">Doctor Name</th>
                             </tr>
                         </thead>
-
-
                         <tbody>
                             {Array.isArray(patConsDoctors) && patConsDoctors.length > 0 ? (
                                 patConsDoctors.map((doc) => (
@@ -151,14 +156,12 @@ export default function DoctorModal({ isOpen, onClose, onSelectDoctor ,visitid,g
                                                 checked={selectedRadio === doc.CID}
                                                 onChange={() => {
                                                     setSelectedRadio(doc.CID);
-                                                    console.log('Selected CID from radio:', doc.CID);
-
-                                                    // Directly send selected doctor on radio select
                                                     if (onSelectDoctor) {
-                                                        onSelectDoctor(doc.CID);
+                                                        onSelectDoctor({
+                                                            CID: doc.CID,
+                                                            CName: doc.CName
+                                                        });
                                                     }
-
-                                                  
                                                 }}
                                             />
                                         </td>
@@ -173,7 +176,6 @@ export default function DoctorModal({ isOpen, onClose, onSelectDoctor ,visitid,g
                                 </tr>
                             )}
                         </tbody>
-
                     </table>
                 </div>
 

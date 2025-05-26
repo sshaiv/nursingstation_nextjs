@@ -36,8 +36,7 @@ export default function PatientInfoCard({
       {/* Basic Info */}
       <div className="grid grid-cols-2 gap-2 ">
         <LineItem 
-        icon="🛏️"
-       
+        icon="🛏️"       
         label="Bed No" value={bedNo} />
         <LineItem
         icon="👨‍⚕️" 

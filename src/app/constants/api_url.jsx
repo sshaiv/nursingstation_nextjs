@@ -2,7 +2,7 @@
 
 
 // apiEndpoints.js
-const BASE_URL = "https://doctorapi.medonext.com/API/HMS";
+const BASE_URL = "https://doctorapi.medonext.com/api/HMS";
 
 const API_ENDPOINTS = {
 
@@ -16,6 +16,8 @@ const API_ENDPOINTS = {
          getAllDoctor : `${BASE_URL}/GetAllDoctor`,
          getPatCons :`${BASE_URL}/GetPatCons`,
          getAdvPatientBed :`${BASE_URL}/GetAdvPatientBed`,
+         getDoctorFavInv :`${BASE_URL}/GetDoctorFavInv`,
+         getAllInv :`${BASE_URL}/GetAllInv`,
 
 
 
