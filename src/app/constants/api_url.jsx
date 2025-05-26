@@ -26,6 +26,7 @@ const API_ENDPOINTS = {
   //for save 
   savePresentIllness: `${BASE_URL}/SavePatpresentillnessData`, 
   saveClinicalExamination: `${BASE_URL}/SavePatClinicalExaminationData`, 
+  savePatNursingINVData: `${BASE_URL}/SavePatNursingINVData`, 
 };
 
 export default API_ENDPOINTS;
