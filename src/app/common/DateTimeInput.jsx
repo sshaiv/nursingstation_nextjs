@@ -31,7 +31,7 @@ export default function DateTimeInput({ selectedDate, onDateChange, time, onTime
         type="time"
         value={time}
         onChange={onTimeChange}
-        className="w-[75px] text-black border-none px-[4px] py-[1px] focus:outline-none"
+        className="w-[60px] text-black border-none px-[4px] py-[1px] focus:outline-none"
         required
     />
 </div>

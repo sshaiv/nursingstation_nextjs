@@ -112,8 +112,8 @@ export default function Investigation({
     console.log("savebtn ", saveData);
     try {
       const response = await fetch(
-         API_ENDPOINTS.savePatNursingINVData,
-        
+        API_ENDPOINTS.savePatNursingINVData,
+
         {
           method: "POST",
           headers: {
@@ -127,7 +127,6 @@ export default function Investigation({
       console.log("Response:", result);
 
       if (response.ok) {
-        
         alert("Data saved successfully!");
         setIsSaved(true);
       } else {
@@ -165,14 +164,14 @@ export default function Investigation({
           parsedData = [];
         }
 
-       // console.log("✅ Parsed Data:", parsedData);
+        // console.log("✅ Parsed Data:", parsedData);
 
         if (parsedData && Array.isArray(parsedData.Table)) {
           parsedData.Table.forEach((item, index) => {
             // console.log(
             //   `Item ${index} => servname: ${
             //     item.servname || "N/A"
-            //   }, 
+            //   },
             //   consultantname: ${item.consultantname || "N/A"},
             //   datetime: ${item.orddate || "N/A"},
             //    remarks: ${
@@ -227,9 +226,10 @@ export default function Investigation({
           remark={remark}
         />
       )}
+      
 
       <div className="border border-gray-100 rounded-lg space-y-4">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end">
+        <div className="grid grid-cols-4 md:grid-cols-3 lg:grid-cols-5 gap-5 items-end">
           <div className="flex flex-col w-full">
             <DateTimeInput
               selectedDate={selectedDate}
@@ -246,9 +246,7 @@ export default function Investigation({
           </div>
 
           <div className="flex flex-col w-full">
-            <label className="text-xs font-medium mb-1">
-              Select Doctor Name*
-            </label>
+           
             <input
               type="text"
               readOnly
@@ -274,14 +272,18 @@ export default function Investigation({
             value={remark}
             onChange={(e) => setRemark(e.target.value)}
           />
-        </div>
-
-        <div className="flex justify-end">
-          <ActionButton
-            label="Insert"
-            onClick={handleInsert}
-            className="text-xs px-4 py-1"
-          />
+          <div className="flex justify-center gap-4">
+            <ActionButton
+              label="Insert"
+              onClick={handleInsert}
+              className="text-xs px-4 py-1"
+            />
+            <ActionButton
+              label="Posted Data"
+              // onClick={handleInsert}
+              className="text-xs px-4 py-1"
+            />
+          </div>
         </div>
       </div>
 
@@ -298,26 +300,10 @@ export default function Investigation({
                 <TableReuse type="th">Actions</TableReuse>
               </tr>
             </thead>
-            {/* <tbody>
-              
-              {table.map((item, idx) => (
-                <tr key={"api-" + idx} className="hover:bg-gray-100 border-t">
-                  <TableReuse>
-                    {item.orddate || "N/A" }
-                  </TableReuse>
-                  <TableReuse>{item.consultantname || "N/A"}</TableReuse>
-                  <TableReuse>{item.servname || "N/A"}</TableReuse>
-                  <TableReuse>{item.remarks || "N/A"}</TableReuse>
-                  <TableReuse>
-                    <div className="flex justify-center space-x-2">
-                     
-                    </div>
-                  </TableReuse>
-                </tr>
-              ))}
 
-           
-              {vitals.map((v, idx) => (
+            <tbody>
+              {/* Render newly inserted vitals at the top */}
+              {[...vitals].reverse().map((v, idx) => (
                 <tr key={"vital-" + idx} className="hover:bg-gray-100 border-t">
                   <TableReuse>{v.date}</TableReuse>
                   <TableReuse>{v.doctorName}</TableReuse>
@@ -339,48 +325,22 @@ export default function Investigation({
                   </TableReuse>
                 </tr>
               ))}
-            </tbody> */}
-<tbody>
-  {/* Render newly inserted vitals at the top */}
-  {[...vitals].reverse().map((v, idx) => (
-    <tr key={"vital-" + idx} className="hover:bg-gray-100 border-t">
-      <TableReuse>{v.date}</TableReuse>
-      <TableReuse>{v.doctorName}</TableReuse>
-      <TableReuse>{v.investigation}</TableReuse>
-      <TableReuse>{v.remarks}</TableReuse>
-      <TableReuse>
-        <div className="flex justify-center space-x-2">
-          {v.source !== "api" && (
-            <button
-              className="text-red-500 hover:underline"
-              onClick={() =>
-                setVitals(vitals.filter((_, i) => i !== idx))
-              }
-            >
-              Delete
-            </button>
-          )}
-        </div>
-      </TableReuse>
-    </tr>
-  ))}
 
-  {/* Render API fetched data below */}
-  {table.map((item, idx) => (
-    <tr key={"api-" + idx} className="hover:bg-gray-100 border-t">
-      <TableReuse>{item.orddate || "N/A"}</TableReuse>
-      <TableReuse>{item.consultantname || "N/A"}</TableReuse>
-      <TableReuse>{item.servname || "N/A"}</TableReuse>
-      <TableReuse>{item.remarks || "N/A"}</TableReuse>
-      <TableReuse>
-        <div className="flex justify-center space-x-2">
-          {/* Actions if needed */}
-        </div>
-      </TableReuse>
-    </tr>
-  ))}
-</tbody>
-
+              {/* Render API fetched data below */}
+              {table.map((item, idx) => (
+                <tr key={"api-" + idx} className="hover:bg-gray-100 border-t">
+                  <TableReuse>{item.orddate || "N/A"}</TableReuse>
+                  <TableReuse>{item.consultantname || "N/A"}</TableReuse>
+                  <TableReuse>{item.servname || "N/A"}</TableReuse>
+                  <TableReuse>{item.remarks || "N/A"}</TableReuse>
+                  <TableReuse>
+                    <div className="flex justify-center space-x-2">
+                      {/* Actions if needed */}
+                    </div>
+                  </TableReuse>
+                </tr>
+              ))}
+            </tbody>
           </table>
         </div>
       </div>

@@ -4,17 +4,24 @@
 import { useState, useEffect } from "react";
 import { ActionButton } from "../common/Buttons";
 import { MainHeadings } from "../common/text";
-import ReactDatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import { format } from "date-fns";
 import TableReuse from "../common/TableReuse";
 import DateTimeInput from "../common/DateTimeInput";
 
-export default function VitalsTable({ title , visitid,gssuhid,empid}) {
-  
+export default function VitalsTable({ title, visitid, gssuhid, empid, patientData }) {
+ 
   const [vitals, setVitals] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedTime, setSelectedTime] = useState("");
+
+  // Initialize selectedTime to current time in HH:mm format
+  const getCurrentTimeHHMM = () => {
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, "0");
+    const minutes = now.getMinutes().toString().padStart(2, "0");
+    return `${hours}:${minutes}`;
+  };
+  const [selectedTime, setSelectedTime] = useState(getCurrentTimeHHMM());
+
   const [bp, setBp] = useState("");
   const [pulse, setPulse] = useState("");
   const [temp, setTemp] = useState("");
@@ -23,32 +30,53 @@ export default function VitalsTable({ title , visitid,gssuhid,empid}) {
   const [height, setHeight] = useState("");
   const [rr, setRr] = useState("");
   const [painScore, setPainScore] = useState("");
-  const [time, setTime] = useState("")
+  const [bmi, setBmi] = useState("");
+  const [loading, setLoading] = useState(false);
 
+  // Generate time options with both value (HH:mm) and label (e.g. 8:00 AM)
   const timeOptions = Array.from({ length: 24 }, (_, index) => {
     const hour = (index + 8) % 24;
-    const period = hour < 12 ? "AM" : "PM";
     const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
-    return `${displayHour}:00 ${period}`;
-  });
+    const period = hour < 12 ? "AM" : "PM";
 
+    const value = hour.toString().padStart(2, "0") + ":00";
+    const label = `${displayHour}:00 ${period}`;
+
+    return { value, label };
+  });
 
   useEffect(() => {
     loadVitalData();
-    setSelectedTime(timeOptions[0]);
+    // No resetting selectedTime here
   }, []);
 
+  useEffect(() => {
+    if (visitid) {
+      loadVitalData();
+      // No resetting selectedTime here either
+    }
+  }, [visitid]);
+
   const loadVitalData = async () => {
+    if (!visitid) {
+      console.warn("No visitid provided, skipping loadVitalData");
+      return;
+    }
     try {
       const response = await fetch(
         `https://doctorapi.medonext.com/API/HMS/GetPatVitalData?visitid=${visitid}`
       );
-      const data = await response.json();
-      const parsedData = typeof data === "string" ? JSON.parse(data) : data;
+      let data = await response.json();
 
-      if (Array.isArray(parsedData)) {
+      if (typeof data === "string") {
+        data = JSON.parse(data);
+      }
+
+      console.log("Parsed Vital Data:", data);
+
+      if (Array.isArray(data) && data.length > 0) {
         setVitals(
-          parsedData.map((item) => ({
+          data.map((item) => ({
             date: item.vitaldatetime,
             bp: item.BP,
             pulse: item.pulse,
@@ -56,12 +84,13 @@ export default function VitalsTable({ title , visitid,gssuhid,empid}) {
             spo2: item.spo2,
             weight: item.weight || "N/A",
             height: item.height || "N/A",
+            bmi: item.bmi || "N/A",
             rr: item.RR || "N/A",
             painScore: item.painscore?.toString() || "N/A",
           }))
         );
       } else {
-        console.error("Parsed data is not an array", parsedData);
+        setVitals([]);
       }
     } catch (error) {
       console.error("Failed to load vital data", error);
@@ -81,16 +110,19 @@ export default function VitalsTable({ title , visitid,gssuhid,empid}) {
       rr ||
       painScore
     ) {
+      const dateTimeString = `${format(selectedDate, "dd-MM-yyyy")} ${selectedTime}`;
+
       setVitals((prev) => [
         ...prev,
         {
-          date: `${format(selectedDate, "dd-MM-yyyy")} ${selectedTime}` || "N/A",
+          date: dateTimeString,
           bp: bp || "N/A",
           pulse: pulse || "N/A",
           temp: temp || "N/A",
           spo2: spo2 || "N/A",
           weight: weight || "N/A",
-          height: height || "N/A",
+         height : height || "N/A",
+         bmi : bmi || "N/A",
           rr: rr || "N/A",
           painScore: painScore || "N/A",
         },
@@ -101,7 +133,7 @@ export default function VitalsTable({ title , visitid,gssuhid,empid}) {
 
   const clearInputs = () => {
     setSelectedDate(new Date());
-    setSelectedTime(timeOptions[0]);
+    setSelectedTime(getCurrentTimeHHMM());
     setBp("");
     setPulse("");
     setTemp("");
@@ -120,12 +152,12 @@ export default function VitalsTable({ title , visitid,gssuhid,empid}) {
       </div>
 
       {/* Inputs */}
-      <div className=" flex items-end flex-wrap gap-2">
+      <div className="flex items-end flex-wrap gap-2">
         <DateTimeInput
           selectedDate={selectedDate}
           onDateChange={setSelectedDate}
-          time={time}
-          onTimeChange={(e) => setTime(e.target.value)}
+          time={selectedTime}
+          onTimeChange={(e) => setSelectedTime(e.target.value)}
           label=" Date & Time"
         />
 
@@ -136,8 +168,10 @@ export default function VitalsTable({ title , visitid,gssuhid,empid}) {
           { placeholder: "SPO2", value: spo2, setValue: setSpo2 },
           { placeholder: "Weight", value: weight, setValue: setWeight },
           { placeholder: "Height", value: height, setValue: setHeight },
+           { placeholder: "BMI", value: bmi, setValue: setBmi },
           { placeholder: "R.R", value: rr, setValue: setRr },
-          { placeholder: "Pain Score", value: painScore, setValue: setPainScore },
+          { placeholder: "PainScore", value: painScore, setValue: setPainScore },
+         
         ].map((input, index) => (
           <div className="flex flex-col items-start" key={index}>
             <label className="text-gray-600 text-[9px] mb-[1px]">{input.placeholder}</label>
@@ -145,12 +179,13 @@ export default function VitalsTable({ title , visitid,gssuhid,empid}) {
               type="text"
               value={input.value}
               onChange={(e) => input.setValue(e.target.value)}
-              className={`border rounded w-[35px] text-[9px] h-[18px] px-[2px] py-[1px] focus:outline-none focus:border-blue-500 ${input.value ? "border-blue-500" : "border-gray-300"}`}
+              className={`border rounded w-[34px] text-[9px] h-[18px] px-[2px] py-[1px] focus:outline-none focus:border-blue-500 ${
+                input.value ? "border-blue-500" : "border-gray-300"
+              }`}
             />
           </div>
         ))}
       </div>
-
 
       {/* Table */}
       <div className="max-h-[80px] overflow-y-scroll hide-scrollbar mt-2">
@@ -164,6 +199,7 @@ export default function VitalsTable({ title , visitid,gssuhid,empid}) {
               <TableReuse type="th">SPO2</TableReuse>
               <TableReuse type="th">Weight</TableReuse>
               <TableReuse type="th">Height</TableReuse>
+              <TableReuse type="th">BMI</TableReuse>
               <TableReuse type="th">R.R</TableReuse>
               <TableReuse type="th">Pain Score</TableReuse>
             </tr>
@@ -178,6 +214,7 @@ export default function VitalsTable({ title , visitid,gssuhid,empid}) {
                 <TableReuse>{v.spo2}</TableReuse>
                 <TableReuse>{v.weight}</TableReuse>
                 <TableReuse>{v.height}</TableReuse>
+                <TableReuse>{v.bmi}</TableReuse>
                 <TableReuse>{v.rr}</TableReuse>
                 <TableReuse>{v.painScore}</TableReuse>
               </tr>

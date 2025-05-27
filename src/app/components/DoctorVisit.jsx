@@ -1,279 +1,650 @@
+// import React, { useEffect, useState } from "react";
+// import { ModalHeading } from "../common/text";
+// import { ActionButton, SaveButton } from "../common/Buttons";
+// import TableReuse from "../common/TableReuse";
+// import "react-datepicker/dist/react-datepicker.css";
+// import DateTimeInput from "../common/DateTimeInput";
+// import ReusableInputField from "../common/SmallInputfields";
+// import DoctorModal from "./DoctorModal";
+// import InvestigationModal from "./InvestigationModal";
+// import useSaveInvData from "../hooks/useSaveInvData";
+// import axios from "axios";
+// import API_ENDPOINTS from "../constants/api_url";
 
-import React, { useEffect, useState } from 'react';
-import { ModalHeading } from '../common/text';
-import { ActionButton, SaveButton } from '../common/Buttons';
-import TableReuse from '../common/TableReuse';
+// export default function DoctorVisit({
+//   visitid,
+//   gssuhid,
+//   empid,
+//   patientData,
+// }) {
+//   const [isSaved, setIsSaved] = useState(false);
+//   const [isDoctorModalOpen, setDoctorModalOpen] = useState(true);
+//   const [showSecondModal, setShowSecondModal] = useState(false);
+//   const [doctorData, setDoctorData] = useState(null);
+//   const [selectedDoctorId, setSelectedDoctorId] = useState(null);
+
+//   const [vitals, setVitals] = useState([]);
+//   const [selectedDate, setSelectedDate] = useState(new Date());
+//   const [time, setTime] = useState("");
+//   const [errors, setErrors] = useState({});
+//   const [doctorName, setDoctorName] = useState("");
+//   const [doctorOptions, setDoctorOptions] = useState([]);
+//   const [remark, setRemark] = useState("");
+//   const [selectedServices, setSelectedServices] = useState([]);
+//   const [loading, setLoading] = useState(false);
+//   const [table, setTable] = useState([]);
+
+//   const handleSelectServices = (selectedIds) => {
+//     console.log("inv in inv", selectedIds);
+
+//     setSelectedServices(selectedIds);
+//     setShowSecondModal(false);
+//   };
+
+//   const [saveData, setSaveData] = useSaveInvData();
+//   console.log("Updated INV", saveData);
+
+//   const handleSelectDoctor = (doctor) => {
+//     console.log("Doctor in inv:", doctor);
+//     let selectedDoc = doctor;
+//     // If only ID was passed (e.g., from radio selection), find the full doctor object
+//     if (typeof doctor === "string") {
+//       selectedDoc = doctorOptions.find((doc) => doc.value === doctor);
+//     }
+//     //console.log("cvbnm", selectedDoc);
+//     if (selectedDoc) {
+//       setDoctorData(selectedDoc);
+//       setDoctorName(selectedDoc.label || selectedDoc.CName);
+//     }
+
+//     setSelectedDoctorId(selectedDoc?.value || doctor);
+//     setShowSecondModal(true);
+//     setDoctorModalOpen(false);
+//   };
+
+//   const handleInsert = () => {
+//     setErrors({});
+
+//     if (!selectedDate || !doctorData || selectedServices.length === 0) {
+//       const newErrors = {};
+//       if (!selectedDate) newErrors.dateTime = "Date and time are required.";
+//       if (!doctorData) newErrors.doctorName = "Please select a doctor.";
+//       if (selectedServices.length === 0)
+//         newErrors.services = "Please select at least one investigation.";
+//       setErrors(newErrors);
+//       return;
+//     }
+
+//     const getCurrentDateTime = () => {
+//       const now = new Date();
+//       const day = String(now.getDate()).padStart(2, "0");
+//       const month = String(now.getMonth() + 1).padStart(2, "0");
+//       const year = now.getFullYear();
+
+//       let hours = now.getHours();
+//       const minutes = String(now.getMinutes()).padStart(2, "0");
+//       const ampm = hours >= 12 ? "PM" : "AM";
+//       hours = hours % 12 || 12;
+
+//       return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
+//     };
+
+//     const currentDateTime = getCurrentDateTime();
+
+//     const newEntries = selectedServices.map((service) => ({
+//       date: currentDateTime,
+//       doctorName: doctorData.label || doctorData.CName || "N/A",
+//       investigation:
+//         service.InvestigationName ||
+//         service.servname ||
+//         service.CName ||
+//         "Unknown",
+//       remarks: remark || "",
+//     }));
+
+//     setVitals((prev) => [...prev, ...newEntries]);
+
+//     // Optional: reset remark after inserting
+//     setRemark("");
+//   };
+
+//   const savebtn = async () => {
+//     console.log("savebtn ", saveData);
+//     try {
+//       const response = await fetch(
+//         API_ENDPOINTS.savePatNursingINVData,
+
+//         {
+//           method: "POST",
+//           headers: {
+//             "Content-Type": "application/json",
+//           },
+//           body: JSON.stringify(saveData),
+//         }
+//       );
+
+//       const result = await response.json();
+//       console.log("Response:", result);
+
+//       if (response.ok) {
+//         alert("Data saved successfully!");
+//         setIsSaved(true);
+//       } else {
+//         alert("Failed to save data.");
+//       }
+//     } catch (error) {
+//       console.error("Error saving data:", error);
+//       alert("An error occurred while saving data.");
+//     }
+//   };
+
+//   useEffect(() => {
+//     setLoading(true);
+//     axios
+//       .get(
+//         `https://doctorapi.medonext.com/api/HMS/GetPatDoctorHistory?visitid=${visitid}`
+//       )
+//       .then((res) => {
+//         //console.log("🚀 Full API response (res.data):", res.data);
+
+//         let parsedData = [];
+//         try {
+//           if (typeof res.data === "string") {
+//             parsedData = JSON.parse(res.data);
+//           } else if (
+//             typeof res.data === "object" &&
+//             typeof res.data.data === "string"
+//           ) {
+//             parsedData = JSON.parse(res.data.data);
+//           } else {
+//             parsedData = res.data;
+//           }
+//         } catch (err) {
+//           console.error("Error parsing investigations JSON:", err);
+//           parsedData = [];
+//         }
+
+//         // console.log("✅ Parsed Data:", parsedData);
+
+//         if (parsedData && Array.isArray(parsedData.Table)) {
+//           parsedData.Table.forEach((item, index) => {
+//             // console.log(
+//             //   `Item ${index} => servname: ${
+//             //     item.servname || "N/A"
+//             //   },
+//             //   consultantname: ${item.consultantname || "N/A"},
+//             //   datetime: ${item.orddate || "N/A"},
+//             //    remarks: ${
+//             //     item.remarks || "N/A"
+//             //   }`
+//             // );
+//           });
+//           setTable(parsedData.Table);
+//         } else {
+//           console.warn("Parsed data me Table array nahi mila:", parsedData);
+//           setTable([]);
+//         }
+//       })
+//       .catch((err) => {
+//         console.error("Error fetching investigations:", err);
+//         setTable([]);
+//       })
+//       .finally(() => {
+//         setLoading(false);
+//       });
+//   }, [visitid]);
+
+//   return (
+//     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
+//       <div className="flex items-center justify-center">
+//         <ModalHeading title="Doctor Visit" />
+//       </div>
+
+//       <hr className="border-t mt-6 mb-2 border-gray-300" />
+
+//       {/* Modals */}
+//       {isDoctorModalOpen && (
+//         <DoctorModal
+//           isOpen={isDoctorModalOpen}
+//           onClose={() => setDoctorModalOpen(false)}
+//           onSelectDoctor={handleSelectDoctor}
+//           visitid={visitid}
+//           gssuhid={gssuhid}
+//           empid={empid}
+//         />
+//       )}
+
+//       {showSecondModal && (
+//         <InvestigationModal
+//           isOpen={showSecondModal}
+//           onSelect={handleSelectServices}
+//           onClose={() => setShowSecondModal(false)}
+//           doctorId={selectedDoctorId}
+//           patientData={patientData}
+//           setSaveData={setSaveData}
+//           setRemark={setRemark}
+//           remark={remark}
+//         />
+//       )}
+      
+
+//       <div className="border border-gray-100 rounded-lg space-y-4">
+//         <div className="grid grid-cols-4 md:grid-cols-3 lg:grid-cols-5 gap-5 items-end">
+//           <div className="flex flex-col w-full">
+//             <DateTimeInput
+//               selectedDate={selectedDate}
+//               onDateChange={setSelectedDate}
+//               time={time}
+//               onTimeChange={(e) => setTime(e.target.value)}
+//               label="Date & Time"
+//             />
+//             {errors.dateTime && (
+//               <p className="text-red-500 text-[10px] mt-[2px] ml-[2px] col-span-full ">
+//                 {errors.dateTime}
+//               </p>
+//             )}
+//           </div>
+
+//           <div className="flex flex-col w-full">
+           
+//             <input
+//               type="text"
+//               readOnly
+//               value={doctorName}
+//               onClick={() => setDoctorModalOpen(true)}
+//               className={`cursor-pointer border px-2 py-1 rounded-md text-sm bg-gray-100 hover:bg-gray-200 focus:outline-none ${
+//                 errors.doctorName ? "border-red-500" : "border-gray-300"
+//               }`}
+//               placeholder=" select doctor"
+//             />
+//             {errors.doctorName && (
+//               <p className="text-red-500 text-[10px] mt-[2px] ml-[2px]">
+//                 {errors.doctorName}
+//               </p>
+//             )}
+//           </div>
+
+//           <ReusableInputField
+//             className="border-2 rounded-lg"
+//             id="remarks"
+//             label="Remarks"
+//             width="w-full"
+//             value={remark}
+//             onChange={(e) => setRemark(e.target.value)}
+//           />
+//           <div className="flex justify-center gap-4">
+//             <ActionButton
+//               label="Insert"
+//               onClick={handleInsert}
+//               className="text-xs px-4 py-1"
+//             />
+//             <ActionButton
+//               label="Posted Data"
+//               // onClick={handleInsert}
+//               className="text-xs px-4 py-1"
+//             />
+//           </div>
+//         </div>
+//       </div>
+
+//       <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+//         <div className="max-h-[225px] overflow-y-auto scrollbar-hide">
+//           <table className="w-full text-[11px] text-center border-collapse">
+//             <thead className="bg-blue-50 text-gray-800 font-semibold sticky top-0 z-10">
+//               <tr>
+//                 <TableReuse type="th">Date/Time</TableReuse>
+//                 <TableReuse type="th">Doctor Name</TableReuse>
+//                 <TableReuse type="th">Investigation</TableReuse>
+
+//                 <TableReuse type="th">Remarks</TableReuse>
+//                 <TableReuse type="th">Actions</TableReuse>
+//               </tr>
+//             </thead>
+
+//             <tbody>
+//               {/* Render newly inserted vitals at the top */}
+//               {[...vitals].reverse().map((v, idx) => (
+//                 <tr key={"vital-" + idx} className="hover:bg-gray-100 border-t">
+//                   <TableReuse>{v.date}</TableReuse>
+//                   <TableReuse>{v.doctorName}</TableReuse>
+//                   <TableReuse>{v.investigation}</TableReuse>
+//                   <TableReuse>{v.remarks}</TableReuse>
+//                   <TableReuse>
+//                     <div className="flex justify-center space-x-2">
+//                       {v.source !== "api" && (
+//                         <button
+//                           className="text-red-500 hover:underline"
+//                           onClick={() =>
+//                             setVitals(vitals.filter((_, i) => i !== idx))
+//                           }
+//                         >
+//                           Delete
+//                         </button>
+//                       )}
+//                     </div>
+//                   </TableReuse>
+//                 </tr>
+//               ))}
+
+//               {/* Render API fetched data below */}
+//               {table.map((item, idx) => (
+//                 <tr key={"api-" + idx} className="hover:bg-gray-100 border-t">
+//                   <TableReuse>{item.orddate || "N/A"}</TableReuse>
+//                   <TableReuse>{item.consultantname || "N/A"}</TableReuse>
+//                   <TableReuse>{item.servname || "N/A"}</TableReuse>
+//                   <TableReuse>{item.remarks || "N/A"}</TableReuse>
+//                   <TableReuse>
+//                     <div className="flex justify-center space-x-2">
+//                       {/* Actions if needed */}
+//                     </div>
+//                   </TableReuse>
+//                 </tr>
+//               ))}
+//             </tbody>
+//           </table>
+//         </div>
+//       </div>
+
+//       <hr className="border-t mt-6 mb-2 border-gray-300" />
+//       <div className="flex justify-center ">
+//         <SaveButton label="Save" onClick={savebtn} />
+//       </div>
+//     </div>
+//   );
+// }
+
+
+
+import React, { useEffect, useState } from "react";
+import { ModalHeading } from "../common/text";
+import { ActionButton, SaveButton } from "../common/Buttons";
+import TableReuse from "../common/TableReuse";
 import "react-datepicker/dist/react-datepicker.css";
-import DateTimeInput from '../common/DateTimeInput';
+import DateTimeInput from "../common/DateTimeInput";
+import ReusableInputField from "../common/SmallInputfields";
+import DoctorModal from "./DoctorModal";
+import useSaveInvData from "../hooks/useSaveInvData";
 import axios from "axios";
-import API_ENDPOINTS from '../constants/api_url';
-import DropdownSelect from '../common/DropdownSelect';
-import ReusableInputField from '../common/SmallInputfields';
+import API_ENDPOINTS from "../constants/api_url";
+import DVDoctorModal from "./DVDoctorModal";
 
-export default function DoctorVisit({ visitid, gssuhid, empid }) {
-    const [vitals, setVitals] = useState([]);
-    const [selectedDate, setSelectedDate] = useState(new Date());
-    const [time, setTime] = useState("");
-    const [errors, setErrors] = useState({});
+export default function DoctorVisit({
+  visitid,
+  gssuhid,
+  empid,
+  patientData,
+}) {
+  const [isSaved, setIsSaved] = useState(false);
+  const [isDoctorModalOpen, setDoctorModalOpen] = useState(true);
+  const [doctorData, setDoctorData] = useState(null);
+  const [selectedDoctorId, setSelectedDoctorId] = useState(null);
 
-    const [nursingService, setNursingService] = useState("");
-    const [doctorName, setDoctorName] = useState("");
-    const [performedBy, setPerformedBy] = useState("");
-    const [issueNo, setIssueNo] = useState("");
-    const [store, setStore] = useState("");
-    const [itemName, setItemName] = useState("");
-    const [bundleName, setBundleName] = useState("");
-    const [barcode, setBarcode] = useState("");
-    const [indentQty, setIndentQty] = useState("");
-    const [issueQty, setIssueQty] = useState("");
-    const [remarks, setRemarks] = useState("");
-    const [isEmergency, setIsEmergency] = useState(false); // New state for emergency
+  const [vitals, setVitals] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [time, setTime] = useState("");
+  const [errors, setErrors] = useState({});
+  const [doctorName, setDoctorName] = useState("");
+  const [remark, setRemark] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [table, setTable] = useState([]);
 
-    // Options for Nursing Service
-    const [options, setOptions] = useState([]);
+  const [saveData, setSaveData] = useSaveInvData();
+  console.log("Updated INV", saveData);
 
-    // Options for Doctors and Performed By Users
-    const [doctors, setDoctors] = useState([]);
-    const [performedByUsers, setPerformedByUsers] = useState([]);
+  const handleSelectDoctor = (doctor) => {
+    console.log("Doctor in inv:", doctor);
+    let selectedDoc = doctor;
+    if (typeof doctor === "string") {
+      selectedDoc = doctorOptions.find((doc) => doc.value === doctor);
+    }
+    if (selectedDoc) {
+      setDoctorData(selectedDoc);
+      setDoctorName(selectedDoc.label || selectedDoc.CName);
+    }
 
-    const validateForm = () => {
-        const newErrors = {};
+    setSelectedDoctorId(selectedDoc?.value || doctor);
+    setDoctorModalOpen(false);
+  };
 
-        if (!nursingService) newErrors.nursingService = "Nursing Service is required.";
-        if (!doctorName) newErrors.doctorName = "Doctor Name is required.";
-        if (!performedBy) newErrors.performedBy = "Performed By is required.";
-        if (!selectedDate || !time) newErrors.dateTime = "Date & Time are required.";
+  const handleInsert = () => {
+    setErrors({});
 
-        return newErrors;
+    if (!selectedDate || !doctorData) {
+      const newErrors = {};
+      if (!selectedDate) newErrors.dateTime = "Date and time are required.";
+      if (!doctorData) newErrors.doctorName = "Please select a doctor.";
+      setErrors(newErrors);
+      return;
+    }
+
+    const getCurrentDateTime = () => {
+      const now = new Date();
+      const day = String(now.getDate()).padStart(2, "0");
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      const year = now.getFullYear();
+
+      let hours = now.getHours();
+      const minutes = String(now.getMinutes()).padStart(2, "0");
+      const ampm = hours >= 12 ? "PM" : "AM";
+      hours = hours % 12 || 12;
+
+      return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
     };
 
-    const handleInsert = () => {
-        const validationErrors = validateForm();
+    const currentDateTime = getCurrentDateTime();
 
-        if (Object.keys(validationErrors).length > 0) {
-            setErrors(validationErrors);
-            return;
+    const newEntry = {
+      date: currentDateTime,
+      doctorName: doctorData.label || doctorData.CName || "N/A",
+      remarks: remark || "",
+    };
+
+    setVitals((prev) => [...prev, newEntry]);
+    setRemark("");
+  };
+
+  const savebtn = async () => {
+    console.log("savebtn ", saveData);
+    try {
+      const response = await fetch(
+        API_ENDPOINTS.savePatNursingINVData,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(saveData),
+        }
+      );
+
+      const result = await response.json();
+      console.log("Response:", result);
+
+      if (response.ok) {
+        alert("Data saved successfully!");
+        setIsSaved(true);
+      } else {
+        alert("Failed to save data.");
+      }
+    } catch (error) {
+      console.error("Error saving data:", error);
+      alert("An error occurred while saving data.");
+    }
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    axios
+      .get(
+        `https://doctorapi.medonext.com/api/HMS/GetPatDoctorHistory?visitid=${visitid}`
+      )
+      .then((res) => {
+        let parsedData = [];
+        try {
+          if (typeof res.data === "string") {
+            parsedData = JSON.parse(res.data);
+          } else if (
+            typeof res.data === "object" &&
+            typeof res.data.data === "string"
+          ) {
+            parsedData = JSON.parse(res.data.data);
+          } else {
+            parsedData = res.data;
+          }
+        } catch (err) {
+          console.error("Error parsing investigations JSON:", err);
+          parsedData = [];
         }
 
-        setErrors({});
+        if (parsedData && Array.isArray(parsedData.Table)) {
+          setTable(parsedData.Table);
+        } else {
+          console.warn("Parsed data does not contain Table array:", parsedData);
+          setTable([]);
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching investigations:", err);
+        setTable([]);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [visitid]);
 
-        const formattedDate = `${selectedDate.toLocaleDateString()} ${time}`;
-        const newEntry = {
-            date: formattedDate,
-            nursingService: nursingService,
-            doctorName: doctorName,
-            performedBy: performedBy,
-            issueNo: issueNo,
-            store: store,
-            itemName: itemName,
-            bundleName: bundleName,
-            barcode: barcode,
-            indentQty: indentQty,
-            issueQty: issueQty,
-            remarks: remarks,
-            isEmergency: isEmergency, // Include emergency status
-        };
+  return (
+    <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
+      <div className="flex items-center justify-center">
+        <ModalHeading title="Doctor Visit" />
+      </div>
 
-        setVitals([...vitals, newEntry]);
-        // Reset fields
-        setNursingService("");
-        setDoctorName("");
-        setPerformedBy("");
-        setIssueNo("");
-        setStore("");
-        setItemName("");
-        setBundleName("");
-        setBarcode("");
-        setIndentQty("");
-        setIssueQty("");
-        setRemarks("");
-        setIsEmergency(false); // Reset emergency status
-    };
+      <hr className="border-t mt-6 mb-2 border-gray-300" />
 
-    useEffect(() => {
-        const fetchNursingServices = async () => {
-            try {
-                const response = await axios.get(API_ENDPOINTS.getAllHeadload);
-                const parsedData = JSON.parse(response.data);
-                const relationData = parsedData.Table;
-                if (relationData && Array.isArray(relationData)) {
-                    const formattedOptions = relationData.map((item) => ({
-                        label: item.CNAME,
-                        value: item.CID,
-                    }));
-                    setOptions(formattedOptions);
-                }
-            } catch (error) {
-                console.error("Error fetching nursing services:", error);
-            }
-        };
+      {/* Modals */}
+      {isDoctorModalOpen && (
+        <DVDoctorModal
+          isOpen={isDoctorModalOpen}
+          onClose={() => setDoctorModalOpen(false)}
+          onSelectDoctor={handleSelectDoctor}
+          visitid={visitid}
+          gssuhid={gssuhid}
+          empid={empid}
+        />
+      )}
 
-        const fetchDoctors = async () => {
-            try {
-                const response = await axios.get(API_ENDPOINTS.getAllHeadload);
-                const doctorData = JSON.parse(response.data);
-                if (doctorData && doctorData.Table && Array.isArray(doctorData.Table)) {
-                    const formattedDoctors = doctorData.Table.map(item => ({
-                        label: item.CNAME,
-                        value: item.CID,
-                    }));
-                    setDoctors(formattedDoctors);
-                } else {
-                    console.warn("No doctor data found or data is not in expected format.");
-                }
-            } catch (error) {
-                console.error("Error fetching doctors:", error);
-            }
-        };
+      <div className="border border-gray-100 rounded-lg space-y-4">
+        <div className="grid grid-cols-4 md:grid-cols-3 lg:grid-cols-5 gap-5 items-end">
+          <div className="flex flex-col w-full">
+            <DateTimeInput
+              selectedDate={selectedDate}
+              onDateChange={setSelectedDate}
+              time={time}
+              onTimeChange={(e) => setTime(e.target.value)}
+              label="Date & Time"
+            />
+            {errors.dateTime && (
+              <p className="text-red-500 text-[10px] mt-[2px] ml-[2px] col-span-full ">
+                {errors.dateTime}
+              </p>
+            )}
+          </div>
 
-        const fetchPerformedByUsers = async () => {
-            try {
-                const response = await axios.get(API_ENDPOINTS.getAllHeadload);
-                const performedByData = JSON.parse(response.data);
-                if (performedByData && performedByData.Table && Array.isArray(performedByData.Table)) {
-                    const formattedPerformedByUsers = performedByData.Table.map(item => ({
-                        label: item.CNAME,
-                        value: item.CID,
-                    }));
-                    setPerformedByUsers(formattedPerformedByUsers);
-                } else {
-                    console.warn("No performed by user data found or data is not in expected format.");
-                }
-            } catch (error) {
-                console.error("Error fetching performed by users:", error);
-            }
-        };
+          <div className="flex flex-col w-full">
+            <input
+              type="text"
+              readOnly
+              value={doctorName}
+              onClick={() => setDoctorModalOpen(true)}
+              className={`cursor-pointer border px-2 py-1 rounded-md text-sm bg-gray-100 hover:bg-gray-200 focus:outline-none ${
+                errors.doctorName ? "border-red-500" : "border-gray-300"
+              }`}
+              placeholder=" select doctor"
+            />
+            {errors.doctorName && (
+              <p className="text-red-500 text-[10px] mt-[2px] ml-[2px]">
+                {errors.doctorName}
+              </p>
+            )}
+          </div>
 
-        const fetchData = async () => {
-            await Promise.all([
-                fetchNursingServices(),
-                fetchDoctors(),
-                fetchPerformedByUsers(),
-            ]);
-        };
-
-        fetchData();
-    }, []);
-
-    return (
-        <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
-            <div className="flex items-center justify-center">
-                <ModalHeading title="DoctorVisit" />
-            </div>
-            <hr className="border-t mt-6 mb-2 border-gray-300" />
-
-            <div className="border border-gray-100 rounded-lg space-y-4">
-
-                {/* Inputs Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end">
-
-                    <div className="flex flex-col w-full">
-                        <DateTimeInput
-                            selectedDate={selectedDate}
-                            onDateChange={setSelectedDate}
-                            time={time}
-                            onTimeChange={(e) => setTime(e.target.value)}
-                            label="Date & Time"
-                        />
-                        {errors.dateTime && (
-                            <p className="text-red-500 text-[10px] mt-[2px] ml-[2px] col-span-full -mt-2">{errors.dateTime}</p>
-                        )}
-                    </div>
-
-                    {/* Doctor Name Dropdown */}
-                    <DropdownSelect
-                        label="Select Doctor Name"
-                        options={doctors}
-                        selectedValue={doctorName}
-                        onSelect={(option) => {
-                            setDoctorName(option.label);
-                            console.log("Doctor :", option.value); // Log the CID
-                        }}
-                        error={errors.doctorName}
-                    />
-
-                    <ReusableInputField
-                        className="border-2 rounded-lg"
-                        id="remarks"
-                        label="Remarks"
-                        width="w-full"
-                        value={remarks}
-                        onChange={(e) => setRemarks(e.target.value)}
-                    />
-
-                    {/* Emergency Checkbox */}
-                    <div className="flex items-center">
-                        <input
-                            type="checkbox"
-                            checked={isEmergency}
-                            onChange={() => setIsEmergency(!isEmergency)}
-                            className="mr-2"
-                        />
-                        <label className="text-sm">Emergency</label>
-                    </div>
-                </div>
-
-                {/* Insert Button */}
-                <div className="flex justify-end">
-                    <ActionButton label="Insert" onClick={handleInsert} className="text-xs px-4 py-1" />
-                </div>
-            </div>
-
-            {/* Table */}
-            <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
-                <div
-                    className="max-h-[225px] overflow-y-auto scrollbar-hide"
-                    style={{
-                        scrollbarWidth: 'none',
-                        msOverflowStyle: 'none',
-                    }}
-                >
-                    <table className="w-full text-[11px] text-center border-collapse">
-                        <thead className="bg-blue-50 text-gray-800 font-semibold sticky top-0 z-10">
-                            <tr>
-                                <TableReuse type="th">Date/Time</TableReuse>
-                                <TableReuse type="th">Doctor Name</TableReuse>
-                                <TableReuse type="th">Remarks</TableReuse>
-                                <TableReuse type="th">Emergency</TableReuse>
-                                <TableReuse type="th">Actions</TableReuse>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {vitals.map((v, idx) => (
-                                <tr key={idx} className="hover:bg-gray-100 border-t">
-                                    <TableReuse>{v.date}</TableReuse>
-                                    <TableReuse>{v.doctorName}</TableReuse>
-                                    <TableReuse>{v.remarks}</TableReuse>
-                                    <TableReuse>{v.isEmergency ? "Yes" : "No"}</TableReuse>
-                                    <TableReuse>
-                                        <div className="flex justify-center space-x-2">
-                                            <button
-                                                className="text-blue-500 hover:underline"
-                                            // onClick={() => handleEdit(idx)}
-                                            >
-                                                Edit
-                                            </button>
-                                            <button
-                                                className="text-red-500 hover:underline"
-                                                onClick={() => setVitals(vitals.filter((_, i) => i !== idx))}
-                                            >
-                                                Delete
-                                            </button>
-                                        </div>
-                                    </TableReuse>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <hr className="border-t mt-6 mb-2 border-gray-300" />
-
-            {/* Save Button */}
-            <div className="flex justify-center ">
-                <SaveButton label="Save" />
-            </div>
+          <ReusableInputField
+            className="border-2 rounded-lg"
+            id="remarks"
+            label="Remarks"
+            width="w-full"
+            value={remark}
+            onChange={(e) => setRemark(e.target.value)}
+          />
+          <div className="flex justify-center gap-4">
+            <ActionButton
+              label="Insert"
+              onClick={handleInsert}
+              className="text-xs px-4 py-1"
+            />
+            <ActionButton
+              label="Posted Data"
+              className="text-xs px-4 py-1"
+            />
+          </div>
         </div>
-    );
+      </div>
+
+      <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+        <div className="max-h-[225px] overflow-y-auto scrollbar-hide">
+          <table className="w-full text-[11px] text-center border-collapse">
+            <thead className="bg-blue-50 text-gray-800 font-semibold sticky top-0 z-10">
+              <tr>
+                <TableReuse type="th">Date/Time</TableReuse>
+                <TableReuse type="th">Doctor Name</TableReuse>
+                <TableReuse type="th">Remarks</TableReuse>
+                <TableReuse type="th">Actions</TableReuse>
+              </tr>
+            </thead>
+
+            <tbody>
+              {/* Render newly inserted vitals at the top */}
+              {[...vitals].reverse().map((v, idx) => (
+                <tr key={"vital-" + idx} className="hover:bg-gray-100 border-t">
+                  <TableReuse>{v.date}</TableReuse>
+                  <TableReuse>{v.doctorName}</TableReuse>
+                  <TableReuse>{v.remarks}</TableReuse>
+                  <TableReuse>
+                    <div className="flex justify-center space-x-2">
+                      <button
+                        className="text-red-500 hover:underline"
+                        onClick={() =>
+                          setVitals(vitals.filter((_, i) => i !== idx))
+                        }
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </TableReuse>
+                </tr>
+              ))}
+
+              {/* Render API fetched data below */}
+              {table.map((item, idx) => (
+                <tr key={"api-" + idx} className="hover:bg-gray-100 border-t">
+                  <TableReuse>{item.orddate || "N/A"}</TableReuse>
+                  <TableReuse>{item.consultantname || "N/A"}</TableReuse>
+                  <TableReuse>{item.remarks || "N/A"}</TableReuse>
+                  <TableReuse>
+                    <div className="flex justify-center space-x-2">
+                      {/* Actions if needed */}
+                    </div>
+                  </TableReuse>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <hr className="border-t mt-6 mb-2 border-gray-300" />
+      <div className="flex justify-center ">
+        <SaveButton label="Save" onClick={savebtn} />
+      </div>
+    </div>
+  );
 }
