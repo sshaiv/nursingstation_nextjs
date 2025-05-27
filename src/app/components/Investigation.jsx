@@ -8,6 +8,8 @@ import ReusableInputField from "../common/SmallInputfields";
 import DoctorModal from "./DoctorModal";
 import InvestigationModal from "./InvestigationModal";
 import useSaveInvData from "../hooks/useSaveInvData";
+import axios from "axios";
+import API_ENDPOINTS from "../constants/api_url";
 
 export default function Investigation({
   visitid,
@@ -15,7 +17,7 @@ export default function Investigation({
   empid,
   patientData,
 }) {
-    const [isSaved, setIsSaved] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
   const [isDoctorModalOpen, setDoctorModalOpen] = useState(true);
   const [showSecondModal, setShowSecondModal] = useState(false);
   const [doctorData, setDoctorData] = useState(null);
@@ -25,14 +27,16 @@ export default function Investigation({
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [time, setTime] = useState("");
   const [errors, setErrors] = useState({});
-  const [doctorName, setDoctorName] = useState(""); 
+  const [doctorName, setDoctorName] = useState("");
   const [doctorOptions, setDoctorOptions] = useState([]);
-const [remark, setRemark] = useState("");
- const [selectedServices, setSelectedServices] = useState([]);
+  const [remark, setRemark] = useState("");
+  const [selectedServices, setSelectedServices] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [table, setTable] = useState([]);
 
   const handleSelectServices = (selectedIds) => {
     console.log("inv in inv", selectedIds);
-   
+
     setSelectedServices(selectedIds);
     setShowSecondModal(false);
   };
@@ -47,7 +51,7 @@ const [remark, setRemark] = useState("");
     if (typeof doctor === "string") {
       selectedDoc = doctorOptions.find((doc) => doc.value === doctor);
     }
-     //console.log("cvbnm", selectedDoc);
+    //console.log("cvbnm", selectedDoc);
     if (selectedDoc) {
       setDoctorData(selectedDoc);
       setDoctorName(selectedDoc.label || selectedDoc.CName);
@@ -58,75 +62,138 @@ const [remark, setRemark] = useState("");
     setDoctorModalOpen(false);
   };
 
- 
- const handleInsert = () => {
-  setErrors({});
+  const handleInsert = () => {
+    setErrors({});
 
-  if (!selectedDate || !doctorData || selectedServices.length === 0) {
-    const newErrors = {};
-    if (!selectedDate) newErrors.dateTime = "Date and time are required.";
-    if (!doctorData) newErrors.doctorName = "Please select a doctor.";
-    if (selectedServices.length === 0) newErrors.services = "Please select at least one investigation.";
-    setErrors(newErrors);
-    return;
-  }
+    if (!selectedDate || !doctorData || selectedServices.length === 0) {
+      const newErrors = {};
+      if (!selectedDate) newErrors.dateTime = "Date and time are required.";
+      if (!doctorData) newErrors.doctorName = "Please select a doctor.";
+      if (selectedServices.length === 0)
+        newErrors.services = "Please select at least one investigation.";
+      setErrors(newErrors);
+      return;
+    }
 
-  const getCurrentDateTime = () => {
-    const now = new Date();
-    const day = String(now.getDate()).padStart(2, "0");
-    const month = String(now.getMonth() + 1).padStart(2, "0");
-    const year = now.getFullYear();
+    const getCurrentDateTime = () => {
+      const now = new Date();
+      const day = String(now.getDate()).padStart(2, "0");
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      const year = now.getFullYear();
 
-    let hours = now.getHours();
-    const minutes = String(now.getMinutes()).padStart(2, "0");
-    const ampm = hours >= 12 ? "PM" : "AM";
-    hours = hours % 12 || 12;
+      let hours = now.getHours();
+      const minutes = String(now.getMinutes()).padStart(2, "0");
+      const ampm = hours >= 12 ? "PM" : "AM";
+      hours = hours % 12 || 12;
 
-    return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
+      return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
+    };
+
+    const currentDateTime = getCurrentDateTime();
+
+    const newEntries = selectedServices.map((service) => ({
+      date: currentDateTime,
+      doctorName: doctorData.label || doctorData.CName || "N/A",
+      investigation:
+        service.InvestigationName ||
+        service.servname ||
+        service.CName ||
+        "Unknown",
+      remarks: remark || "",
+    }));
+
+    setVitals((prev) => [...prev, ...newEntries]);
+
+    // Optional: reset remark after inserting
+    setRemark("");
   };
 
-  const currentDateTime = getCurrentDateTime();
-
-  const newEntries = selectedServices.map((service) => ({
-    date: currentDateTime,
-    doctorName: doctorData.label || doctorData.CName || "N/A",
-    investigation: service.InvestigationName || service.servname || service.CName || "Unknown",
-    remarks: remark || "",
-  }));
-
-  setVitals((prev) => [...prev, ...newEntries]);
-  
-  // Optional: reset remark after inserting
-  setRemark("");
-};
-
-
- 
-const savebtn = async () => {
-        console.log("savebtn ", saveData);
-        try {
-            const response = await fetch("https://doctorapi.medonext.com/API/HMS/SavePatNursingINVData", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(saveData),
-            });
-
-            const result = await response.json();
-            console.log("Response:", result);
-
-            if (response.ok) {
-                alert("Data saved successfully!");
-                setIsSaved(true); 
-            } else {
-                alert("Failed to save data.");
-            }
-        } catch (error) {
-            console.error("Error saving data:", error);
-            alert("An error occurred while saving data.");
+  const savebtn = async () => {
+    console.log("savebtn ", saveData);
+    try {
+      const response = await fetch(
+         API_ENDPOINTS.savePatNursingINVData,
+        
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(saveData),
         }
-    };
+      );
+
+      const result = await response.json();
+      console.log("Response:", result);
+
+      if (response.ok) {
+        
+        alert("Data saved successfully!");
+        setIsSaved(true);
+      } else {
+        alert("Failed to save data.");
+      }
+    } catch (error) {
+      console.error("Error saving data:", error);
+      alert("An error occurred while saving data.");
+    }
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    axios
+      .get(
+        `https://doctorapi.medonext.com/api/HMS/GetInvDetail?visitid=${visitid}`
+      )
+      .then((res) => {
+        //console.log("🚀 Full API response (res.data):", res.data);
+
+        let parsedData = [];
+        try {
+          if (typeof res.data === "string") {
+            parsedData = JSON.parse(res.data);
+          } else if (
+            typeof res.data === "object" &&
+            typeof res.data.data === "string"
+          ) {
+            parsedData = JSON.parse(res.data.data);
+          } else {
+            parsedData = res.data;
+          }
+        } catch (err) {
+          console.error("Error parsing investigations JSON:", err);
+          parsedData = [];
+        }
+
+       // console.log("✅ Parsed Data:", parsedData);
+
+        if (parsedData && Array.isArray(parsedData.Table)) {
+          parsedData.Table.forEach((item, index) => {
+            // console.log(
+            //   `Item ${index} => servname: ${
+            //     item.servname || "N/A"
+            //   }, 
+            //   consultantname: ${item.consultantname || "N/A"},
+            //   datetime: ${item.orddate || "N/A"},
+            //    remarks: ${
+            //     item.remarks || "N/A"
+            //   }`
+            // );
+          });
+          setTable(parsedData.Table);
+        } else {
+          console.warn("Parsed data me Table array nahi mila:", parsedData);
+          setTable([]);
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching investigations:", err);
+        setTable([]);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [visitid]);
 
   return (
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
@@ -145,7 +212,6 @@ const savebtn = async () => {
           visitid={visitid}
           gssuhid={gssuhid}
           empid={empid}
-
         />
       )}
 
@@ -232,39 +298,96 @@ const savebtn = async () => {
                 <TableReuse type="th">Actions</TableReuse>
               </tr>
             </thead>
-            <tbody>
-              {vitals.map((v, idx) => (
-                <tr key={idx} className="hover:bg-gray-100 border-t">
-                  <TableReuse>{v.date}</TableReuse>
-                  <TableReuse>{v.doctorName}</TableReuse>
-                  <TableReuse>{v.investigation}</TableReuse>
-
-                  <TableReuse>{v.remarks}</TableReuse>
+            {/* <tbody>
+              
+              {table.map((item, idx) => (
+                <tr key={"api-" + idx} className="hover:bg-gray-100 border-t">
+                  <TableReuse>
+                    {item.orddate || "N/A" }
+                  </TableReuse>
+                  <TableReuse>{item.consultantname || "N/A"}</TableReuse>
+                  <TableReuse>{item.servname || "N/A"}</TableReuse>
+                  <TableReuse>{item.remarks || "N/A"}</TableReuse>
                   <TableReuse>
                     <div className="flex justify-center space-x-2">
-                      {/* <button className="text-blue-500 hover:underline">
-                        Edit
-                      </button> */}
-                      <button
-                        className="text-red-500 hover:underline"
-                        onClick={() =>
-                          setVitals(vitals.filter((_, i) => i !== idx))
-                        }
-                      >
-                        Delete
-                      </button>
+                     
                     </div>
                   </TableReuse>
                 </tr>
               ))}
-            </tbody>
+
+           
+              {vitals.map((v, idx) => (
+                <tr key={"vital-" + idx} className="hover:bg-gray-100 border-t">
+                  <TableReuse>{v.date}</TableReuse>
+                  <TableReuse>{v.doctorName}</TableReuse>
+                  <TableReuse>{v.investigation}</TableReuse>
+                  <TableReuse>{v.remarks}</TableReuse>
+                  <TableReuse>
+                    <div className="flex justify-center space-x-2">
+                      {v.source !== "api" && (
+                        <button
+                          className="text-red-500 hover:underline"
+                          onClick={() =>
+                            setVitals(vitals.filter((_, i) => i !== idx))
+                          }
+                        >
+                          Delete
+                        </button>
+                      )}
+                    </div>
+                  </TableReuse>
+                </tr>
+              ))}
+            </tbody> */}
+<tbody>
+  {/* Render newly inserted vitals at the top */}
+  {[...vitals].reverse().map((v, idx) => (
+    <tr key={"vital-" + idx} className="hover:bg-gray-100 border-t">
+      <TableReuse>{v.date}</TableReuse>
+      <TableReuse>{v.doctorName}</TableReuse>
+      <TableReuse>{v.investigation}</TableReuse>
+      <TableReuse>{v.remarks}</TableReuse>
+      <TableReuse>
+        <div className="flex justify-center space-x-2">
+          {v.source !== "api" && (
+            <button
+              className="text-red-500 hover:underline"
+              onClick={() =>
+                setVitals(vitals.filter((_, i) => i !== idx))
+              }
+            >
+              Delete
+            </button>
+          )}
+        </div>
+      </TableReuse>
+    </tr>
+  ))}
+
+  {/* Render API fetched data below */}
+  {table.map((item, idx) => (
+    <tr key={"api-" + idx} className="hover:bg-gray-100 border-t">
+      <TableReuse>{item.orddate || "N/A"}</TableReuse>
+      <TableReuse>{item.consultantname || "N/A"}</TableReuse>
+      <TableReuse>{item.servname || "N/A"}</TableReuse>
+      <TableReuse>{item.remarks || "N/A"}</TableReuse>
+      <TableReuse>
+        <div className="flex justify-center space-x-2">
+          {/* Actions if needed */}
+        </div>
+      </TableReuse>
+    </tr>
+  ))}
+</tbody>
+
           </table>
         </div>
       </div>
 
       <hr className="border-t mt-6 mb-2 border-gray-300" />
       <div className="flex justify-center ">
-        <SaveButton label="Save"  onClick={savebtn} />
+        <SaveButton label="Save" onClick={savebtn} />
       </div>
     </div>
   );

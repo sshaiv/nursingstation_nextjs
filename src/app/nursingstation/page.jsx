@@ -126,7 +126,12 @@ function NursingStationContent() {
             </div>
 
             <div className="md:w-7/12 w-full">
-              <VitalsTable title="Vitals" />
+              <VitalsTable
+               title="Vitals" visitid={visitid}
+            gssuhid={gssuhid}
+            empid={empid}
+            patientData={patientData}
+            />
             </div>
           </div>
 

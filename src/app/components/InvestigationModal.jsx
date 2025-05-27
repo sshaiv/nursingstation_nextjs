@@ -15,13 +15,16 @@ export default function InvestigationModal({
   setRemark,
   remark
 }) {
+  
+  
+  
   const [visitThrough, setVisitThrough] = useState("Visit");
   const [tab, setTab] = useState("COMMON");
   const [investigations, setInvestigations] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedIds, setSelectedIds] = useState([]);
- 
+
 
   useEffect(() => {
     setLoading(true);
@@ -32,6 +35,7 @@ export default function InvestigationModal({
     } else if (tab === "ALL") {
       url = `${API_ENDPOINTS.getAllInv}?visitid=${patientData.visitid}&wardcatgid=${patientData.reqwardcatgid}&wardtypeid=${patientData.wardtypeid}&tariffid=${patientData.terriffid}&billgrpid=${patientData.billgrpid}&isshowservicewithhospcode=0&isshowservicewithcharges=1`;
     }
+console.log("url",url);
 
     axios
       .get(url) 
@@ -82,107 +86,308 @@ export default function InvestigationModal({
     return startsWithTerm(sername) || startsWithTerm(cname);
   });
 
+  // const handleDoneClick = () => {
+  //   const getCurrentDateTime = () => {
+  //     const now = new Date();
+
+  //     const day = String(now.getDate()).padStart(2, "0");
+  //     const month = String(now.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+  //     const year = now.getFullYear();
+
+  //     let hours = now.getHours();
+  //     const minutes = String(now.getMinutes()).padStart(2, "0");
+  //     const ampm = hours >= 12 ? "PM" : "AM";
+  //     hours = hours % 12;
+  //     hours = hours ? hours : 12; // the hour '0' should be '12'
+
+  //     const formattedTime = `${hours}:${minutes} ${ampm}`;
+  //     return `${day}/${month}/${year} ${formattedTime}`;
+  //   };
+
+  //   const currentDateTime = getCurrentDateTime();
+
+  //   const jsonStringsubinvreqdetail
+  //                      = selectedIds.map((id) => {
+  //     const selectedInvestigation = investigations.find(
+  //       (item) => item.CID === id || item.servid === id
+  //     );
+
+  //     return {
+  //       rowid:0,
+  //       SNo: 1,
+  //       servid: selectedInvestigation?.servid ||selectedInvestigation?.CID|| "",
+  //       InvestigationName:
+  //         selectedInvestigation?.servname || selectedInvestigation?.CName || "",
+  //       consultantid: doctorId?.CID,
+  //       DoctorName: doctorId?.CName,
+  //       isurgent: 0,
+  //       Urgent: "",
+  //       consenttypeid: 0,
+  //       ConsentType: "",
+  //       isconsenttaken: 0,
+  //       ConsentTaken: "",
+  //       Remove: "",
+  //       reqid: 0,
+  //       invdate: "",
+  //       remarks: remark,
+  //       issampled: 0,
+  //       isresult: 0,
+  //       isverified: 0,
+  //       isunabletoprocess: 0,
+  //       isemg: 0,
+  //       preparationstatusid: 0,
+  //       preparationremarkid: 0,
+  //       reasonfornotpreparation: " ",
+  //       isconsentreq: 0,
+  //       isremove: 0,
+  //       removedatetime: " ",
+  //       isprofile: 0,
+  //       profileservid: 0,
+  //       charge: selectedInvestigation?.charge || " ",
+  //       isinactive: 0,
+  //       entempid: selectedInvestigation?.entempid || " ",
+  //       entdatetime: currentDateTime,
+  //       entwsname: "GSLAP2",
+  //       modifyempid: selectedInvestigation?.modifyempid || " ",
+  //       modifydatetime: currentDateTime,
+  //       modifywsname: "GSLAP2",
+  //       locationid: selectedInvestigation?.locationid || " ",
+  //       IsEdit: 0,
+  //       financialyear: "",
+  //       servcatgid:
+  //         selectedInvestigation?.servid || selectedInvestigation?.CID || "",
+  //       servsubcatgid: selectedInvestigation?.servsubcatgid || " ",
+  //       deptid: selectedInvestigation?.deptid || " ",
+  //       subdeptid: selectedInvestigation?.subdeptid || " ",
+  //       statusid: 0,
+  //       Consultant: " ",
+  //       reqwardcatgid: patientData.reqwardcatgid,
+  //       ispaid: 0,
+  //       Paid: "",
+  //       isrepeat: 0,
+  //       Repeat: "",
+  //       repeatremark: "",
+  //       RepeatRemark: "",
+  //       itemlineid: 1,
+  //       performedbyempid: 0,
+  //       callbyempid: 0,
+  //       callbyremark: "",
+  //       CallByRemark: "",
+  //       postinfinalbill: 0,
+  //       otherconsultantid: doctorId?.CID,
+  //     };
+  //   });
+
+  // //    const jsonStringsubpatbilinginfomodel = selectedIds.map((id) => {
+  // //     return {     
+  // //     visitid:patientData.visitid,
+  // //       gssuhid:patientData.gssuhid,
+  // //       reqwardcatgid:patientData.reqwardcatgid,
+  // //       allotedcatg:patientData.wardcatgid,
+  // //       bedno:patientData.bedno,
+  // //       admissiontypeid:patientData.admissiontypeid,
+  // //       corporateid:patientData.corporateid,
+  // //       billinggroupid:patientData.billgrpid,
+  // //       terriffid:patientData.terriffid
+  // //   };
+  // // });
+  // //    const jsonStringsubinvreqmain = selectedIds.map((id) => {
+  // //    const selectedInvestigation = investigations.find(
+  // //       (item) => item.CID === id || item.servid === id
+  // //     );
+  // //     return {     
+  // //     rowid:0,
+  // //     reqid:0 ,
+  // //     gssuhid:patientData.gssuhid,
+  // //     visitid:patientData.visitid,
+  // //     visittype:"I",
+  // //     orddate:currentDateTime,
+  // //     isallresultready:0,
+  // //     bedno:patientData.bedno,
+  // //     consultantvisitid:0,
+  // //     isremove:0,
+  // //     visitthrough:"VISIT",
+  // //     removedatetime:0,
+  // //     isinactive:0,
+  // //     entempid: selectedInvestigation?.entempid || " ",
+  // //     entdatetime:currentDateTime,
+  // //     entwsname:"GSLAP2",
+  // //     modifyempid: selectedInvestigation?.modifyempid || " ",
+  // //     modifydatetime:currentDateTime,
+  // //     modifywsname:"GSLAP2",
+  // //     locationid: selectedInvestigation?.locationid || " ",
+  // //     financialyear:" ",
+  // //     isprint:0,
+  // //     removeremark:"",
+  // //     secondconsultantid:doctorId?.CID,
+  // //   };
+  // // });
+
+  //   console.log("Prepared JSON Array:", jsonStringsubinvreqdetail);
+  //   // console.log("Prepared JSON Array:", jsonStringsubpatbilinginfomodel);
+  //   // console.log("Prepared JSON Array:", jsonStringsubinvreqmain);
+
+  //    setSaveData(prevData => ({
+  //               ...prevData,
+  //               jsonStringsubinvreqdetail: JSON.stringify(jsonStringsubinvreqdetail),
+  //               // jsonStringsubpatbilinginfomodel: JSON.stringify(jsonStringsubpatbilinginfomodel),
+  //               // jsonStringsubinvreqmain: JSON.stringify(jsonStringsubinvreqmain)
+  //           }));
+
+  //   if (onSelect) onSelect(jsonStringsubinvreqdetail); // Pass the prepared JSON array back
+  //   if (onClose) onClose(); // Close modal
+  // };
+
+
+
   const handleDoneClick = () => {
-    const getCurrentDateTime = () => {
-      const now = new Date();
-
-      const day = String(now.getDate()).padStart(2, "0");
-      const month = String(now.getMonth() + 1).padStart(2, "0"); // Months are 0-based
-      const year = now.getFullYear();
-
-      let hours = now.getHours();
-      const minutes = String(now.getMinutes()).padStart(2, "0");
-      const ampm = hours >= 12 ? "PM" : "AM";
-      hours = hours % 12;
-      hours = hours ? hours : 12; // the hour '0' should be '12'
-
-      const formattedTime = `${hours}:${minutes} ${ampm}`;
-      return `${day}/${month}/${year} ${formattedTime}`;
-    };
-
-    const currentDateTime = getCurrentDateTime();
-
-    const jsonArray = selectedIds.map((id) => {
-      const selectedInvestigation = investigations.find(
-        (item) => item.CID === id || item.servid === id
-      );
-
-      return {
-        rowid: "0",
-        SNo: "1",
-        servid: selectedInvestigation?.servid ||selectedInvestigation?.CID|| "",
-        InvestigationName:
-          selectedInvestigation?.servname || selectedInvestigation?.CName || "",
-        consultantid: doctorId?.CID,
-        DoctorName: doctorId?.CName,
-        isurgent: "",
-        Urgent: "",
-        consenttypeid: "",
-        ConsentType: "",
-        isconsenttaken: "",
-        ConsentTaken: "",
-        Remove: "",
-        reqid: "0",
-        invdate: "",
-        remarks: remark,
-        issampled: 0,
-        isresult: 0,
-        isverified: 0,
-        isunabletoprocess: 0,
-        isemg: 0,
-        preparationstatusid: 0,
-        preparationremarkid: 0,
-        reasonfornotpreparation: " ",
-        isconsentreq: 0,
-        isremove: 0,
-        removedatetime: " ",
-        isprofile: 0,
-        profileservid: 0,
-        charge: selectedInvestigation?.charge || " ",
-        isinactive: 0,
-        entempid: selectedInvestigation?.entempid || " ",
-        entdatetime: currentDateTime,
-        entwsname: "GSLAP2",
-        modifyempid: selectedInvestigation?.modifyempid || " ",
-        modifydatetime: currentDateTime,
-        modifywsname: "GSLAP2",
-        locationid: selectedInvestigation?.locationid || " ",
-        IsEdit: 0,
-        financialyear: "",
-        servcatgid:
-          selectedInvestigation?.servid || selectedInvestigation?.CID || "",
-        servsubcatgid: selectedInvestigation?.servsubcatgid || " ",
-        deptid: selectedInvestigation?.deptid || " ",
-        subdeptid: selectedInvestigation?.subdeptid || " ",
-        statusid: 0,
-        Consultant: " ",
-        reqwardcatgid: patientData.reqwardcatgid,
-        ispaid: 0,
-        Paid: "",
-        isrepeat: 0,
-        Repeat: "",
-        repeatremark: "",
-        RepeatRemark: "",
-        itemlineid: 1,
-        performedbyempid: 0,
-        callbyempid: 0,
-        callbyremark: "",
-        CallByRemark: "",
-        postinfinalbill: 1,
-        otherconsultantid: doctorId?.CID,
-      };
-    });
-
-    console.log("Prepared JSON Array:", jsonArray);
-
-     setSaveData(prevData => ({
-                ...prevData,
-                jsonStringsubinvreqdetail: JSON.stringify(jsonArray)
-            }));
-
-    if (onSelect) onSelect(jsonArray); // Pass the prepared JSON array back
-    if (onClose) onClose(); // Close modal
+  const getCurrentDateTime = () => {
+    const now = new Date();
+    const day = String(now.getDate()).padStart(2, "0");
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const year = now.getFullYear();
+    let hours = now.getHours();
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12;
+    const formattedTime = `${hours}:${minutes} ${ampm}`;
+    return `${day}/${month}/${year} ${formattedTime}`;
   };
+
+  const currentDateTime = getCurrentDateTime();
+
+  // Multiple investigations
+  const jsonStringsubinvreqdetail = selectedIds.map((id, index) => {
+    const selectedInvestigation = investigations.find(
+      (item) => item.CID === id || item.servid === id
+    );
+
+    return {
+      rowid: 0,
+      SNo: index + 1,
+      servid: selectedInvestigation?.servid || selectedInvestigation?.CID || "",
+      InvestigationName:
+        selectedInvestigation?.servname || selectedInvestigation?.CName || "",
+      consultantid: doctorId?.CID,
+      DoctorName: doctorId?.CName,
+      isurgent: 0,
+      Urgent: "",
+      consenttypeid: 0,
+      ConsentType: "",
+      isconsenttaken: 0,
+      ConsentTaken: "",
+      Remove: "",
+      reqid: 0,
+      invdate: "",
+      remarks: remark,
+      issampled: 0,
+      isresult: 0,
+      isverified: 0,
+      isunabletoprocess: 0,
+      isemg: 0,
+      preparationstatusid: 0,
+      preparationremarkid: 0,
+      reasonfornotpreparation: " ",
+      isconsentreq: 0,
+      isremove: 0,
+      removedatetime: " ",
+      isprofile: 0,
+      profileservid: 0,
+      charge: selectedInvestigation?.charge || " ",
+      isinactive: 0,
+      entempid: selectedInvestigation?.entempid || " ",
+      entdatetime: currentDateTime,
+      entwsname: "GSLAP2",
+      modifyempid: selectedInvestigation?.modifyempid || " ",
+      modifydatetime: currentDateTime,
+      modifywsname: "GSLAP2",
+      locationid: selectedInvestigation?.locationid || " ",
+      IsEdit: 0,
+      financialyear: "",
+      servcatgid: selectedInvestigation?.servid || selectedInvestigation?.CID || "",
+      servsubcatgid: selectedInvestigation?.servsubcatgid || " ",
+      deptid: selectedInvestigation?.deptid || " ",
+      subdeptid: selectedInvestigation?.subdeptid || " ",
+      statusid: 0,
+      Consultant: " ",
+      reqwardcatgid: patientData.reqwardcatgid,
+      ispaid: 0,
+      Paid: "",
+      isrepeat: 0,
+      Repeat: "",
+      repeatremark: "",
+      RepeatRemark: "",
+      itemlineid: 1,
+      performedbyempid: 0,
+      callbyempid: 0,
+      callbyremark: "",
+      CallByRemark: "",
+      postinfinalbill: 0,
+      otherconsultantid: doctorId?.CID,
+    };
+  });
+
+  // Single billing info (outside loop)
+  const jsonStringsubpatbilinginfomodel = [
+    {
+      visitid: patientData.visitid,
+      gssuhid: patientData.gssuhid,
+      reqwardcatgid: patientData.reqwardcatgid,
+      allotedcatg: patientData.wardcatgid,
+      bedno: patientData.bedno,
+      admissiontypeid: patientData.admissiontypeid,
+      corporateid: patientData.corporateid,
+      billinggroupid: patientData.billgrpid,
+      terriffid: patientData.terriffid,
+    },
+  ];
+
+  // Single main request info (outside loop)
+  const jsonStringsubinvreqmain = [
+    {
+      rowid: 0,
+      reqid: 0,
+      gssuhid: patientData.gssuhid,
+      visitid: patientData.visitid,
+      visittype: "I",
+      orddate: currentDateTime,
+      isallresultready: 0,
+      bedno: patientData.bedno,
+      consultantvisitid: 0,
+      isremove: 0,
+      visitthrough: "VISIT",
+      removedatetime: 0,
+      isinactive: 0,
+      entempid: investigations[0]?.entempid || " ",
+      entdatetime: currentDateTime,
+      entwsname: "GSLAP2",
+      modifyempid: investigations[0]?.modifyempid || " ",
+      modifydatetime: currentDateTime,
+      modifywsname: "GSLAP2",
+      locationid: investigations[0]?.locationid || " ",
+      financialyear: " ",
+      isprint: 0,
+      removeremark: "",
+      secondconsultantid: doctorId?.CID,
+    },
+  ];
+
+  // Save all data
+  setSaveData((prevData) => ({
+    ...prevData,
+    jsonStringsubinvreqdetail: JSON.stringify(jsonStringsubinvreqdetail),
+    jsonStringsubpatbilinginfomodel: JSON.stringify(jsonStringsubpatbilinginfomodel),
+    jsonStringsubinvreqmain: JSON.stringify(jsonStringsubinvreqmain),
+  }));
+
+  console.log("Details:", jsonStringsubinvreqdetail);
+  console.log("Billing Info:", jsonStringsubpatbilinginfomodel);
+  console.log("Main Info:", jsonStringsubinvreqmain);
+
+  if (onSelect) onSelect(jsonStringsubinvreqdetail);
+  if (onClose) onClose();
+};
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-xs">
@@ -356,3 +561,5 @@ export default function InvestigationModal({
     </div>
   );
 }
+
+

@@ -10,7 +10,8 @@ import { format } from "date-fns";
 import TableReuse from "../common/TableReuse";
 import DateTimeInput from "../common/DateTimeInput";
 
-export default function VitalsTable({ title }) {
+export default function VitalsTable({ title , visitid,gssuhid,empid}) {
+  
   const [vitals, setVitals] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState("");
@@ -40,7 +41,7 @@ export default function VitalsTable({ title }) {
   const loadVitalData = async () => {
     try {
       const response = await fetch(
-        'https://doctorapi.medonext.com/api/DoctorAPI/GetData?JsonAppInbox={"doctorid":"24","fromdate":"","todate":"","datafor":"VITAL","visitid":"GNI24250001379","gCookieSessionOrgID":"48","gCookieSessionDBId":"gdnew"}'
+        `https://doctorapi.medonext.com/API/HMS/GetPatVitalData?visitid=${visitid}`
       );
       const data = await response.json();
       const parsedData = typeof data === "string" ? JSON.parse(data) : data;
