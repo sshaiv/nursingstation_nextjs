@@ -46,7 +46,7 @@ export default function ButtonGrid({ visitid, gssuhid, empid ,patientData}) {
             setShowModal(true);
         } 
         else if (label === "Nursing Services") {
-            setModalContent(<NursingServices visitid={visitid} gssuhid={gssuhid} empid={empid} />);
+            setModalContent(<NursingServices visitid={visitid} gssuhid={gssuhid} empid={empid} patientData={patientData}/>);
             setShowModal(true);
         }
         else if (label === "Consumables") {
@@ -54,7 +54,7 @@ export default function ButtonGrid({ visitid, gssuhid, empid ,patientData}) {
             setShowModal(true);
         }
         else if (label === "Doctor Visit") {
-            setModalContent(<DoctorVisit visitid={visitid} gssuhid={gssuhid} empid={empid} />);
+            setModalContent(<DoctorVisit visitid={visitid} gssuhid={gssuhid} empid={empid}  patientData={patientData}/>);
             setShowModal(true);
         }
         else if (label === "Advice Surgery") {

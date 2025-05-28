@@ -142,7 +142,8 @@ export default function Investigation({
     setLoading(true);
     axios
       .get(
-        `https://doctorapi.medonext.com/api/HMS/GetInvDetail?visitid=${visitid}`
+       
+         `${API_ENDPOINTS.getInvDetail}/?visitid=${visitid}`
       )
       .then((res) => {
         //console.log("🚀 Full API response (res.data):", res.data);
@@ -226,7 +227,6 @@ export default function Investigation({
           remark={remark}
         />
       )}
-      
 
       <div className="border border-gray-100 rounded-lg space-y-4">
         <div className="grid grid-cols-4 md:grid-cols-3 lg:grid-cols-5 gap-5 items-end">
@@ -246,7 +246,6 @@ export default function Investigation({
           </div>
 
           <div className="flex flex-col w-full">
-           
             <input
               type="text"
               readOnly
@@ -300,7 +299,6 @@ export default function Investigation({
                 <TableReuse type="th">Actions</TableReuse>
               </tr>
             </thead>
-
             <tbody>
               {/* Render newly inserted vitals at the top */}
               {[...vitals].reverse().map((v, idx) => (
@@ -326,20 +324,34 @@ export default function Investigation({
                 </tr>
               ))}
 
-              {/* Render API fetched data below */}
-              {table.map((item, idx) => (
-                <tr key={"api-" + idx} className="hover:bg-gray-100 border-t">
-                  <TableReuse>{item.orddate || "N/A"}</TableReuse>
-                  <TableReuse>{item.consultantname || "N/A"}</TableReuse>
-                  <TableReuse>{item.servname || "N/A"}</TableReuse>
-                  <TableReuse>{item.remarks || "N/A"}</TableReuse>
-                  <TableReuse>
-                    <div className="flex justify-center space-x-2">
-                      {/* Actions if needed */}
-                    </div>
-                  </TableReuse>
+              {/* Conditional rendering for loading */}
+              {loading ? (
+                <tr>
+                  <td colSpan={5} className="text-center py-2 text-gray-500">
+                    ⟳ Loading investigations...
+                  </td>
                 </tr>
-              ))}
+              ) : (
+                <>
+                  {/* Render API fetched data below */}
+                  {table.map((item, idx) => (
+                    <tr
+                      key={"api-" + idx}
+                      className="hover:bg-gray-100 border-t"
+                    >
+                      <TableReuse>{item.orddate || "N/A"}</TableReuse>
+                      <TableReuse>{item.consultantname || "N/A"}</TableReuse>
+                      <TableReuse>{item.servname || "N/A"}</TableReuse>
+                      <TableReuse>{item.remarks || "-"}</TableReuse>
+                      <TableReuse>
+                        <div className="flex justify-center space-x-2">
+                          {/* Actions if needed */}
+                        </div>
+                      </TableReuse>
+                    </tr>
+                  ))}
+                </>
+              )}
             </tbody>
           </table>
         </div>

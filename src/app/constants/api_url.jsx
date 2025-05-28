@@ -18,6 +18,9 @@ const API_ENDPOINTS = {
          getAdvPatientBed :`${BASE_URL}/GetAdvPatientBed`,
          getDoctorFavInv :`${BASE_URL}/GetDoctorFavInv`,
          getAllInv :`${BASE_URL}/GetAllInv`,
+         getInvDetail :`${BASE_URL}/GetInvDetail`,
+         getPatDoctorHistory :`${BASE_URL}/GetPatDoctorHistory`,
+         getServices :`${BASE_URL}/getServices`,
 
 
 
@@ -27,6 +30,7 @@ const API_ENDPOINTS = {
   savePresentIllness: `${BASE_URL}/SavePatpresentillnessData`, 
   saveClinicalExamination: `${BASE_URL}/SavePatClinicalExaminationData`, 
   savePatNursingINVData: `${BASE_URL}/SavePatNursingINVData`, 
+  savePatDoctorVisit: `${BASE_URL}/SavePatDoctorVisit`, 
 };
 
 export default API_ENDPOINTS;
