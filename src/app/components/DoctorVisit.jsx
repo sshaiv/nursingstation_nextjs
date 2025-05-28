@@ -348,7 +348,7 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
               id="emergency"
               checked={isEmergency}
               onChange={(e) => setIsEmergency(e.target.checked)}
-              className="w-4 h-4"
+              className="w-4 h-4 text-black"
             />
             <label htmlFor="emergency" className="text-sm">
               Emergency
