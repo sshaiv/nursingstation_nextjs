@@ -139,7 +139,7 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
         modifyempid: 21,
         modifydatetime: currentDateTime,
         modifywsname: "GSLAP2",
-        locationid: 1,
+        locationid: patientData.locationid,
         financialyear: "2526",
         IsEdit: 0,
       },
@@ -173,7 +173,7 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
       jsonStringdoctorvisit,
       jsonStringsubpatbilinginfomodel
     );
-    // console.log("jsonStringsubpatbilinginfomodel:", jsonStringsubpatbilinginfomodel);
+  
 
     setVitals((prev) => [...prev, newEntry]);
 
