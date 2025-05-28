@@ -1,6 +1,3 @@
-
-
-
 import React, { useEffect, useState } from "react";
 import { ModalHeading } from "../common/text";
 import { ActionButton, SaveButton } from "../common/Buttons";
@@ -15,8 +12,6 @@ import useSaveDVData from "../hooks/useSaveDVData";
 import DoctorModal from "./DoctorModal";
 
 export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
- 
-  
   const [isSaved, setIsSaved] = useState(false);
   const [isDoctorModalOpen, setDoctorModalOpen] = useState(true);
   const [doctorData, setDoctorData] = useState(null);
@@ -31,14 +26,16 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
   const [loading, setLoading] = useState(false);
   const [table, setTable] = useState([]);
   const [isEmergency, setIsEmergency] = useState(false);
-  const [bedNo, setBedNo] = useState("");
+  const [isInsertClicked, setIsInsertClicked] = useState(false);
+  const [refreshData, setRefreshData] = useState(false);
+  const [isValidToSave, setIsValidToSave] = useState(false);
 
   const [saveData, setSaveData] = useSaveDVData();
   console.log("Updated DV", saveData);
 
   const handleSelectDoctor = (doctor) => {
-      console.log("Doctor in inv:", doctor);
-    
+    console.log("Doctor in inv:", doctor);
+
     let selectedDoc = doctor;
     if (typeof doctor === "string") {
       selectedDoc = doctorOptions.find((doc) => doc.value === doctor);
@@ -52,6 +49,8 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
   };
 
   const handleInsert = () => {
+    setIsInsertClicked(true);
+
     setErrors({});
     if (!selectedDate || !doctorData) {
       const newErrors = {};
@@ -83,92 +82,102 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
       remarks: remark || "",
       bedno: patientData?.bedno || "N/A",
       emergency: isEmergency ? 1 : 0,
-      qty:1,
-      investigation: "", 
+      qty: 1,
+      investigation: "",
       source: "local",
     };
+    const newErrors = {};
+    if (!selectedDate) newErrors.dateTime = "Date and time are required.";
+    if (!doctorData) newErrors.doctorName = "Please select a doctor.";
 
-
-    
-  // Single main request info (outside loop)
-  const jsonStringdoctorvisit = [
-   {
-    rowid:0,
-    consultantvisitid:0,
-    gssuhid:patientData?.gssuhid,
-    visitid:patientData?.visitid,
-    SNo: 1,
-    visitdate:currentDateTime,
-    Date:currentDateTime,
-    visittime:currentDateTime,
-    Time:currentDateTime,
-    visitdatetime:currentDateTime,
-    visitthrough:"VISIT",
-    visittypeid:0,
-    Bedno:patientData?.bedno,
-    BedNo:patientData?.bedno,
-    consultantid:doctorData.CID,
-    DoctorName:doctorData.CName,
-    qty:1,
-    Quantity:1,
-    wardcatgid:patientData.reqwardcatgid,
-    isemergency:isEmergency ? 1 : 0,
-    Emergency:isEmergency ? 1 : 0,
-    remark:remark,
-    Remark:remark,
-    Remove:0,
-    isremove:0,
-    removedatetime:currentDateTime,
-    isverified:0,
-    verificationdatetime:currentDateTime,
-    verifiedbyid:0,
-    verificationremark:" ",
-    callbyempid:0,
-    isinactive:0,
-    entempid:21,
-    entdatetime:currentDateTime,
-    entwsname:"GSLAP2",
-    modifyempid:21,
-    modifydatetime:currentDateTime,
-    modifywsname:"GSLAP2",
-    locationid:1,
-    financialyear:"2526",
-    IsEdit:0
-  }
-  ];
-
-  const jsonStringsubpatbilinginfomodel =
-  [
-  {
-     visitid: patientData.visitid,
-      gssuhid: patientData.gssuhid,
-      reqwardcatgid: patientData.reqwardcatgid,
-      allotedcatg: patientData.wardcatgid,
-      bedno: patientData.bedno,
-      admissiontypeid: patientData.admissiontypeid,
-      corporateid: patientData.corporateid,
-      billinggroupid: patientData.billgrpid,
-      terriffid: patientData.terriffid,
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      setIsValidToSave(false); // ❌ not valid to save
+      return;
     }
+
+    setIsValidToSave(true); // ✅ all good, enable save
+
+    // Single main request info (outside loop)
+    const jsonStringdoctorvisit = [
+      {
+        rowid: 0,
+        consultantvisitid: 0,
+        gssuhid: patientData?.gssuhid,
+        visitid: patientData?.visitid,
+        SNo: 1,
+        visitdate: currentDateTime,
+        Date: currentDateTime,
+        visittime: currentDateTime,
+        Time: currentDateTime,
+        visitdatetime: currentDateTime,
+        visitthrough: "VISIT",
+        visittypeid: 0,
+        Bedno: patientData?.bedno,
+        BedNo: patientData?.bedno,
+        consultantid: doctorData.CID,
+        DoctorName: doctorData.CName,
+        qty: 1,
+        Quantity: 1,
+        wardcatgid: patientData.reqwardcatgid,
+        isemergency: isEmergency ? 1 : 0,
+        Emergency: isEmergency ? 1 : 0,
+        remark: remark,
+        Remark: remark,
+        Remove: 0,
+        isremove: 0,
+        removedatetime: currentDateTime,
+        isverified: 0,
+        verificationdatetime: currentDateTime,
+        verifiedbyid: 0,
+        verificationremark: " ",
+        callbyempid: 0,
+        isinactive: 0,
+        entempid: 21,
+        entdatetime: currentDateTime,
+        entwsname: "GSLAP2",
+        modifyempid: 21,
+        modifydatetime: currentDateTime,
+        modifywsname: "GSLAP2",
+        locationid: 1,
+        financialyear: "2526",
+        IsEdit: 0,
+      },
     ];
 
-  // Save all data
-  setSaveData((prevData) => ({
-    ...prevData,
-    jsonStringdoctorvisit: JSON.stringify(jsonStringdoctorvisit),
-    jsonStringsubpatbilinginfomodel: JSON.stringify(jsonStringsubpatbilinginfomodel),
-   
-  }));
+    const jsonStringsubpatbilinginfomodel = [
+      {
+        visitid: patientData.visitid,
+        gssuhid: patientData.gssuhid,
+        reqwardcatgid: patientData.reqwardcatgid,
+        allotedcatg: patientData.wardcatgid,
+        bedno: patientData.bedno,
+        admissiontypeid: patientData.admissiontypeid,
+        corporateid: patientData.corporateid,
+        billinggroupid: patientData.billgrpid,
+        terriffid: patientData.terriffid,
+      },
+    ];
 
-  console.log("jsonStringdoctorvisit:", jsonStringdoctorvisit,jsonStringsubpatbilinginfomodel);
-  // console.log("jsonStringsubpatbilinginfomodel:", jsonStringsubpatbilinginfomodel);
-  
+    // Save all data
+    setSaveData((prevData) => ({
+      ...prevData,
+      jsonStringdoctorvisit: JSON.stringify(jsonStringdoctorvisit),
+      jsonStringsubpatbilinginfomodel: JSON.stringify(
+        jsonStringsubpatbilinginfomodel
+      ),
+    }));
+
+    console.log(
+      "jsonStringdoctorvisit:",
+      jsonStringdoctorvisit,
+      jsonStringsubpatbilinginfomodel
+    );
+    // console.log("jsonStringsubpatbilinginfomodel:", jsonStringsubpatbilinginfomodel);
 
     setVitals((prev) => [...prev, newEntry]);
 
-
     setRemark("");
-    setBedNo("");
     setIsEmergency(false);
   };
 
@@ -185,9 +194,22 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
 
       const result = await response.json();
       console.log("Response:", result);
-      
+
       if (response.ok) {
         alert("Data saved successfully!");
+        setRefreshData((prev) => !prev);
+        // 🔁 Reset entries and form fields
+        setVitals([]);
+        setSaveData({});
+        setRemark("");
+        setIsEmergency(false);
+        setDoctorData(null);
+        setSelectedDate(null);
+        setErrors({});
+        setIsInsertClicked(false);
+        setDoctorName("");
+        setIsValidToSave(false)
+
         setIsSaved(true);
       } else {
         alert("Failed to save data.");
@@ -198,48 +220,47 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
     }
   };
 
- useEffect(() => {
-  setLoading(true);
-  axios
-    .get(`${API_ENDPOINTS.getPatDoctorHistory}/?visitid=${visitid}`)
-    .then((res) => {
-      let parsedData = [];
-      try {
-        if (typeof res.data === "string") {
-          parsedData = JSON.parse(res.data);
-        } else if (
-          typeof res.data === "object" &&
-          typeof res.data.data === "string"
-        ) {
-          parsedData = JSON.parse(res.data.data);
-        } else {
-          parsedData = res.data;
+  useEffect(() => {
+    setLoading(true);
+    axios
+      .get(`${API_ENDPOINTS.getPatDoctorHistory}/?visitid=${visitid}`)
+      .then((res) => {
+        let parsedData = [];
+        try {
+          if (typeof res.data === "string") {
+            parsedData = JSON.parse(res.data);
+          } else if (
+            typeof res.data === "object" &&
+            typeof res.data.data === "string"
+          ) {
+            parsedData = JSON.parse(res.data.data);
+          } else {
+            parsedData = res.data;
+          }
+        } catch (err) {
+          console.error("Error parsing investigations JSON:", err);
+          parsedData = [];
         }
-      } catch (err) {
-        console.error("Error parsing investigations JSON:", err);
-        parsedData = [];
-      }
 
-      if (Array.isArray(parsedData)) {
-        // The response is already an array, use it directly
-        setTable(parsedData);
-      } else if (parsedData && Array.isArray(parsedData.Table)) {
-        // If there is a Table property, use that
-        setTable(parsedData.Table);
-      } else {
-        console.warn("Parsed data format unexpected:", parsedData);
+        if (Array.isArray(parsedData)) {
+          // The response is already an array, use it directly
+          setTable(parsedData);
+        } else if (parsedData && Array.isArray(parsedData.Table)) {
+          // If there is a Table property, use that
+          setTable(parsedData.Table);
+        } else {
+          console.warn("Parsed data format unexpected:", parsedData);
+          setTable([]);
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching investigations:", err);
         setTable([]);
-      }
-    })
-    .catch((err) => {
-      console.error("Error fetching investigations:", err);
-      setTable([]);
-    })
-    .finally(() => {
-      setLoading(false);
-    });
-}, [visitid]);
-
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [visitid, refreshData]);
 
   return (
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
@@ -364,8 +385,8 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
               {[...vitals].reverse().map((v, idx) => (
                 <tr key={"vital-" + idx} className="hover:bg-gray-100 border-t">
                   <TableReuse>{v.date}</TableReuse>
-                  <TableReuse>{v.bedno}</TableReuse> 
-                   <TableReuse>{v.doctorName}</TableReuse>             
+                  <TableReuse>{v.bedno}</TableReuse>
+                  <TableReuse>{v.doctorName}</TableReuse>
                   <TableReuse>{v.qty}</TableReuse>
                   <TableReuse>{v.emergency}</TableReuse>
                   <TableReuse>{v.remarks}</TableReuse>
@@ -400,7 +421,11 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
                     <TableReuse>{row.bedno || "-"}</TableReuse>
                     <TableReuse>{row.consultantname || "-"}</TableReuse>
                     <TableReuse>{row.qty || "-"}</TableReuse>
-                    <TableReuse>{row.isemergency != null ? String(row.isemergency ? 1 : 0 ) : "-"}</TableReuse>
+                    <TableReuse>
+                      {row.isemergency != null
+                        ? String(row.isemergency ? 1 : 0)
+                        : "-"}
+                    </TableReuse>
 
                     <TableReuse>{row.remark || "-"}</TableReuse>
                     <TableReuse>-</TableReuse>
@@ -419,12 +444,17 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
       </div>
 
       <div className="flex justify-center">
-        <SaveButton
-          label="Save"
+        <button
           onClick={savebtn}
-          disabled={isSaved}
-          className="px-6 py-2 rounded text-white bg-blue-600 hover:bg-blue-700"
-        />
+          disabled={!isValidToSave}
+          className={`w-full  px-6 py-2 rounded text-white ${
+            !isValidToSave
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-blue-500 hover:bg-blue-600"
+          }`}
+        >
+          Save
+        </button>
       </div>
     </div>
   );
