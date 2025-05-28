@@ -272,7 +272,7 @@ setCanSave(true);  // Enable Save button after insert
               readOnly
               value={doctorName}
               onClick={() => setDoctorModalOpen(true)}
-              className={`cursor-pointer border px-2 py-1 rounded-md text-sm bg-gray-100 hover:bg-gray-200 focus:outline-none ${
+              className={`cursor-pointer text-black border px-2 py-1 rounded-md text-sm bg-gray-100 hover:bg-gray-200 focus:outline-none ${
                 errors.doctorName ? "border-red-500" : "border-gray-300"
               }`}
               placeholder=" select doctor"
