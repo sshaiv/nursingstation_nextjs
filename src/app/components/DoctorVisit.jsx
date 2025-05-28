@@ -178,6 +178,8 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
     setVitals((prev) => [...prev, newEntry]);
 
     setRemark("");
+    setDoctorName("");
+    setDoctorData(null);
     setIsEmergency(false);
   };
 
@@ -307,7 +309,7 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
               readOnly
               value={doctorName}
               onClick={() => setDoctorModalOpen(true)}
-              className={`cursor-pointer border px-2 py-1 rounded-md text-sm bg-gray-100 hover:bg-gray-200 focus:outline-none ${
+              className={`cursor-pointer text-black border px-2 py-1 rounded-md text-sm bg-gray-100 hover:bg-gray-200 focus:outline-none ${
                 errors.doctorName ? "border-red-500" : "border-gray-300"
               }`}
               placeholder="Select doctor"
