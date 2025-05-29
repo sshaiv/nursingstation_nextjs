@@ -29,6 +29,9 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
   const [isInsertClicked, setIsInsertClicked] = useState(false);
   const [refreshData, setRefreshData] = useState(false);
   const [isValidToSave, setIsValidToSave] = useState(false);
+  // This is the key state to hold multiple service entries
+  const [serviceEntries, setServiceEntries] = useState([]);
+  const [entries, setEntries] = useState([]); // Grid data
 
   const [saveData, setSaveData] = useSaveDVData();
   console.log("Updated DV", saveData);
@@ -92,14 +95,14 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      setIsValidToSave(false); 
+      setIsValidToSave(false);
       return;
     }
 
-    setIsValidToSave(true); 
+    setIsValidToSave(true);
 
     // Single main request info (outside loop)
-    const jsonStringdoctorvisit = [
+    const newServiceEntry = 
       {
         rowid: 0,
         consultantvisitid: 0,
@@ -142,8 +145,10 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
         locationid: patientData.locationid,
         financialyear: "2526",
         IsEdit: 0,
-      },
-    ];
+      };
+    
+    // Add new entry to the list
+    
 
     const jsonStringsubpatbilinginfomodel = [
       {
@@ -159,10 +164,13 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
       },
     ];
 
+     const updatedEntries = [...serviceEntries, newServiceEntry];
+    setServiceEntries(updatedEntries);
+
     // Save all data
     setSaveData((prevData) => ({
       ...prevData,
-      jsonStringdoctorvisit: JSON.stringify(jsonStringdoctorvisit),
+      jsonStringdoctorvisit: JSON.stringify(updatedEntries),
       jsonStringsubpatbilinginfomodel: JSON.stringify(
         jsonStringsubpatbilinginfomodel
       ),
@@ -170,10 +178,9 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
 
     console.log(
       "jsonStringdoctorvisit:",
-      jsonStringdoctorvisit,
+      updatedEntries,
       jsonStringsubpatbilinginfomodel
     );
-  
 
     setVitals((prev) => [...prev, newEntry]);
 
@@ -210,7 +217,7 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
         setErrors({});
         setIsInsertClicked(false);
         setDoctorName("");
-        setIsValidToSave(false)
+        setIsValidToSave(false);
 
         setIsSaved(true);
       } else {
@@ -263,6 +270,37 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
         setLoading(false);
       });
   }, [visitid, refreshData]);
+
+  const handleDeleteEntry = (indexToDelete) => {
+    console.log("🗑️ Deleting Entry at Index:", indexToDelete);
+    console.log("📦 Entry Being Deleted:", serviceEntries[indexToDelete]);
+
+    const updatedVitals = vitals.filter((_, i) => i !== indexToDelete);
+    const updatedEntries = entries.filter((_, i) => i !== indexToDelete);
+
+    setVitals(updatedVitals);
+    setEntries(updatedEntries);
+
+    const updatedServiceEntries = serviceEntries.filter(
+      (_, i) => i !== indexToDelete
+    );
+    setServiceEntries(updatedServiceEntries);
+
+    const newJSONString = JSON.stringify(updatedServiceEntries);
+    setSaveData((prevData) => ({
+      ...prevData,
+      jsonStringdoctorvisit: newJSONString,
+    }));
+
+    if (updatedServiceEntries.length === 0) {
+      setIsSaveEnabled(false);
+    }
+
+    console.log("✅ Updated Vitals:", updatedVitals);
+    console.log("✅ Updated Entries:", updatedEntries);
+    console.log("✅ Updated Service Entries:", updatedServiceEntries);
+    console.log("🧾 Updated JSON String:", newJSONString);
+  };
 
   return (
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
@@ -384,30 +422,40 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
 
             <tbody>
               {/* Render newly inserted vitals at the top */}
-              {[...vitals].reverse().map((v, idx) => (
-                <tr key={"vital-" + idx} className="hover:bg-gray-100 border-t">
-                  <TableReuse>{v.date}</TableReuse>
-                  <TableReuse>{v.bedno}</TableReuse>
-                  <TableReuse>{v.doctorName}</TableReuse>
-                  <TableReuse>{v.qty}</TableReuse>
-                  <TableReuse>{v.emergency}</TableReuse>
-                  <TableReuse>{v.remarks}</TableReuse>
-                  <TableReuse>
-                    <div className="flex justify-center space-x-2">
-                      {v.source !== "api" && (
-                        <button
-                          className="text-red-500 hover:underline"
-                          onClick={() =>
-                            setVitals(vitals.filter((_, i) => i !== idx))
-                          }
-                        >
-                          Delete
-                        </button>
-                      )}
-                    </div>
-                  </TableReuse>
-                </tr>
-              ))}
+              {[...vitals].reverse().map((v, idx) => {
+                const actualIndex = vitals.length - 1 - idx;
+
+                return (
+                  <tr
+                    key={"vital-" + idx}
+                    className="hover:bg-gray-100 border-t"
+                  >
+                    <TableReuse>{v.date}</TableReuse>
+                    <TableReuse>{v.bedno}</TableReuse>
+                    <TableReuse>{v.doctorName}</TableReuse>
+                    <TableReuse>{v.qty}</TableReuse>
+                    <TableReuse>{v.emergency}</TableReuse>
+                    <TableReuse>{v.remarks}</TableReuse>
+                    <TableReuse>
+                      <div className="flex justify-center space-x-2">
+                        {v.source !== "api" && (
+                          <button
+                            className="text-red-500 hover:underline"
+                            // onClick={() =>
+                            //   setVitals(
+                            //     vitals.filter((_, i) => i !== actualIndex)
+                            //   )
+                            // } 
+                             onClick={() => handleDeleteEntry(actualIndex)}
+                          >
+                            Delete
+                          </button>
+                        )}
+                      </div>
+                    </TableReuse>
+                  </tr>
+                );
+              })}
 
               {/* API fetched data */}
               {loading ? (
