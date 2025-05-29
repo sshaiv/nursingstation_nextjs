@@ -16,7 +16,7 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
   const [isDoctorModalOpen, setDoctorModalOpen] = useState(true);
   const [doctorData, setDoctorData] = useState(null);
   const [selectedDoctorId, setSelectedDoctorId] = useState(null);
-
+const [isSaveEnabled, setIsSaveEnabled] = useState(false);
   const [vitals, setVitals] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [time, setTime] = useState("");
@@ -163,8 +163,8 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
         terriffid: patientData.terriffid,
       },
     ];
-
-     const updatedEntries = [...serviceEntries, newServiceEntry];
+ const updatedEntries = [...serviceEntries, newServiceEntry]
+    
     setServiceEntries(updatedEntries);
 
     // Save all data
