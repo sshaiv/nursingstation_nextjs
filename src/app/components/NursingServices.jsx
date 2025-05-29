@@ -413,7 +413,7 @@ setServiceEntries(updatedEntries);
               readOnly
               value={doctorName}
               onClick={() => setDoctorModalOpen(true)}
-              className={`cursor-pointer border px-2 py-1 rounded-md text-sm bg-gray-100 hover:bg-gray-200 focus:outline-none ${
+              className={`cursor-pointer text-black border px-2 py-1 rounded-md text-sm bg-gray-100 hover:bg-gray-200 focus:outline-none ${
                 errors.doctorName ? "border-red-500" : "border-gray-300"
               }`}
               placeholder=" select doctor"
@@ -457,7 +457,7 @@ setServiceEntries(updatedEntries);
               value={performedBy}
               readOnly
               onClick={() => setShowPerformedByModal(true)}
-              className={`px-2 py-1 text-sm border rounded-lg cursor-pointer bg-gray-100 hover:bg-gray-200 focus:outline-none ${
+              className={`px-2 py-1  text-black text-sm border rounded-lg cursor-pointer bg-gray-100 hover:bg-gray-200 focus:outline-none ${
                 errors.performedBy ? "border-red-500" : "border-gray-300"
               }`}
               placeholder="Select PerformedBy"
