@@ -344,36 +344,36 @@ export default function NursingServices({
       });
   }, [visitid, refreshData]);
 
-
   const handleDeleteEntry = (indexToDelete) => {
-  console.log("🗑️ Deleting Entry at Index:", indexToDelete);
-  console.log("📦 Entry Being Deleted:", serviceEntries[indexToDelete]);
+    console.log("🗑️ Deleting Entry at Index:", indexToDelete);
+    console.log("📦 Entry Being Deleted:", serviceEntries[indexToDelete]);
 
-  const updatedVitals = vitals.filter((_, i) => i !== indexToDelete);
-  const updatedEntries = entries.filter((_, i) => i !== indexToDelete);
+    const updatedVitals = vitals.filter((_, i) => i !== indexToDelete);
+    const updatedEntries = entries.filter((_, i) => i !== indexToDelete);
 
-  setVitals(updatedVitals);
-  setEntries(updatedEntries);
+    setVitals(updatedVitals);
+    setEntries(updatedEntries);
 
-  const updatedServiceEntries = serviceEntries.filter((_, i) => i !== indexToDelete);
-  setServiceEntries(updatedServiceEntries);
+    const updatedServiceEntries = serviceEntries.filter(
+      (_, i) => i !== indexToDelete
+    );
+    setServiceEntries(updatedServiceEntries);
 
-  const newJSONString = JSON.stringify(updatedServiceEntries);
-  setSaveData((prevData) => ({
-    ...prevData,
-    jsonStringsubpatipdservice: newJSONString,
-  }));
+    const newJSONString = JSON.stringify(updatedServiceEntries);
+    setSaveData((prevData) => ({
+      ...prevData,
+      jsonStringsubpatipdservice: newJSONString,
+    }));
 
-  if (updatedServiceEntries.length === 0) {
-    setIsSaveEnabled(false);
-  }
+    if (updatedServiceEntries.length === 0) {
+      setIsSaveEnabled(false);
+    }
 
-  console.log("✅ Updated Vitals:", updatedVitals);
-  console.log("✅ Updated Entries:", updatedEntries);
-  console.log("✅ Updated Service Entries:", updatedServiceEntries);
-  console.log("🧾 Updated JSON String:", newJSONString);
-};
-
+    console.log("✅ Updated Vitals:", updatedVitals);
+    console.log("✅ Updated Entries:", updatedEntries);
+    console.log("✅ Updated Service Entries:", updatedServiceEntries);
+    console.log("🧾 Updated JSON String:", newJSONString);
+  };
 
   return (
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
@@ -541,36 +541,43 @@ export default function NursingServices({
               </tr>
             </thead>
             <tbody>
-              {/* Render newly inserted vitals at the top */}
-              {[...vitals].reverse().map((v, idx) => (
-                <tr key={"vital-" + idx} className="hover:bg-gray-100 border-t">
-                  <TableReuse>{v.date}</TableReuse>
-                  <TableReuse>{v.bedno}</TableReuse>
-                  <TableReuse>{v.doctorName}</TableReuse>
-                  <TableReuse>{v.nursingservice}</TableReuse>
-                  <TableReuse>{v.performedBy}</TableReuse>
-                  <TableReuse>{v.qty}</TableReuse>
+              {[...vitals].reverse().map((v, idx) => {
+                const actualIndex = vitals.length - 1 - idx;
 
-                  <TableReuse>
-                    <div className="flex justify-center space-x-2">
-                      {v.source !== "api" && (
-                        <button
-                          className="text-red-500 hover:underline"
-                        onClick={() => handleDeleteEntry(idx)}
-                        >
-                          Delete
-                        </button>
-//                         <ActionButton
-//   icon="delete"
-//   onClick={() => handleDeleteEntry(idx)}
-//   tooltip="Delete"
-// />
+                return (
+                  <tr
+                    key={"vital-" + idx}
+                    className="hover:bg-gray-100 border-t"
+                  >
+                    <TableReuse>{v.date}</TableReuse>
+                    <TableReuse>{v.bedno}</TableReuse>
+                    <TableReuse>{v.doctorName}</TableReuse>
+                    <TableReuse>{v.nursingservice}</TableReuse>
+                    <TableReuse>{v.performedBy}</TableReuse>
+                    <TableReuse>{v.qty}</TableReuse>
 
-                      )}
-                    </div>
-                  </TableReuse>
-                </tr>
-              ))}
+                    <TableReuse>
+                      <div className="flex justify-center space-x-2">
+                        {v.source !== "api" && (
+                          <button
+                            className="text-red-500 hover:underline"
+                            onClick={() => handleDeleteEntry(actualIndex)}
+                          >
+                           🗑 Delete
+                          </button>
+
+                          // Or if you prefer the icon version:
+                          // <ActionButton
+                          //   icon="delete"
+                          //   onClick={() => handleDeleteEntry(actualIndex)}
+                          //   tooltip="Delete"
+                          // />
+                        )}
+                      </div>
+                    </TableReuse>
+                  </tr>
+                );
+              })}
 
               {/* Conditional rendering for loading */}
               {loading ? (
