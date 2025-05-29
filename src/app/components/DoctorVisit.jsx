@@ -92,11 +92,11 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      setIsValidToSave(false); // ❌ not valid to save
+      setIsValidToSave(false); 
       return;
     }
 
-    setIsValidToSave(true); // ✅ all good, enable save
+    setIsValidToSave(true); 
 
     // Single main request info (outside loop)
     const jsonStringdoctorvisit = [

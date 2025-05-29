@@ -25,7 +25,6 @@ export default function NursingServices({
   const [showSecondModal, setShowSecondModal] = useState(false);
   const [doctorData, setDoctorData] = useState(null);
   const [selectedDoctorId, setSelectedDoctorId] = useState(null);
-
   const [vitals, setVitals] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [time, setTime] = useState("");
@@ -38,6 +37,11 @@ export default function NursingServices({
   const [quantity, setQuantity] = useState("");
   const [performedByData, setPerformedByData] = useState(null);
   const [showPerformedByModal, setShowPerformedByModal] = useState(false);
+  const [refreshData, setRefreshData] = useState(false);
+// This is the key state to hold multiple service entries
+  const [serviceEntries, setServiceEntries] = useState([]);
+  const [entries, setEntries] = useState([]); // Grid data
+  const [isSaveEnabled, setIsSaveEnabled] = useState(false);
 
   const [selectedServices, setSelectedServices] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -87,87 +91,96 @@ export default function NursingServices({
 
     if (!selectedDate || !doctorData || selectedServices.length === 0) {
       const newErrors = {};
+
       if (!selectedDate) newErrors.dateTime = "Date and time are required.";
       if (!doctorData) newErrors.doctorName = "Please select a doctor.";
       if (selectedServices.length === 0)
-        newErrors.services = " nursing services is required";
+        newErrors.services = "Nursing services is required.";
+      // if (!quality) newErrors.quality = "Quality is required.";
+
       setErrors(newErrors);
       return;
     }
 
-    const getCurrentDateTime = () => {
+    const getCurrentDateTime = (includeTime = true) => {
       const now = new Date();
       const day = String(now.getDate()).padStart(2, "0");
       const month = String(now.getMonth() + 1).padStart(2, "0");
       const year = now.getFullYear();
 
+      if (!includeTime) {
+        return `${day}/${month}/${year}`;
+      }
+
       let hours = now.getHours();
       const minutes = String(now.getMinutes()).padStart(2, "0");
       const ampm = hours >= 12 ? "PM" : "AM";
       hours = hours % 12 || 12;
+      const paddedHours = String(hours).padStart(2, "0");
 
-      return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
+      return `${day}/${month}/${year} ${paddedHours}:${minutes} ${ampm}`;
     };
 
-    const currentDateTime = getCurrentDateTime();
+    const dateOnly = getCurrentDateTime(false);
+    console.log("Sirf date:", dateOnly); // e.g. "29/05/2025"
 
+    const currentDateTime = getCurrentDateTime(true);
+    console.log("Date + Time:", currentDateTime); // e.g. "29/05/2025 09:42 AM"
 
-      const newEntry = {
+    const newEntry = {
       date: currentDateTime,
       bedno: patientData?.bedno || "N/A",
-      doctorName: doctorData.label || doctorData.CName || "N/A",
-        nursingservice: selectedServices.label || selectedServices.CNAME || "N/A",
-     performedBy  :performedByData.label||performedByData.CName|| "",
-    
-           qty:quantity ||" ",
-    
+      doctorName: doctorData?.label || doctorData?.CName || "N/A",
+      nursingservice:
+        selectedServices?.label || selectedServices?.CNAME || "N/A",
+      performedBy: performedByData?.label || performedByData?.CName || "",
+      qty: quantity || " ",
       source: "local",
-       
     };
-   
+    
+console.log("aai",newEntry);
 
-   const jsonStringsubpatipdservice =[
-        {
-            rowid:0,
-            gssuhid:patientData.gssuhid,
-            visitid:patientData.visitid,
-            consltantvisitid:0,
-            DateTime:currentDateTime,
-            servdatetime:currentDateTime,
-            BedNo:patientData.bedno,
-            bedno:patientData.bedno,
-            Service:selectedServices.CNAME,
-            servid:selectedServices.CID,
-            consultantid:doctorData.CID,
-            Consultant:doctorData.CName,
-            PerformedBy:performedByData.CName,
-            performbyid:performedByData.CID,
-            unitid:0,
-            Qty:quantity,
-            qty:quantity,
-            Charge:0,
-            charge:0,
-            Remark:" ",
-            remark:" ",
-            isinactive:0,
-            entempid:21,
-            entdatetime:patientData.bedno,
-            entwsname:"GSLAP2",
-            modifyempid:21,
-            modifydatetime:patientData.bedno,
-            modifywsname:"GSLAP2",
-            locationid:patientData.locationid,
-            financialyear:"2526",
-            Remove:" ",
-            isremove:0,
-            RemoveRemark:" ",
-            removeremark: " ",
-            isedit:0,
-            count:2,
-            wardcatgid:patientData.reqwardcatgid,
-            },
-            ];
-
+    const jsonStringsubpatipdservice = [
+      {
+        rowid: 0,
+        gssuhid: patientData.gssuhid,
+        visitid: patientData.visitid,
+        consltantvisitid: 0,
+        DateTime: currentDateTime,
+        servdatetime: dateOnly,
+        BedNo: patientData.bedno,
+        bedno: patientData.bedno,
+        Service: selectedServices.CNAME,
+        servid: selectedServices.CID,
+        consultantid: doctorData.CID,
+        Consultant: doctorData.CName,
+        PerformedBy: performedByData.CName,
+        performbyid: performedByData.CID,
+        unitid: 0,
+        Qty: quantity,
+        qty: quantity,
+        Charge: 0,
+        charge: 0,
+        Remark: " ",
+        remark: " ",
+        isinactive: 0,
+        entempid: 21,
+        entdatetime: patientData.bedno,
+        entwsname: "GSLAP2",
+        modifyempid: 21,
+        modifydatetime: patientData.bedno,
+        modifywsname: "GSLAP2",
+        locationid: patientData.locationid,
+        financialyear: "2526",
+        Remove: " ",
+        isremove: 0,
+        RemoveRemark: " ",
+        removeremark: " ",
+        isedit: 0,
+        count: 2,
+        wardcatgid: patientData.reqwardcatgid,
+      },
+    ];
 
     const jsonStringsubpatbilinginfomodel = [
       {
@@ -186,10 +199,10 @@ export default function NursingServices({
     // Save all data
     setSaveData((prevData) => ({
       ...prevData,
-     jsonStringsubpatipdservice: JSON.stringify(jsonStringsubpatipdservice),
-       jsonStringsubpatbilinginfomodel: JSON.stringify(
-         jsonStringsubpatbilinginfomodel
-       ),
+      jsonStringsubpatipdservice: JSON.stringify(jsonStringsubpatipdservice),
+      jsonStringsubpatbilinginfomodel: JSON.stringify(
+        jsonStringsubpatbilinginfomodel
+      ),
     }));
 
     console.log(
@@ -197,9 +210,22 @@ export default function NursingServices({
       jsonStringsubpatipdservice,
       jsonStringsubpatbilinginfomodel
     );
-  
-    setVitals((prev) => [...prev, newEntry]); 
 
+    setVitals((prev) => [...prev, newEntry]);
+    setEntries((prev) => [...prev, newEntry]);
+
+    // ✅ Enable Save button
+    setIsSaveEnabled(true);
+    // (Optional) Clear fields
+    setSelectedDate(null); // or "" if DateTimeInput expects string
+    setDoctorData(null);
+    setDoctorName(""); // clear doctor name string
+    setSelectedServices([]); // assuming this is the array holding services info
+    setInvestigationName(""); // clear nursing service name string
+    setPerformedByData(null);
+    setPerformedBy(""); // clear performedBy string
+    setQuantity(""); // clear quantity
+    setTime(""); // clear time if you are managing time separately
   };
 
   const savebtn = async () => {
@@ -222,7 +248,27 @@ export default function NursingServices({
 
       if (response.ok) {
         alert("Data saved successfully!");
+        // Clear local new entries (already saved)
+        // Clear the new entries so UI updates and doesn't show them anymore
+        setEntries([]);
+        setVitals([]);
+
+        // Clear form input fields here if needed
+        setSelectedDate(null);
+        setTime("");
+        setDoctorData(null);
+        setDoctorName("");
+        setSelectedServices([]);
+        setInvestigationName("");
+        setPerformedByData(null);
+        setPerformedBy("");
+        setQuantity("");
+
+        // Trigger refresh to fetch updated data from backend
+        setRefreshData((prev) => !prev);
+
         setIsSaved(true);
+        setIsSaveEnabled(false);
       } else {
         alert("Failed to save data.");
       }
@@ -235,7 +281,9 @@ export default function NursingServices({
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`${API_ENDPOINTS.getServiceDetail}/?visitid=${visitid}&gssuhid=${gssuhid}`)
+      .get(
+        `${API_ENDPOINTS.getServiceDetail}/?visitid=${visitid}&gssuhid=${gssuhid}`
+      )
       .then((res) => {
         //console.log("🚀 Full API response (res.data):", res.data);
 
@@ -284,7 +332,7 @@ export default function NursingServices({
       .finally(() => {
         setLoading(false);
       });
-  }, [visitid]);
+  }, [visitid, refreshData]);
 
   return (
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
@@ -346,7 +394,7 @@ export default function NursingServices({
           </div>
 
           <div className="flex flex-col w-full">
-             <label  className="text-sm text-black font-medium mb-1">
+            <label className="text-sm text-black font-medium mb-1">
               Doctor *
             </label>
             <input
@@ -366,7 +414,7 @@ export default function NursingServices({
             )}
           </div>
           <div className="flex flex-col w-full">
-             <label  className="text-sm text-black font-medium mb-1">
+            <label className="text-sm text-black font-medium mb-1">
               Nursing service *
             </label>
             <input
@@ -439,7 +487,7 @@ export default function NursingServices({
             </thead>
             <tbody>
               {/* Render newly inserted vitals at the top */}
-               {[...vitals].reverse().map((v, idx) => (
+              {[...vitals].reverse().map((v, idx) => (
                 <tr key={"vital-" + idx} className="hover:bg-gray-100 border-t">
                   <TableReuse>{v.date}</TableReuse>
                   <TableReuse>{v.bedno}</TableReuse>
@@ -447,7 +495,7 @@ export default function NursingServices({
                   <TableReuse>{v.nursingservice}</TableReuse>
                   <TableReuse>{v.performedBy}</TableReuse>
                   <TableReuse>{v.qty}</TableReuse>
-                  
+
                   <TableReuse>
                     <div className="flex justify-center space-x-2">
                       {v.source !== "api" && (
@@ -475,12 +523,12 @@ export default function NursingServices({
               ) : (
                 <>
                   {/* Render API fetched data below */}
-                  {table.map((item, idx) => (
+                  {[...table].reverse().map((item, idx) => (
                     <tr
                       key={"api-" + idx}
                       className="hover:bg-gray-100 border-t"
                     >
-                       <TableReuse>{item.servdatetime || "-"}</TableReuse>
+                      <TableReuse>{item.servdatetime || "-"}</TableReuse>
                       <TableReuse>{item.bedno || "-"}</TableReuse>
                       <TableReuse>{item.proposedby || "-"}</TableReuse>
                       <TableReuse>{item.servname || "-"}</TableReuse>
@@ -501,7 +549,19 @@ export default function NursingServices({
 
       <hr className="border-t mt-6 mb-2 border-gray-300" />
       <div className="flex justify-center ">
-        <SaveButton label="Save" onClick={savebtn} />
+        {/* <SaveButton label="Save" onClick={savebtn} /> */}
+
+        <button
+          onClick={savebtn}
+          disabled={!isSaveEnabled}
+          className={`w-full  px-6 py-2 rounded text-white ${
+            !isSaveEnabled
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-blue-500 hover:bg-blue-600"
+          }`}
+        >
+          Save
+        </button>
       </div>
     </div>
   );
