@@ -38,10 +38,11 @@ export default function NursingServices({
   const [performedByData, setPerformedByData] = useState(null);
   const [showPerformedByModal, setShowPerformedByModal] = useState(false);
   const [refreshData, setRefreshData] = useState(false);
-// This is the key state to hold multiple service entries
+  // This is the key state to hold multiple service entries
   const [serviceEntries, setServiceEntries] = useState([]);
   const [entries, setEntries] = useState([]); // Grid data
   const [isSaveEnabled, setIsSaveEnabled] = useState(false);
+  
 
   const [selectedServices, setSelectedServices] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -89,14 +90,21 @@ export default function NursingServices({
   const handleInsert = () => {
     setErrors({});
 
-    if (!selectedDate || !doctorData || selectedServices.length === 0) {
+    if (
+      !selectedDate ||
+      !doctorData ||
+      selectedServices.length === 0 ||
+      !performedByData ||
+      !quantity
+    ) {
       const newErrors = {};
 
       if (!selectedDate) newErrors.dateTime = "Date and time are required.";
       if (!doctorData) newErrors.doctorName = "Please select a doctor.";
       if (selectedServices.length === 0)
         newErrors.services = "Nursing services is required.";
-      // if (!quality) newErrors.quality = "Quality is required.";
+      if (!performedByData) newErrors.performedBy = "Performed By is required.";
+      if (!quantity) newErrors.qty = "Quantity is required.";
 
       setErrors(newErrors);
       return;
@@ -137,50 +145,52 @@ export default function NursingServices({
       qty: quantity || " ",
       source: "local",
     };
-    
-console.log("aai",newEntry);
 
-    const jsonStringsubpatipdservice = [
-      {
-        rowid: 0,
-        gssuhid: patientData.gssuhid,
-        visitid: patientData.visitid,
-        consltantvisitid: 0,
-        DateTime: currentDateTime,
-        servdatetime: dateOnly,
-        BedNo: patientData.bedno,
-        bedno: patientData.bedno,
-        Service: selectedServices.CNAME,
-        servid: selectedServices.CID,
-        consultantid: doctorData.CID,
-        Consultant: doctorData.CName,
-        PerformedBy: performedByData.CName,
-        performbyid: performedByData.CID,
-        unitid: 0,
-        Qty: quantity,
-        qty: quantity,
-        Charge: 0,
-        charge: 0,
-        Remark: " ",
-        remark: " ",
-        isinactive: 0,
-        entempid: 21,
-        entdatetime: patientData.bedno,
-        entwsname: "GSLAP2",
-        modifyempid: 21,
-        modifydatetime: patientData.bedno,
-        modifywsname: "GSLAP2",
-        locationid: patientData.locationid,
-        financialyear: "2526",
-        Remove: " ",
-        isremove: 0,
-        RemoveRemark: " ",
-        removeremark: " ",
-        isedit: 0,
-        count: 2,
-        wardcatgid: patientData.reqwardcatgid,
-      },
-    ];
+    console.log("aai", newEntry);
+
+   const newServiceEntry = {
+  rowid: 0,
+  gssuhid: patientData.gssuhid,
+  visitid: patientData.visitid,
+  consltantvisitid: 0,
+  DateTime: currentDateTime,
+  servdatetime: dateOnly,
+  BedNo: patientData.bedno,
+  bedno: patientData.bedno,
+  Service: selectedServices.CNAME,
+  servid: selectedServices.CID,
+  consultantid: doctorData.CID,
+  Consultant: doctorData.CName,
+  PerformedBy: performedByData.CName,
+  performbyid: performedByData.CID,
+  unitid: 0,
+  Qty: quantity,
+  qty: quantity,
+  Charge: 0,
+  charge: 0,
+  Remark: " ",
+  remark: " ",
+  isinactive: 0,
+  entempid: 21,
+  entdatetime: patientData.bedno,
+  entwsname: "GSLAP2",
+  modifyempid: 21,
+  modifydatetime: patientData.bedno,
+  modifywsname: "GSLAP2",
+  locationid: patientData.locationid,
+  financialyear: "2526",
+  Remove: " ",
+  isremove: 0,
+  RemoveRemark: " ",
+  removeremark: " ",
+  isedit: 0,
+  count: 2,
+  wardcatgid: patientData.reqwardcatgid,
+};
+
+// Add new entry to the list
+setServiceEntries((prev) => [...prev, newServiceEntry]);
+
 
     const jsonStringsubpatbilinginfomodel = [
       {
@@ -195,11 +205,12 @@ console.log("aai",newEntry);
         terriffid: patientData.terriffid,
       },
     ];
-
+const updatedEntries = [...serviceEntries, newServiceEntry];
+setServiceEntries(updatedEntries);
     // Save all data
     setSaveData((prevData) => ({
       ...prevData,
-      jsonStringsubpatipdservice: JSON.stringify(jsonStringsubpatipdservice),
+      jsonStringsubpatipdservice: JSON.stringify(updatedEntries),
       jsonStringsubpatbilinginfomodel: JSON.stringify(
         jsonStringsubpatbilinginfomodel
       ),
@@ -207,7 +218,7 @@ console.log("aai",newEntry);
 
     console.log(
       "jsonStringdoctorvisit:",
-      jsonStringsubpatipdservice,
+      updatedEntries,
       jsonStringsubpatbilinginfomodel
     );
 
@@ -445,20 +456,34 @@ console.log("aai",newEntry);
               type="text"
               value={performedBy}
               readOnly
-              onClick={() => setShowPerformedByModal(true)} // Correct modal trigger
-              className="px-2 py-1 text-sm border-2 rounded-lg border-gray-300 cursor-pointer bg-gray-100 hover:bg-gray-200 focus:outline-none"
+              onClick={() => setShowPerformedByModal(true)}
+              className={`px-2 py-1 text-sm border rounded-lg cursor-pointer bg-gray-100 hover:bg-gray-200 focus:outline-none ${
+                errors.performedBy ? "border-red-500" : "border-gray-300"
+              }`}
               placeholder="Select PerformedBy"
             />
+            {errors.performedBy && (
+              <p className="text-red-500 text-[10px] mt-[2px] ml-[2px]">
+                {errors.performedBy}
+              </p>
+            )}
           </div>
 
           <ReusableInputField
-            className="border-2 text-black rounded-lg"
+            className={`border text-black rounded-lg ${
+              errors.qty ? "border-red-500" : "border-gray-300"
+            }`}
             id="qty"
             label="Quantity*"
             width="w-full"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
           />
+          {errors.qty && (
+            <p className="text-red-500 text-[10px] mt-[2px] ml-[2px]">
+              {errors.qty}
+            </p>
+          )}
         </div>
         <div className="flex justify-end items-center w-full gap-4">
           <ActionButton
