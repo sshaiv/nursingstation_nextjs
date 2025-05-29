@@ -42,7 +42,6 @@ export default function NursingServices({
   const [serviceEntries, setServiceEntries] = useState([]);
   const [entries, setEntries] = useState([]); // Grid data
   const [isSaveEnabled, setIsSaveEnabled] = useState(false);
-  
 
   const [selectedServices, setSelectedServices] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -148,49 +147,48 @@ export default function NursingServices({
 
     console.log("aai", newEntry);
 
-   const newServiceEntry = {
-  rowid: 0,
-  gssuhid: patientData.gssuhid,
-  visitid: patientData.visitid,
-  consltantvisitid: 0,
-  DateTime: currentDateTime,
-  servdatetime: dateOnly,
-  BedNo: patientData.bedno,
-  bedno: patientData.bedno,
-  Service: selectedServices.CNAME,
-  servid: selectedServices.CID,
-  consultantid: doctorData.CID,
-  Consultant: doctorData.CName,
-  PerformedBy: performedByData.CName,
-  performbyid: performedByData.CID,
-  unitid: 0,
-  Qty: quantity,
-  qty: quantity,
-  Charge: 0,
-  charge: 0,
-  Remark: " ",
-  remark: " ",
-  isinactive: 0,
-  entempid: 21,
-  entdatetime: patientData.bedno,
-  entwsname: "GSLAP2",
-  modifyempid: 21,
-  modifydatetime: patientData.bedno,
-  modifywsname: "GSLAP2",
-  locationid: patientData.locationid,
-  financialyear: "2526",
-  Remove: " ",
-  isremove: 0,
-  RemoveRemark: " ",
-  removeremark: " ",
-  isedit: 0,
-  count: 2,
-  wardcatgid: patientData.reqwardcatgid,
-};
+    const newServiceEntry = {
+      rowid: 0,
+      gssuhid: patientData.gssuhid,
+      visitid: patientData.visitid,
+      consltantvisitid: 0,
+      DateTime: currentDateTime,
+      servdatetime: dateOnly,
+      BedNo: patientData.bedno,
+      bedno: patientData.bedno,
+      Service: selectedServices.CNAME,
+      servid: selectedServices.CID,
+      consultantid: doctorData.CID,
+      Consultant: doctorData.CName,
+      PerformedBy: performedByData.CName,
+      performbyid: performedByData.CID,
+      unitid: 0,
+      Qty: quantity,
+      qty: quantity,
+      Charge: 0,
+      charge: 0,
+      Remark: " ",
+      remark: " ",
+      isinactive: 0,
+      entempid: 21,
+      entdatetime: patientData.bedno,
+      entwsname: "GSLAP2",
+      modifyempid: 21,
+      modifydatetime: patientData.bedno,
+      modifywsname: "GSLAP2",
+      locationid: patientData.locationid,
+      financialyear: "2526",
+      Remove: " ",
+      isremove: 0,
+      RemoveRemark: " ",
+      removeremark: " ",
+      isedit: 0,
+      count: 2,
+      wardcatgid: patientData.reqwardcatgid,
+    };
 
-// Add new entry to the list
-setServiceEntries((prev) => [...prev, newServiceEntry]);
-
+    // Add new entry to the list
+    setServiceEntries((prev) => [...prev, newServiceEntry]);
 
     const jsonStringsubpatbilinginfomodel = [
       {
@@ -205,8 +203,9 @@ setServiceEntries((prev) => [...prev, newServiceEntry]);
         terriffid: patientData.terriffid,
       },
     ];
-const updatedEntries = [...serviceEntries, newServiceEntry];
-setServiceEntries(updatedEntries);
+
+    const updatedEntries = [...serviceEntries, newServiceEntry];
+    setServiceEntries(updatedEntries);
     // Save all data
     setSaveData((prevData) => ({
       ...prevData,
@@ -344,6 +343,37 @@ setServiceEntries(updatedEntries);
         setLoading(false);
       });
   }, [visitid, refreshData]);
+
+
+  const handleDeleteEntry = (indexToDelete) => {
+  console.log("🗑️ Deleting Entry at Index:", indexToDelete);
+  console.log("📦 Entry Being Deleted:", serviceEntries[indexToDelete]);
+
+  const updatedVitals = vitals.filter((_, i) => i !== indexToDelete);
+  const updatedEntries = entries.filter((_, i) => i !== indexToDelete);
+
+  setVitals(updatedVitals);
+  setEntries(updatedEntries);
+
+  const updatedServiceEntries = serviceEntries.filter((_, i) => i !== indexToDelete);
+  setServiceEntries(updatedServiceEntries);
+
+  const newJSONString = JSON.stringify(updatedServiceEntries);
+  setSaveData((prevData) => ({
+    ...prevData,
+    jsonStringsubpatipdservice: newJSONString,
+  }));
+
+  if (updatedServiceEntries.length === 0) {
+    setIsSaveEnabled(false);
+  }
+
+  console.log("✅ Updated Vitals:", updatedVitals);
+  console.log("✅ Updated Entries:", updatedEntries);
+  console.log("✅ Updated Service Entries:", updatedServiceEntries);
+  console.log("🧾 Updated JSON String:", newJSONString);
+};
+
 
   return (
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
@@ -526,12 +556,16 @@ setServiceEntries(updatedEntries);
                       {v.source !== "api" && (
                         <button
                           className="text-red-500 hover:underline"
-                          onClick={() =>
-                            setVitals(vitals.filter((_, i) => i !== idx))
-                          }
+                        onClick={() => handleDeleteEntry(idx)}
                         >
                           Delete
                         </button>
+//                         <ActionButton
+//   icon="delete"
+//   onClick={() => handleDeleteEntry(idx)}
+//   tooltip="Delete"
+// />
+
                       )}
                     </div>
                   </TableReuse>
