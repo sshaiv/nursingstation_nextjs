@@ -139,34 +139,30 @@ export default function VitalsTable({
   };
 
   const handleInsert = () => {
-   setErrors({});
+    setErrors({});
 
-const hasVitalsData =
-  bp ||
-  pulse ||
-  temp ||
-  spo2 ||
-  weight ||
-  headCircumference ||
-  height ||
-  rr ||
-  painScore;
+    const hasVitalsData =
+      bp ||
+      pulse ||
+      temp ||
+      spo2 ||
+      weight ||
+      headCircumference ||
+      height ||
+      rr ||
+      painScore;
 
-if (
- 
-  !performedByData ||
- 
-  !hasVitalsData // Add this condition to check vital signs
-) {
-  const newErrors = {};
+    if (
+      !performedByData ||
+      !hasVitalsData // Add this condition to check vital signs
+    ) {
+      const newErrors = {};
 
+      if (!performedByData) newErrors.performedBy = "Performed By is required.";
 
-  if (!performedByData) newErrors.performedBy = "Performed By is required.";
-
-  setErrors(newErrors);
-  return;
-}
-
+      setErrors(newErrors);
+      return;
+    }
 
     if (selectedDate && selectedTime && hasVitalsData) {
       const dateTimeString = `${format(
@@ -225,7 +221,7 @@ if (
         Pulse_1: "",
         rr: rr || "",
         RR_1: " ",
-        
+
         headCircumference: headCircumference || "",
         HeadCircumference: " ",
         spo2: spo2 || "",
@@ -464,96 +460,92 @@ if (
         </div>
       </div>
 
-    
+      {/* Table */}
+      <div className="max-h-[90px] overflow-y-scroll hide-scrollbar mt-1">
+        <table className="w-full table-auto text-[5px] text-start border border-collapse">
+          <thead >
+            <tr className="bg-white sticky top-0 z-10 text-blue-800">
+              <TableReuse type="th">Date/Time</TableReuse>
+              <TableReuse type="th">Nur.Services</TableReuse>
+              <TableReuse type="th">BP</TableReuse>
+              <TableReuse type="th">Pulse</TableReuse>
+              <TableReuse type="th">Temp</TableReuse>
+              <TableReuse type="th">SPO2</TableReuse>
+              <TableReuse type="th">Weight</TableReuse>
+              <TableReuse type="th">Height</TableReuse>
+              <TableReuse type="th">BMI</TableReuse>
+              <TableReuse type="th">R.R</TableReuse>
+              <TableReuse type="th">Pain</TableReuse>
+              <TableReuse type="th">Head Circum.</TableReuse>
+              <TableReuse type="th">BSL (R)</TableReuse>
+              <TableReuse type="th">CVS</TableReuse>
+              <TableReuse type="th">CNS</TableReuse>
+              <TableReuse type="th">RS</TableReuse>
+              <TableReuse type="th">P/A</TableReuse>
+              <TableReuse type="th">L/E</TableReuse>
+              <TableReuse type="th">Action</TableReuse>
+            </tr>
+          </thead>
+          <tbody>
+            {[...insertedVitals].reverse().map((entry, idx) => {
+              const actualIndex = insertedVitals.length - 1 - idx;
+              return (
+                <tr key={"inserted-" + idx} className="hover:bg-gray-50 ">
+                  <TableReuse>{entry.vitaldatetime}</TableReuse>
+                  <TableReuse>{performedBy}</TableReuse>
+                  <TableReuse>{entry.bp}</TableReuse>
+                  <TableReuse>{entry.pulse}</TableReuse>
+                  <TableReuse>{entry.temp}</TableReuse>
+                  <TableReuse>{entry.spo2}</TableReuse>
+                  <TableReuse>{entry.weight}</TableReuse>
+                  <TableReuse>{entry.height}</TableReuse>
+                  <TableReuse>{entry.bmi}</TableReuse>
+                  <TableReuse>{entry.rr}</TableReuse>
+                  <TableReuse>{entry.painScore}</TableReuse>
+                  <TableReuse>{entry.headCircumference}</TableReuse>
+                  <TableReuse>{entry.bsl}</TableReuse>
+                  <TableReuse>{entry.cvs}</TableReuse>
+                  <TableReuse>{entry.cns}</TableReuse>
+                  <TableReuse>{entry.rs}</TableReuse>
+                  <TableReuse>{entry.pa}</TableReuse>
+                  <TableReuse>{entry.logicalExam}</TableReuse>
+                  <TableReuse>
+                    <button
+                      className="text-red-500 hover:underline"
+                      onClick={() => handleDeleteEntry(actualIndex)}
+                    >
+                      🗑 Delete
+                    </button>
+                  </TableReuse>
+                </tr>
+              );
+            })}
 
-{/* Table */}
-<div className="max-h-[90px] overflow-y-scroll hide-scrollbar mt-1">
-  <table className="w-full table-auto text-[5px] text-start border border-collapse">
-    <thead>
-      <tr className="bg-white sticky top-0 z-10">
-        <TableReuse type="th">Date/Time</TableReuse>
-        <TableReuse type="th">Nur.Services</TableReuse>
-        <TableReuse type="th">BP</TableReuse>
-        <TableReuse type="th">Pulse</TableReuse>
-        <TableReuse type="th">Temp</TableReuse>
-        <TableReuse type="th">SPO2</TableReuse>
-        <TableReuse type="th">Weight</TableReuse>
-        <TableReuse type="th">Height</TableReuse>
-        <TableReuse type="th">BMI</TableReuse>
-        <TableReuse type="th">R.R</TableReuse>
-        <TableReuse type="th">Pain</TableReuse>
-        <TableReuse type="th">Head Circum.</TableReuse>
-        <TableReuse type="th">BSL (R)</TableReuse>
-        <TableReuse type="th">CVS</TableReuse>
-        <TableReuse type="th">CNS</TableReuse>
-        <TableReuse type="th">RS</TableReuse>
-        <TableReuse type="th">P/A</TableReuse>
-        <TableReuse type="th">L/E</TableReuse>
-        <TableReuse type="th">Action</TableReuse>
-      </tr>
-    </thead>
-    <tbody>
-      {[...insertedVitals].reverse().map((entry, idx) => {
-        const actualIndex = insertedVitals.length - 1 - idx;
-        return (
-          <tr key={"inserted-" + idx} className="hover:bg-gray-50 ">
-            <TableReuse>{entry.vitaldatetime}</TableReuse>
-            <TableReuse>{performedBy}</TableReuse>
-            <TableReuse>{entry.bp}</TableReuse>
-            <TableReuse>{entry.pulse}</TableReuse>
-            <TableReuse>{entry.temp}</TableReuse>
-            <TableReuse>{entry.spo2}</TableReuse>
-            <TableReuse>{entry.weight}</TableReuse>
-            <TableReuse>{entry.height}</TableReuse>
-            <TableReuse>{entry.bmi}</TableReuse>
-            <TableReuse>{entry.rr}</TableReuse>
-            <TableReuse>{entry.painScore}</TableReuse>
-            <TableReuse>{entry.headCircumference}</TableReuse>
-            <TableReuse>{entry.bsl}</TableReuse>
-            <TableReuse>{entry.cvs}</TableReuse>
-            <TableReuse>{entry.cns}</TableReuse>
-            <TableReuse>{entry.rs}</TableReuse>
-            <TableReuse>{entry.pa}</TableReuse>
-            <TableReuse>{entry.logicalExam}</TableReuse>
-            <TableReuse>
-              <button
-                className="text-red-500 hover:underline"
-                onClick={() => handleDeleteEntry(actualIndex)}
-              >
-                🗑 Delete
-              </button>
-            </TableReuse>
-          </tr>
-        );
-      })}
-
-      {[...vitals].reverse().map((v, idx) => (
-        <tr key={"api-" + idx} className="hover:bg-gray-50 ">
-          <TableReuse>{v.date}</TableReuse>
-          <TableReuse>{v.takenby}</TableReuse>
-          <TableReuse>{v.bp}</TableReuse>
-          <TableReuse>{v.pulse}</TableReuse>
-          <TableReuse>{v.temp}</TableReuse>
-          <TableReuse>{v.spo2}</TableReuse>
-          <TableReuse>{v.weight}</TableReuse>
-          <TableReuse>{v.height}</TableReuse>
-          <TableReuse>{v.bmi}</TableReuse>
-          <TableReuse>{v.rr}</TableReuse>
-          <TableReuse>{v.painScore}</TableReuse>
-          <TableReuse>{v.headCircumference}</TableReuse>
-          <TableReuse>{v.bsl}</TableReuse>
-          <TableReuse>{v.cvs}</TableReuse>
-          <TableReuse>{v.cns}</TableReuse>
-          <TableReuse>{v.rs}</TableReuse>
-          <TableReuse>{v.pa}</TableReuse>
-          <TableReuse>{v.logicalExam}</TableReuse>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
-
-
+            {[...vitals].reverse().map((v, idx) => (
+              <tr key={"api-" + idx} className="hover:bg-gray-50 ">
+                <TableReuse>{v.date}</TableReuse>
+                <TableReuse>{v.takenby}</TableReuse>
+                <TableReuse>{v.bp}</TableReuse>
+                <TableReuse>{v.pulse}</TableReuse>
+                <TableReuse>{v.temp}</TableReuse>
+                <TableReuse>{v.spo2}</TableReuse>
+                <TableReuse>{v.weight}</TableReuse>
+                <TableReuse>{v.height}</TableReuse>
+                <TableReuse>{v.bmi}</TableReuse>
+                <TableReuse>{v.rr}</TableReuse>
+                <TableReuse>{v.painScore}</TableReuse>
+                <TableReuse>{v.headCircumference}</TableReuse>
+                <TableReuse>{v.bsl}</TableReuse>
+                <TableReuse>{v.cvs}</TableReuse>
+                <TableReuse>{v.cns}</TableReuse>
+                <TableReuse>{v.rs}</TableReuse>
+                <TableReuse>{v.pa}</TableReuse>
+                <TableReuse>{v.logicalExam}</TableReuse>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
