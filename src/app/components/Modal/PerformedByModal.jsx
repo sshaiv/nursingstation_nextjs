@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import API_ENDPOINTS from "../constants/api_url";
+import API_ENDPOINTS from "../../constants/api_url";
 
 export default function PerformedByModal({
   isOpen,

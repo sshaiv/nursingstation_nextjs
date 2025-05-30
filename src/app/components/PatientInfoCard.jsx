@@ -24,7 +24,7 @@ export default function PatientInfoCard({
           className="w-6 h-6 rounded-full object-cover"
         />
 
-        <div className="flex items-center space-x-1 font-semibold text-gray-800 text-sm leading-tight">        
+        <div className="flex items-center space-x-1 font-semibold text-gray-800 text-xs leading-tight">        
           <H3>{name}</H3>
           <Label>({age}, {gender})</Label>        
         </div>

@@ -5,14 +5,14 @@ import TableReuse from "../common/TableReuse";
 import "react-datepicker/dist/react-datepicker.css";
 import DateTimeInput from "../common/DateTimeInput";
 
-import DoctorModal from "./DoctorModal";
+import DoctorModal from "./Modal/DoctorModal";
 
 import axios from "axios";
 import API_ENDPOINTS from "../constants/api_url";
 import NursingServiceModal from "./NursingServiceModal";
 import useSaveNSData from "../hooks/useSaveNSData";
 import ReusableInputField from "../common/SmallInputfields";
-import PerformedByModal from "./PerformedByModal";
+import PerformedByModal from "./Modal/PerformedByModal";
 
 export default function NursingServices({
   visitid,
@@ -61,11 +61,11 @@ export default function NursingServices({
     setShowSecondModal(false);
   };
 
+  // When user selects from modal:
   const handleSelectPerformedBy = (selected) => {
     console.log("PerformedBy selected:", selected);
-    setPerformedByData(selected);
-    setPerformedBy(selected.label || selected.CName || "");
-    setShowPerformedByModal(false); // Close the correct modal
+    setPerformedBy(selected.CNAME);
+    setShowPerformedByModal(false);
   };
 
   const handleSelectDoctor = (doctor) => {
@@ -206,6 +206,7 @@ export default function NursingServices({
 
     const updatedEntries = [...serviceEntries, newServiceEntry];
     setServiceEntries(updatedEntries);
+
     // Save all data
     setSaveData((prevData) => ({
       ...prevData,
@@ -282,7 +283,9 @@ export default function NursingServices({
       } else {
         alert("Failed to save data.");
       }
-    } catch (error) {
+    } 
+    
+    catch (error) {
       console.error("Error saving data:", error);
       alert("An error occurred while saving data.");
     }
@@ -476,7 +479,6 @@ export default function NursingServices({
           </div>
 
           {/*  Performed By */}
-
           <div className="flex flex-col w-full">
             <label className="text-sm text-black font-medium mb-1">
               PerformedBy
@@ -487,7 +489,7 @@ export default function NursingServices({
               value={performedBy}
               readOnly
               onClick={() => setShowPerformedByModal(true)}
-              className={`px-2 py-1  text-black text-sm border rounded-lg cursor-pointer bg-gray-100 hover:bg-gray-200 focus:outline-none ${
+              className={`px-2 py-1 text-black text-sm border rounded-lg cursor-pointer bg-gray-100 hover:bg-gray-200 focus:outline-none ${
                 errors.performedBy ? "border-red-500" : "border-gray-300"
               }`}
               placeholder="Select PerformedBy"
@@ -563,7 +565,7 @@ export default function NursingServices({
                             className="text-red-500 hover:underline"
                             onClick={() => handleDeleteEntry(actualIndex)}
                           >
-                           🗑 Delete
+                            🗑 Delete
                           </button>
 
                           // Or if you prefer the icon version:

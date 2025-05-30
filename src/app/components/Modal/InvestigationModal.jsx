@@ -1,9 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { H3 } from "../common/text";
-import API_ENDPOINTS from "../constants/api_url";
-import ReusableInputField from "../common/SmallInputfields";
+import { H3 } from "@/app/common/text";
+import API_ENDPOINTS from "@/app/constants/api_url";
+import ReusableInputField from "@/app/common/SmallInputfields";
 
 export default function InvestigationModal({
   isOpen,

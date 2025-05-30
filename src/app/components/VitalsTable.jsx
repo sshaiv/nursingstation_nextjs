@@ -1,5 +1,3 @@
-
-
 "use client";
 import { useState, useEffect } from "react";
 import { ActionButton } from "../common/Buttons";
@@ -7,9 +5,18 @@ import { MainHeadings } from "../common/text";
 import { format } from "date-fns";
 import TableReuse from "../common/TableReuse";
 import DateTimeInput from "../common/DateTimeInput";
+import useSaveVitalData from "../hooks/useSaveVitalData";
+import API_ENDPOINTS from "../constants/api_url";
+import NursingServiceModal from "./NursingServiceModal";
+import PerformedByModal from "./Modal/PerformedByModal";
 
-export default function VitalsTable({ title, visitid, gssuhid, empid, patientData }) {
- 
+export default function VitalsTable({
+  title,
+  visitid,
+  gssuhid,
+  empid,
+  patientData,
+}) {
   const [vitals, setVitals] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -22,6 +29,9 @@ export default function VitalsTable({ title, visitid, gssuhid, empid, patientDat
   };
   const [selectedTime, setSelectedTime] = useState(getCurrentTimeHHMM());
 
+  const [selectedDoctorId, setSelectedDoctorId] = useState(null);
+  const [errors, setErrors] = useState({});
+
   const [bp, setBp] = useState("");
   const [pulse, setPulse] = useState("");
   const [temp, setTemp] = useState("");
@@ -32,28 +42,46 @@ export default function VitalsTable({ title, visitid, gssuhid, empid, patientDat
   const [painScore, setPainScore] = useState("");
   const [bmi, setBmi] = useState("");
   const [loading, setLoading] = useState(false);
+  const [systolic, setSystolic] = useState("");
+  const [diastolic, setDiastolic] = useState("");
+  const [headCircumference, setHeadCircumference] = useState("");
+  const [bsl, setBsl] = useState("");
+  const [cvs, setCvs] = useState("");
+  const [cns, setCns] = useState("");
+  const [rs, setRs] = useState("");
+  const [pa, setPa] = useState("");
+  const [logicalExam, setLogicalExam] = useState("");
+  const [showPerformedByModal, setShowPerformedByModal] = useState(false);
+  const [selectedServices, setSelectedServices] = useState([]);
 
-  // Generate time options with both value (HH:mm) and label (e.g. 8:00 AM)
-  const timeOptions = Array.from({ length: 24 }, (_, index) => {
-    const hour = (index + 8) % 24;
-    const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
-    const period = hour < 12 ? "AM" : "PM";
+  const [performedBy, setPerformedBy] = useState("");
+  const [performedByID, setPerformedByID] = useState("");
+  const [performedByData, setPerformedByData] = useState(null);
 
-    const value = hour.toString().padStart(2, "0") + ":00";
-    const label = `${displayHour}:00 ${period}`;
+  const [saveData, setSaveData] = useSaveVitalData();
 
-    return { value, label };
-  });
+  console.log("update vital", saveData);
+
+  // Array to keep inserted entries only
+  const [insertedVitals, setInsertedVitals] = useState([]);
+
+  // When user selects from modal:
+  const handleSelectPerformedBy = (selected) => {
+    console.log("PerformedBy selected:", selected);
+    setPerformedByData(selected);
+    setPerformedBy(selected.CName);
+    // console.log("spb",performedBy.CName);
+
+    setShowPerformedByModal(false);
+  };
 
   useEffect(() => {
     loadVitalData();
-    // No resetting selectedTime here
   }, []);
 
   useEffect(() => {
     if (visitid) {
       loadVitalData();
-      // No resetting selectedTime here either
     }
   }, [visitid]);
 
@@ -63,6 +91,7 @@ export default function VitalsTable({ title, visitid, gssuhid, empid, patientDat
       return;
     }
     try {
+      setLoading(true);
       const response = await fetch(
         `https://doctorapi.medonext.com/API/HMS/GetPatVitalData?visitid=${visitid}`
       );
@@ -78,56 +107,173 @@ export default function VitalsTable({ title, visitid, gssuhid, empid, patientDat
         setVitals(
           data.map((item) => ({
             date: item.vitaldatetime,
+            takenby: item.takenby,
             bp: item.BP,
-            pulse: item.pulse,
-            temp: item.temp,
-            spo2: item.spo2,
-            weight: item.weight || "N/A",
-            height: item.height || "N/A",
-            bmi: item.bmi || "N/A",
-            rr: item.RR || "N/A",
-            painScore: item.painscore?.toString() || "N/A",
+            // systolic: item.systolic || "",
+            // diastolic: item.diastolic || "",
+            pulse: item.pulse || "",
+            temp: item.temp || "",
+            spo2: item.spo2 || "",
+            weight: item.weight || "",
+            height: item.height || "",
+            bmi: item.bmi || "",
+            rr: item.RR || "",
+            painScore: item.painscore?.toString() || "",
+            headCircumference: item.Headcircumference || "",
+            bsl: item.bsl || "",
+            cvs: item.cvs || "",
+            cns: item.cns || "",
+            rs: item.rs || "",
+            pa: item.pa || "",
+            logicalExam: item.le || "",
           }))
         );
       } else {
         setVitals([]);
       }
+      setLoading(false);
     } catch (error) {
       console.error("Failed to load vital data", error);
+      setLoading(false);
     }
   };
 
-  const handleSave = () => {
-    if (
-      selectedDate ||
-      selectedTime ||
-      bp ||
-      pulse ||
-      temp ||
-      spo2 ||
-      weight ||
-      height ||
-      rr ||
-      painScore
-    ) {
-      const dateTimeString = `${format(selectedDate, "dd-MM-yyyy")} ${selectedTime}`;
+  const handleInsert = () => {
+   setErrors({});
 
-      setVitals((prev) => [
-        ...prev,
-        {
-          date: dateTimeString,
-          bp: bp || "N/A",
-          pulse: pulse || "N/A",
-          temp: temp || "N/A",
-          spo2: spo2 || "N/A",
-          weight: weight || "N/A",
-         height : height || "N/A",
-         bmi : bmi || "N/A",
-          rr: rr || "N/A",
-          painScore: painScore || "N/A",
-        },
-      ]);
+const hasVitalsData =
+  bp ||
+  pulse ||
+  temp ||
+  spo2 ||
+  weight ||
+  headCircumference ||
+  height ||
+  rr ||
+  painScore;
+
+if (
+ 
+  !performedByData ||
+ 
+  !hasVitalsData // Add this condition to check vital signs
+) {
+  const newErrors = {};
+
+
+  if (!performedByData) newErrors.performedBy = "Performed By is required.";
+
+  setErrors(newErrors);
+  return;
+}
+
+
+    if (selectedDate && selectedTime && hasVitalsData) {
+      const dateTimeString = `${format(
+        selectedDate,
+        "dd-MM-yyyy"
+      )} ${selectedTime}`;
+
+      const getCurrentDateTime = (includeTime = true) => {
+        const now = new Date();
+        const day = String(now.getDate()).padStart(2, "0");
+        const month = String(now.getMonth() + 1).padStart(2, "0");
+        const year = now.getFullYear();
+
+        if (!includeTime) {
+          return `${day}/${month}/${year}`;
+        }
+
+        let hours = now.getHours();
+        const minutes = String(now.getMinutes()).padStart(2, "0");
+        const ampm = hours >= 12 ? "PM" : "AM";
+        hours = hours % 12 || 12;
+        const paddedHours = String(hours).padStart(2, "0");
+
+        return `${day}/${month}/${year} ${paddedHours}:${minutes} ${ampm}`;
+      };
+
+      // const dateOnly = getCurrentDateTime(false);
+      // console.log("Sirf date:", dateOnly);
+
+      const currentDateTime = getCurrentDateTime(true);
+      console.log("Date + Time:", currentDateTime);
+
+      const newEntry = {
+        performedBy: performedByData?.label || performedByData?.CName || "",
+        performedByID: performedByData?.label || performedByData?.CID || "",
+      };
+
+      const newVitalEntry = {
+        Sno: 0,
+        rowid: 0,
+        visitid: patientData.visitid,
+        gssuhid: patientData.gssuhid,
+        bedno: patientData.bedno,
+        takenbyid: performedByData.CID,
+        height: height || "",
+        Height_1: " ",
+        weight: weight || "",
+        Weight_1: " ",
+        bmi: bmi || "",
+        BMI_1: " ",
+        temp: temp || "",
+        Temperature: " ",
+        bp: bp || "",
+        BloodPressure: " ",
+        pulse: pulse || "",
+        Pulse_1: "",
+        rr: rr || "",
+        RR_1: " ",
+        
+        headCircumference: headCircumference || "",
+        HeadCircumference: " ",
+        spo2: spo2 || "",
+        SpPO2: " ",
+        entempid: patientData.empid,
+        entdatetime: patientData.entdatetime,
+        entwsname: "GSLAP2",
+        modifyempid: patientData.modifyempid,
+        modifydatetime: patientData.modifydatetime,
+        modifywsname: "GSLAP2",
+        locationid: patientData.locationid,
+        IsEdit: 0,
+        isopd: 0,
+        Remove: " ",
+        vitaldatetime: currentDateTime,
+        bsl: bsl || "",
+        BSL: "",
+        cvs: cvs || "",
+        CVS_1: " ",
+        cns: cns || "",
+        CNS_1: " ",
+        rs: rs || "",
+        RS_1: " ",
+        pa: pa || "",
+        PA_1: " ",
+        painScore: painScore || 0,
+        logicalExam: logicalExam || "",
+        LE_1: " ",
+        isprintonds: 0,
+        PrintOnDischSumm: " ",
+      };
+
+      // Add new entry to insertedVitals
+      setInsertedVitals((prev) => [...prev, newVitalEntry]);
+      const updatedEntries = [...insertedVitals, newVitalEntry];
+      setInsertedVitals(updatedEntries);
+
+      // Save all data
+      setSaveData((prevData) => ({
+        ...prevData,
+        jsonStringsubvitaldataentry: JSON.stringify(updatedEntries),
+      }));
+
+      console.log("jsonStringsubvitaldataentry:", updatedEntries);
+
       clearInputs();
+    } else {
+      alert("Please fill at least one vital ");
     }
   };
 
@@ -141,87 +287,273 @@ export default function VitalsTable({ title, visitid, gssuhid, empid, patientDat
     setWeight("");
     setHeight("");
     setRr("");
+    setBmi("");
     setPainScore("");
+  };
+
+  const savebtn = async () => {
+    console.log("savebtn ", saveData);
+    try {
+      const response = await fetch(
+        API_ENDPOINTS.savePatVitalEntry,
+
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(saveData),
+        }
+      );
+
+      const result = await response.json();
+      console.log("Response:", result);
+
+      if (response.ok) {
+        alert("Data saved successfully!");
+        // Clear inserted vitals
+        setInsertedVitals([]);
+        setPerformedByData(null);
+        setPerformedBy("");
+        // Reload fresh data from API
+        loadVitalData();
+      } else {
+        alert("Failed to save data.");
+      }
+    } catch (error) {
+      console.error("Error saving data:", error);
+      alert("An error occurred while saving data.");
+    }
+  };
+
+  const handleDeleteEntry = (indexToDelete) => {
+    // Log the entry being deleted
+    console.log("Deleting entry at index:", indexToDelete);
+    console.log("Deleted entry:", insertedVitals[indexToDelete]);
+
+    // Filter out the deleted entry
+    const updatedEntries = insertedVitals.filter((_, i) => i !== indexToDelete);
+
+    // Log the updated entries after deletion
+    console.log("Updated entries after deletion:", updatedEntries);
+
+    // Update state
+    setInsertedVitals(updatedEntries);
+
+    // Update JSON string
+    setSaveData((prevData) => {
+      const newSaveData = {
+        ...prevData,
+        jsonStringsubvitaldataentry: JSON.stringify(updatedEntries),
+      };
+
+      console.log("Updated saveData:", newSaveData);
+
+      return newSaveData;
+    });
   };
 
   return (
     <div className="bg-gray-50 border border-gray-300 shadow rounded-2xl p-2">
       <div className="flex justify-between items-center mb-1">
         <MainHeadings title={title} icon="🩺" />
-        <ActionButton label="Insert" onClick={handleSave} />
+        <div className="justify-end gap-2 flex">
+          <ActionButton label="Insert" onClick={handleInsert} />
+          {/* <ActionButton label="Save" onClick={savebtn} /> */}
+          <button
+            onClick={savebtn}
+            disabled={insertedVitals.length === 0}
+            className={`text-xs p-2  rounded text-white ${
+              insertedVitals.length === 0
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-500 hover:bg-blue-600"
+            }`}
+          >
+            Save
+          </button>
+        </div>
       </div>
-
-      {/* Inputs */}
-      <div className="flex items-end flex-wrap gap-2">
-        <DateTimeInput
-          selectedDate={selectedDate}
-          onDateChange={setSelectedDate}
-          time={selectedTime}
-          onTimeChange={(e) => setSelectedTime(e.target.value)}
-          label=" Date & Time"
+      {showPerformedByModal && (
+        <PerformedByModal
+          isOpen={showPerformedByModal}
+          onSelect={handleSelectPerformedBy}
+          onClose={() => setShowPerformedByModal(false)}
+          // doctorId={selectedDoctorId}
+          patientData={patientData}
+          setSaveData={setSaveData}
         />
+      )}
+      {/* Inputs */}
 
-        {[
-          { placeholder: "BP", value: bp, setValue: setBp },
-          { placeholder: "Pulse", value: pulse, setValue: setPulse },
-          { placeholder: "Temp", value: temp, setValue: setTemp },
-          { placeholder: "SPO2", value: spo2, setValue: setSpo2 },
-          { placeholder: "Weight", value: weight, setValue: setWeight },
-          { placeholder: "Height", value: height, setValue: setHeight },
-           { placeholder: "BMI", value: bmi, setValue: setBmi },
-          { placeholder: "R.R", value: rr, setValue: setRr },
-          { placeholder: "PainScore", value: painScore, setValue: setPainScore },
-         
-        ].map((input, index) => (
-          <div className="flex flex-col items-start" key={index}>
-            <label className="text-gray-600 text-[9px] mb-[1px]">{input.placeholder}</label>
+      <div className="overflow-x-auto hide-scrollbar w-full">
+        <div className="flex items-end min-w-max gap-2 px-1">
+          {/* Date & Time Input */}
+          <DateTimeInput
+            selectedDate={selectedDate}
+            onDateChange={setSelectedDate}
+            time={selectedTime}
+            onTimeChange={(e) => setSelectedTime(e.target.value)}
+            label="Date & Time"
+          />
+
+          {/* Performed By Input */}
+          <div className="flex flex-col w-40">
             <input
+              id="performedBy"
               type="text"
-              value={input.value}
-              onChange={(e) => input.setValue(e.target.value)}
-              className={`border rounded w-[34px] text-[9px] h-[18px] px-[2px] py-[1px] focus:outline-none focus:border-blue-500 ${
-                input.value ? "border-blue-500" : "border-gray-300"
+              value={performedBy}
+              readOnly
+              onClick={() => setShowPerformedByModal(true)}
+              className={`px-2 py-1 text-black text-xs border rounded-lg cursor-pointer bg-gray-100 hover:bg-gray-200 focus:outline-none ${
+                errors.performedBy ? "border-red-500" : "border-gray-300"
               }`}
+              placeholder="Select PerformedBy"
             />
+            {errors.performedBy && (
+              <p className="text-red-500 text-[10px] mt-[2px] ml-[2px]">
+                {errors.performedBy}
+              </p>
+            )}
           </div>
-        ))}
+
+          {/* Vital Fields */}
+          {[
+            { placeholder: "BP", value: bp, setValue: setBp },
+            { placeholder: "Pulse", value: pulse, setValue: setPulse },
+            { placeholder: "Temp", value: temp, setValue: setTemp },
+            { placeholder: "SPO2", value: spo2, setValue: setSpo2 },
+            { placeholder: "Weight", value: weight, setValue: setWeight },
+            { placeholder: "Height", value: height, setValue: setHeight },
+            { placeholder: "BMI", value: bmi, setValue: setBmi },
+            { placeholder: "R.R", value: rr, setValue: setRr },
+            {
+              placeholder: "PainScore",
+              value: painScore,
+              setValue: setPainScore,
+            },
+            {
+              placeholder: "Head Circum.",
+              value: headCircumference,
+              setValue: setHeadCircumference,
+            },
+            { placeholder: "BSL (R)", value: bsl, setValue: setBsl },
+            { placeholder: "CVS", value: cvs, setValue: setCvs },
+            { placeholder: "CNS", value: cns, setValue: setCns },
+            { placeholder: "RS", value: rs, setValue: setRs },
+            { placeholder: "P/A", value: pa, setValue: setPa },
+            {
+              placeholder: "Logical Exam",
+              value: logicalExam,
+              setValue: setLogicalExam,
+            },
+          ].map((input, index) => (
+            <div className="flex flex-col items-start" key={index}>
+              <label className="text-gray-600 text-[9px] mb-[1px]">
+                {input.placeholder}
+              </label>
+              <input
+                type="text"
+                value={input.value}
+                onChange={(e) => input.setValue(e.target.value || "")}
+                className={`border rounded w-[60px] text-[9px] h-[18px] px-[2px] py-[1px] focus:outline-none focus:border-blue-500 ${
+                  input.value ? "border-blue-500" : "border-gray-300"
+                }`}
+              />
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* Table */}
-      <div className="max-h-[80px] overflow-y-scroll hide-scrollbar mt-2">
-        <table className="w-full table-auto text-[9px] text-center border">
-          <thead className="sticky top-0 bg-gray-100">
-            <tr>
-              <TableReuse type="th">Date/Time</TableReuse>
-              <TableReuse type="th">BP</TableReuse>
-              <TableReuse type="th">Pulse</TableReuse>
-              <TableReuse type="th">Temp</TableReuse>
-              <TableReuse type="th">SPO2</TableReuse>
-              <TableReuse type="th">Weight</TableReuse>
-              <TableReuse type="th">Height</TableReuse>
-              <TableReuse type="th">BMI</TableReuse>
-              <TableReuse type="th">R.R</TableReuse>
-              <TableReuse type="th">Pain Score</TableReuse>
-            </tr>
-          </thead>
-          <tbody>
-            {vitals.map((v, idx) => (
-              <tr key={idx} className="hover:bg-gray-50">
-                <TableReuse>{v.date}</TableReuse>
-                <TableReuse>{v.bp}</TableReuse>
-                <TableReuse>{v.pulse}</TableReuse>
-                <TableReuse>{v.temp}</TableReuse>
-                <TableReuse>{v.spo2}</TableReuse>
-                <TableReuse>{v.weight}</TableReuse>
-                <TableReuse>{v.height}</TableReuse>
-                <TableReuse>{v.bmi}</TableReuse>
-                <TableReuse>{v.rr}</TableReuse>
-                <TableReuse>{v.painScore}</TableReuse>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+    
+
+{/* Table */}
+<div className="max-h-[90px] overflow-y-scroll hide-scrollbar mt-1">
+  <table className="w-full table-auto text-[5px] text-start border border-collapse">
+    <thead>
+      <tr className="bg-white sticky top-0 z-10">
+        <TableReuse type="th">Date/Time</TableReuse>
+        <TableReuse type="th">Nur.Services</TableReuse>
+        <TableReuse type="th">BP</TableReuse>
+        <TableReuse type="th">Pulse</TableReuse>
+        <TableReuse type="th">Temp</TableReuse>
+        <TableReuse type="th">SPO2</TableReuse>
+        <TableReuse type="th">Weight</TableReuse>
+        <TableReuse type="th">Height</TableReuse>
+        <TableReuse type="th">BMI</TableReuse>
+        <TableReuse type="th">R.R</TableReuse>
+        <TableReuse type="th">Pain</TableReuse>
+        <TableReuse type="th">Head Circum.</TableReuse>
+        <TableReuse type="th">BSL (R)</TableReuse>
+        <TableReuse type="th">CVS</TableReuse>
+        <TableReuse type="th">CNS</TableReuse>
+        <TableReuse type="th">RS</TableReuse>
+        <TableReuse type="th">P/A</TableReuse>
+        <TableReuse type="th">L/E</TableReuse>
+        <TableReuse type="th">Action</TableReuse>
+      </tr>
+    </thead>
+    <tbody>
+      {[...insertedVitals].reverse().map((entry, idx) => {
+        const actualIndex = insertedVitals.length - 1 - idx;
+        return (
+          <tr key={"inserted-" + idx} className="hover:bg-gray-50 ">
+            <TableReuse>{entry.vitaldatetime}</TableReuse>
+            <TableReuse>{performedBy}</TableReuse>
+            <TableReuse>{entry.bp}</TableReuse>
+            <TableReuse>{entry.pulse}</TableReuse>
+            <TableReuse>{entry.temp}</TableReuse>
+            <TableReuse>{entry.spo2}</TableReuse>
+            <TableReuse>{entry.weight}</TableReuse>
+            <TableReuse>{entry.height}</TableReuse>
+            <TableReuse>{entry.bmi}</TableReuse>
+            <TableReuse>{entry.rr}</TableReuse>
+            <TableReuse>{entry.painScore}</TableReuse>
+            <TableReuse>{entry.headCircumference}</TableReuse>
+            <TableReuse>{entry.bsl}</TableReuse>
+            <TableReuse>{entry.cvs}</TableReuse>
+            <TableReuse>{entry.cns}</TableReuse>
+            <TableReuse>{entry.rs}</TableReuse>
+            <TableReuse>{entry.pa}</TableReuse>
+            <TableReuse>{entry.logicalExam}</TableReuse>
+            <TableReuse>
+              <button
+                className="text-red-500 hover:underline"
+                onClick={() => handleDeleteEntry(actualIndex)}
+              >
+                🗑 Delete
+              </button>
+            </TableReuse>
+          </tr>
+        );
+      })}
+
+      {[...vitals].reverse().map((v, idx) => (
+        <tr key={"api-" + idx} className="hover:bg-gray-50 ">
+          <TableReuse>{v.date}</TableReuse>
+          <TableReuse>{v.takenby}</TableReuse>
+          <TableReuse>{v.bp}</TableReuse>
+          <TableReuse>{v.pulse}</TableReuse>
+          <TableReuse>{v.temp}</TableReuse>
+          <TableReuse>{v.spo2}</TableReuse>
+          <TableReuse>{v.weight}</TableReuse>
+          <TableReuse>{v.height}</TableReuse>
+          <TableReuse>{v.bmi}</TableReuse>
+          <TableReuse>{v.rr}</TableReuse>
+          <TableReuse>{v.painScore}</TableReuse>
+          <TableReuse>{v.headCircumference}</TableReuse>
+          <TableReuse>{v.bsl}</TableReuse>
+          <TableReuse>{v.cvs}</TableReuse>
+          <TableReuse>{v.cns}</TableReuse>
+          <TableReuse>{v.rs}</TableReuse>
+          <TableReuse>{v.pa}</TableReuse>
+          <TableReuse>{v.logicalExam}</TableReuse>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+
     </div>
   );
 }

@@ -5,11 +5,10 @@ import TableReuse from "../common/TableReuse";
 import "react-datepicker/dist/react-datepicker.css";
 import DateTimeInput from "../common/DateTimeInput";
 import ReusableInputField from "../common/SmallInputfields";
-import DVDoctorModal from "./DVDoctorModal";
 import axios from "axios";
 import API_ENDPOINTS from "../constants/api_url";
 import useSaveDVData from "../hooks/useSaveDVData";
-import DoctorModal from "./DoctorModal";
+import DoctorModal from "./Modal/DoctorModal";
 
 export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
   const [isSaved, setIsSaved] = useState(false);

@@ -5,9 +5,11 @@ import React from 'react';
 
 export function H3({ children }) {
   return (
-    <h3 className="text-base md:text-sm font-semibold font-serif text-gray-700 flex items-center gap-2">
-      {children}
-    </h3>
+  
+    <h3 className="text-sm md:text-xs font-semibold font-serif text-gray-700 flex items-center gap-2">
+  {children}
+</h3>
+
   );
 }
 

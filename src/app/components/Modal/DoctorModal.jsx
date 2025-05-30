@@ -3,8 +3,8 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
-import DateTimeInput from '../common/DateTimeInput';
-import API_ENDPOINTS from '../constants/api_url';
+import DateTimeInput from '@/app/common/DateTimeInput';
+import API_ENDPOINTS from '@/app/constants/api_url';
 
 export default function DoctorModal({ isOpen, onClose, onSelectDoctor, visitid, gssuhid, empid }) {
     console.log("doc pop", visitid, gssuhid, empid);
