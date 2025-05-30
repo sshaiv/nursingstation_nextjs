@@ -10,6 +10,7 @@ import InvestigationModal from "./Modal/InvestigationModal";
 import useSaveInvData from "../hooks/useSaveInvData";
 import axios from "axios";
 import API_ENDPOINTS from "../constants/api_url";
+import { getCurrentDateTime ,getCurrentDate } from "../utils/dateUtils";
 
 export default function Investigation({
   visitid,
@@ -17,6 +18,9 @@ export default function Investigation({
   empid,
   patientData,
 }) {
+    const CurrentDate = getCurrentDate(); 
+      const fullDateTime = getCurrentDateTime(); 
+
   const [isSaved, setIsSaved] = useState(false);
   const [isDoctorModalOpen, setDoctorModalOpen] = useState(true);
   const [showSecondModal, setShowSecondModal] = useState(false);
@@ -78,24 +82,10 @@ export default function Investigation({
     return;
   }
 
-    const getCurrentDateTime = () => {
-      const now = new Date();
-      const day = String(now.getDate()).padStart(2, "0");
-      const month = String(now.getMonth() + 1).padStart(2, "0");
-      const year = now.getFullYear();
-
-      let hours = now.getHours();
-      const minutes = String(now.getMinutes()).padStart(2, "0");
-      const ampm = hours >= 12 ? "PM" : "AM";
-      hours = hours % 12 || 12;
-
-      return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
-    };
-
-    const currentDateTime = getCurrentDateTime();
+  
 
     const newEntries = selectedServices.map((service) => ({
-      date: currentDateTime,
+      date: fullDateTime,
       doctorName: doctorData.label || doctorData.CName || "N/A",
       investigation:
         service.InvestigationName ||

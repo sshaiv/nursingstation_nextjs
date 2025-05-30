@@ -145,7 +145,12 @@ function NursingStationContent() {
             <AssessmentCard title="Allergies" />
             <NotesBox />
           </div>
-          <MedicineTable />
+          <MedicineTable
+           visitid={visitid}
+            gssuhid={gssuhid}
+            empid={empid}
+            patientData={patientData}
+             />
         </div>
         <div>
           <ButtonGrid

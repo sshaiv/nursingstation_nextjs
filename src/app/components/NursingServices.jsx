@@ -14,12 +14,17 @@ import useSaveNSData from "../hooks/useSaveNSData";
 import ReusableInputField from "../common/SmallInputfields";
 import PerformedByModal from "./Modal/PerformedByModal";
 
+import { getCurrentDate, getCurrentDateTime, getgetCurrentDateTime } from "../utils/dateUtils";
+
 export default function NursingServices({
   visitid,
   gssuhid,
   empid,
   patientData,
 }) {
+  const CurrentDate = getCurrentDate(); 
+  const fullDateTime = getCurrentDateTime(); 
+
   const [isSaved, setIsSaved] = useState(false);
   const [isDoctorModalOpen, setDoctorModalOpen] = useState(true);
   const [showSecondModal, setShowSecondModal] = useState(false);
@@ -61,10 +66,12 @@ export default function NursingServices({
     setShowSecondModal(false);
   };
 
-  // When user selects from modal:
   const handleSelectPerformedBy = (selected) => {
     console.log("PerformedBy selected:", selected);
-    setPerformedBy(selected.CNAME);
+    setPerformedByData(selected);
+    setPerformedBy(selected.CName);
+    // console.log("spb",performedBy.CName);
+
     setShowPerformedByModal(false);
   };
 
@@ -109,33 +116,11 @@ export default function NursingServices({
       return;
     }
 
-    const getCurrentDateTime = (includeTime = true) => {
-      const now = new Date();
-      const day = String(now.getDate()).padStart(2, "0");
-      const month = String(now.getMonth() + 1).padStart(2, "0");
-      const year = now.getFullYear();
-
-      if (!includeTime) {
-        return `${day}/${month}/${year}`;
-      }
-
-      let hours = now.getHours();
-      const minutes = String(now.getMinutes()).padStart(2, "0");
-      const ampm = hours >= 12 ? "PM" : "AM";
-      hours = hours % 12 || 12;
-      const paddedHours = String(hours).padStart(2, "0");
-
-      return `${day}/${month}/${year} ${paddedHours}:${minutes} ${ampm}`;
-    };
-
-    const dateOnly = getCurrentDateTime(false);
-    console.log("Sirf date:", dateOnly); // e.g. "29/05/2025"
-
-    const currentDateTime = getCurrentDateTime(true);
-    console.log("Date + Time:", currentDateTime); // e.g. "29/05/2025 09:42 AM"
+  
 
     const newEntry = {
-      date: currentDateTime,
+      date: fullDateTime,
+    
       bedno: patientData?.bedno || "N/A",
       doctorName: doctorData?.label || doctorData?.CName || "N/A",
       nursingservice:
@@ -145,15 +130,15 @@ export default function NursingServices({
       source: "local",
     };
 
-    console.log("aai", newEntry);
+    console.log("aai", newEntry.date);
 
     const newServiceEntry = {
       rowid: 0,
       gssuhid: patientData.gssuhid,
       visitid: patientData.visitid,
       consltantvisitid: 0,
-      DateTime: currentDateTime,
-      servdatetime: dateOnly,
+      DateTime: fullDateTime,
+      servdatetime: CurrentDate,
       BedNo: patientData.bedno,
       bedno: patientData.bedno,
       Service: selectedServices.CNAME,
@@ -227,8 +212,8 @@ export default function NursingServices({
 
     // ✅ Enable Save button
     setIsSaveEnabled(true);
-    // (Optional) Clear fields
-    setSelectedDate(null); // or "" if DateTimeInput expects string
+
+    setSelectedDate(null);
     setDoctorData(null);
     setDoctorName(""); // clear doctor name string
     setSelectedServices([]); // assuming this is the array holding services info
@@ -283,9 +268,7 @@ export default function NursingServices({
       } else {
         alert("Failed to save data.");
       }
-    } 
-    
-    catch (error) {
+    } catch (error) {
       console.error("Error saving data:", error);
       alert("An error occurred while saving data.");
     }

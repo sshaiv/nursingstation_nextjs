@@ -29,7 +29,6 @@ export default function VitalsTable({
   };
   const [selectedTime, setSelectedTime] = useState(getCurrentTimeHHMM());
 
-  const [selectedDoctorId, setSelectedDoctorId] = useState(null);
   const [errors, setErrors] = useState({});
 
   const [bp, setBp] = useState("");
@@ -44,7 +43,7 @@ export default function VitalsTable({
   const [loading, setLoading] = useState(false);
   const [systolic, setSystolic] = useState("");
   const [diastolic, setDiastolic] = useState("");
-  const [headCircumference, setHeadCircumference] = useState("");
+  const [Headcircumference, setHeadcircumference] = useState("");
   const [bsl, setBsl] = useState("");
   const [cvs, setCvs] = useState("");
   const [cns, setCns] = useState("");
@@ -52,10 +51,9 @@ export default function VitalsTable({
   const [pa, setPa] = useState("");
   const [logicalExam, setLogicalExam] = useState("");
   const [showPerformedByModal, setShowPerformedByModal] = useState(false);
-  const [selectedServices, setSelectedServices] = useState([]);
 
   const [performedBy, setPerformedBy] = useState("");
-  const [performedByID, setPerformedByID] = useState("");
+
   const [performedByData, setPerformedByData] = useState(null);
 
   const [saveData, setSaveData] = useSaveVitalData();
@@ -119,7 +117,7 @@ export default function VitalsTable({
             bmi: item.bmi || "",
             rr: item.RR || "",
             painScore: item.painscore?.toString() || "",
-            headCircumference: item.Headcircumference || "",
+            Headcircumference: item.Headcircumference || "",
             bsl: item.bsl || "",
             cvs: item.cvs || "",
             cns: item.cns || "",
@@ -147,7 +145,7 @@ export default function VitalsTable({
       temp ||
       spo2 ||
       weight ||
-      headCircumference ||
+      Headcircumference ||
       height ||
       rr ||
       painScore;
@@ -222,8 +220,8 @@ export default function VitalsTable({
         rr: rr || "",
         RR_1: " ",
 
-        headCircumference: headCircumference || "",
-        HeadCircumference: " ",
+        Headcircumference: Headcircumference || "",
+       
         spo2: spo2 || "",
         SpPO2: " ",
         entempid: patientData.empid,
@@ -275,7 +273,7 @@ export default function VitalsTable({
 
   const clearInputs = () => {
     setSelectedDate(new Date());
-    setSelectedTime(getCurrentTimeHHMM());
+    setSelectedTime(getCurrentTimeHHMM());   
     setBp("");
     setPulse("");
     setTemp("");
@@ -429,8 +427,8 @@ export default function VitalsTable({
             },
             {
               placeholder: "Head Circum.",
-              value: headCircumference,
-              setValue: setHeadCircumference,
+              value: Headcircumference,
+              setValue: setHeadcircumference,
             },
             { placeholder: "BSL (R)", value: bsl, setValue: setBsl },
             { placeholder: "CVS", value: cvs, setValue: setCvs },
@@ -502,7 +500,7 @@ export default function VitalsTable({
                   <TableReuse>{entry.bmi}</TableReuse>
                   <TableReuse>{entry.rr}</TableReuse>
                   <TableReuse>{entry.painScore}</TableReuse>
-                  <TableReuse>{entry.headCircumference}</TableReuse>
+                  <TableReuse>{entry.Headcircumference}</TableReuse>
                   <TableReuse>{entry.bsl}</TableReuse>
                   <TableReuse>{entry.cvs}</TableReuse>
                   <TableReuse>{entry.cns}</TableReuse>
@@ -534,7 +532,7 @@ export default function VitalsTable({
                 <TableReuse>{v.bmi}</TableReuse>
                 <TableReuse>{v.rr}</TableReuse>
                 <TableReuse>{v.painScore}</TableReuse>
-                <TableReuse>{v.headCircumference}</TableReuse>
+                <TableReuse>{v.Headcircumference}</TableReuse>
                 <TableReuse>{v.bsl}</TableReuse>
                 <TableReuse>{v.cvs}</TableReuse>
                 <TableReuse>{v.cns}</TableReuse>

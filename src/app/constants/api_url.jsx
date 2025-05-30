@@ -23,6 +23,8 @@ const API_ENDPOINTS = {
          getServices :`${BASE_URL}/getServices`,
          getNursingStaff :`${BASE_URL}/getNursingStaff`,
          getServiceDetail :`${BASE_URL}/GetServiceDetail`,
+         getAllItems :`${BASE_URL}/GetAllItems`,
+         getPrescriptionDetail :`${BASE_URL}/GetPrescriptionDetail`,
 
 
 

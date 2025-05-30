@@ -183,12 +183,8 @@ export default function DoctorModal({ isOpen, onClose, onSelectDoctor, visitid, 
                     <button
                         onClick={onClose}
                         className="bg-blue-800 text-white text-[11px] py-[4px] px-5 rounded flex items-center justify-center gap-1 mx-auto"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" height="12" viewBox="0 0 24 24" fill="white">
-                            <path d="M10 17l5-5-5-5v10z" />
-                            <path d="M0 24V0h24v24H0z" fill="none" />
-                        </svg>
-                        Close
+                    >                       
+                       ❌ Close
                     </button>
                 </div>
             </div>

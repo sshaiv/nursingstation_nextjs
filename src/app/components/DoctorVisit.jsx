@@ -9,8 +9,12 @@ import axios from "axios";
 import API_ENDPOINTS from "../constants/api_url";
 import useSaveDVData from "../hooks/useSaveDVData";
 import DoctorModal from "./Modal/DoctorModal";
+import { getCurrentDate , getCurrentDateTime } from "../utils/dateUtils";
 
 export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
+    const CurrentDate = getCurrentDate(); 
+    const fullDateTime = getCurrentDateTime(); 
+  
   const [isSaved, setIsSaved] = useState(false);
   const [isDoctorModalOpen, setDoctorModalOpen] = useState(true);
   const [doctorData, setDoctorData] = useState(null);
@@ -62,24 +66,10 @@ const [isSaveEnabled, setIsSaveEnabled] = useState(false);
       return;
     }
 
-    const getCurrentDateTime = () => {
-      const now = new Date();
-      const day = String(now.getDate()).padStart(2, "0");
-      const month = String(now.getMonth() + 1).padStart(2, "0");
-      const year = now.getFullYear();
 
-      let hours = now.getHours();
-      const minutes = String(now.getMinutes()).padStart(2, "0");
-      const ampm = hours >= 12 ? "PM" : "AM";
-      hours = hours % 12 || 12;
-
-      return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
-    };
-
-    const currentDateTime = getCurrentDateTime();
 
     const newEntry = {
-      date: currentDateTime,
+      date: fullDateTime,
       doctorName: doctorData.label || doctorData.CName || "N/A",
       remarks: remark || "",
       bedno: patientData?.bedno || "N/A",
@@ -108,11 +98,11 @@ const [isSaveEnabled, setIsSaveEnabled] = useState(false);
         gssuhid: patientData?.gssuhid,
         visitid: patientData?.visitid,
         SNo: 1,
-        visitdate: currentDateTime,
-        Date: currentDateTime,
-        visittime: currentDateTime,
-        Time: currentDateTime,
-        visitdatetime: currentDateTime,
+        visitdate: fullDateTime,
+        Date: fullDateTime,
+        visittime: fullDateTime,
+        Time: fullDateTime,
+        visitdatetime: fullDateTime,
         visitthrough: "VISIT",
         visittypeid: 0,
         Bedno: patientData?.bedno,
@@ -128,18 +118,18 @@ const [isSaveEnabled, setIsSaveEnabled] = useState(false);
         Remark: remark,
         Remove: 0,
         isremove: 0,
-        removedatetime: currentDateTime,
+        removedatetime: fullDateTime,
         isverified: 0,
-        verificationdatetime: currentDateTime,
+        verificationdatetime: fullDateTime,
         verifiedbyid: 0,
         verificationremark: " ",
         callbyempid: 0,
         isinactive: 0,
         entempid: 21,
-        entdatetime: currentDateTime,
+        entdatetime: fullDateTime,
         entwsname: "GSLAP2",
         modifyempid: 21,
-        modifydatetime: currentDateTime,
+        modifydatetime: fullDateTime,
         modifywsname: "GSLAP2",
         locationid: patientData.locationid,
         financialyear: "2526",
