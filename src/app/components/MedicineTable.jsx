@@ -4,7 +4,7 @@ import CurrentMedicines from "./CurrentMedicines";
 import PrescribedMedicine from "./PrescribedMedicine";
 import MedicineIndent from "./MedicineIndent";
 
-const MedicineTable = ({ visitid, gssuhid, empid ,patientData}) => {
+const MedicineTable = ({ visitid, gssuhid, empid ,patientData ,}) => {
   const [activeTab, setActiveTab] = useState("prescribed");
 
   const tabData = [
@@ -30,8 +30,8 @@ const MedicineTable = ({ visitid, gssuhid, empid ,patientData}) => {
                   onClick={() => setActiveTab(name)}
                   className={`flex items-center gap-1 px-3 py-1 rounded-md border ${
                     isActive
-                      ? "bg-white dark:bg-gray-800 border-blue-500 text-blue-600 dark:text-blue-400 shadow-sm"
-                      : "bg-gray-300 dark:bg-gray-700 border-transparent hover:border-gray-400 hover:bg-gray-300 dark:hover:bg-gray-600"
+                      ? "bg-white dark:bg-white border-blue-500 text-blue-600 dark:text-blue-400 shadow-sm"
+                      : "bg-gray-300 dark:bg-gray-300 border-transparent hover:border-gray-400 hover:bg-gray-300 dark:hover:bg-gray-600"
                   } transition-all duration-200 whitespace-nowrap`}
                 >
                   <span className="text-sm">{emoji}</span>
@@ -44,7 +44,7 @@ const MedicineTable = ({ visitid, gssuhid, empid ,patientData}) => {
       </div>
 
       {/* Content area */}
-      <div className=" border border-gray-300 bg-white rounded-b-md dark:border-gray-300 dark:bg-gray-300 text-sm">
+      <div className=" border border-white bg-white rounded-b-md dark:border-white dark:bg-white text-sm">
         {activeTab === "prescribed" && <PrescribedMedicine />}
         {activeTab === "current" && <CurrentMedicines />}
         {activeTab === "medicineindent" && 

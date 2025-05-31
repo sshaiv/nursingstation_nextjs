@@ -111,29 +111,8 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
     label: item.CNAME,
   }));
 
-  const customStyles = {
-    menu: (provided) => ({
-      ...provided,
-      fontSize: '12px',
-      // remove maxHeight and overflowY from here
-    }),
-    menuList: (provided) => ({
-      ...provided,
-      maxHeight: '100px',
-      overflowY: 'auto',
-      fontSize: '12px',
-    }),
-    control: (provided) => ({
-      ...provided,
-      minHeight: '28px',
-      fontSize: '12px',
-      padding: '0 4px',
-    }),
-  };
 
 
-  const startsWithFilter = (option, inputValue) =>
-    option.label.toLowerCase().startsWith(inputValue.toLowerCase());
 
 
   return (

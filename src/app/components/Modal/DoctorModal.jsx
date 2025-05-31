@@ -184,7 +184,7 @@ export default function DoctorModal({ isOpen, onClose, onSelectDoctor, visitid, 
                         onClick={onClose}
                         className="bg-blue-800 text-white text-[11px] py-[4px] px-5 rounded flex items-center justify-center gap-1 mx-auto"
                     >                       
-                       ❌ Close
+                       ✖️ Close
                     </button>
                 </div>
             </div>

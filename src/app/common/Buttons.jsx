@@ -6,12 +6,12 @@ export function ActionButton({ label, onClick }) {
     <button
       className="
         text-xs 
-        sm:text-xs md:text-sm  
+        sm:text-xs md:text-xs  
         text-white 
         px-1.5 py-0.5 
-        rounded-lg 
-        bg-blue-500 
-        hover:bg-blue-700 
+        rounded-sm 
+        bg-blue-600 
+        hover:bg-blue-400 
         transition-colors 
         duration-200
       "

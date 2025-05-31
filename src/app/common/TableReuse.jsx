@@ -1,9 +1,13 @@
 
-import React from 'react';
 
 const TableReuse = ({ type = 'td', children, className = '' }) => {
-  const defaultTdStyle = 'border text-gray-700 p-[2px] text-[9px]'; // Even more compact
-  const defaultThStyle = 'border p-[2px] text-[9px] font-semibold bg-gray-200'; // Matching th
+  const isTextSizeOverridden = className.includes('text-['); // crude but works
+
+  const tdTextSize = isTextSizeOverridden ? '' : 'text-[9px]';
+  const thTextSize = isTextSizeOverridden ? '' : 'text-[9px]';
+
+  const defaultTdStyle = `border text-gray-700 p-[2px] ${tdTextSize}`;
+  const defaultThStyle = `border p-[2px] font-semibold bg-gray-200 ${thTextSize}`;
 
   const cellClass = type === 'th' 
     ? `${defaultThStyle} ${className}` 
@@ -13,5 +17,4 @@ const TableReuse = ({ type = 'td', children, className = '' }) => {
 
   return <CellTag className={cellClass}>{children}</CellTag>;
 };
-
 export default TableReuse;

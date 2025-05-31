@@ -10,7 +10,7 @@ import InvestigationModal from "./Modal/InvestigationModal";
 import useSaveInvData from "../hooks/useSaveInvData";
 import axios from "axios";
 import API_ENDPOINTS from "../constants/api_url";
-import { getCurrentDateTime ,getCurrentDate } from "../utils/dateUtils";
+import { getCurrentDateTime, getCurrentDate } from "../utils/dateUtils";
 
 export default function Investigation({
   visitid,
@@ -18,8 +18,8 @@ export default function Investigation({
   empid,
   patientData,
 }) {
-    const CurrentDate = getCurrentDate(); 
-      const fullDateTime = getCurrentDateTime(); 
+  const CurrentDate = getCurrentDate();
+  const fullDateTime = getCurrentDateTime();
 
   const [isSaved, setIsSaved] = useState(false);
   const [isDoctorModalOpen, setDoctorModalOpen] = useState(true);
@@ -38,8 +38,7 @@ export default function Investigation({
   const [loading, setLoading] = useState(false);
   const [table, setTable] = useState([]);
   const [canSave, setCanSave] = useState(false);
-   const [refreshData, setRefreshData] = useState(false);
-
+  const [refreshData, setRefreshData] = useState(false);
 
   const handleSelectServices = (selectedIds) => {
     console.log("inv in inv", selectedIds);
@@ -70,19 +69,17 @@ export default function Investigation({
   };
 
   const handleInsert = () => {
-   setErrors({});
+    setErrors({});
 
-  if (!selectedDate || !doctorData || selectedServices.length === 0) {
-    const newErrors = {};
-    if (!selectedDate) newErrors.dateTime = "Date and time are required.";
-    if (!doctorData) newErrors.doctorName = "Please select a doctor.";
-    if (selectedServices.length === 0)
-      newErrors.services = "Please select at least one investigation.";
-    setErrors(newErrors);
-    return;
-  }
-
-  
+    if (!selectedDate || !doctorData || selectedServices.length === 0) {
+      const newErrors = {};
+      if (!selectedDate) newErrors.dateTime = "Date and time are required.";
+      if (!doctorData) newErrors.doctorName = "Please select a doctor.";
+      if (selectedServices.length === 0)
+        newErrors.services = "Please select at least one investigation.";
+      setErrors(newErrors);
+      return;
+    }
 
     const newEntries = selectedServices.map((service) => ({
       date: fullDateTime,
@@ -96,15 +93,14 @@ export default function Investigation({
     }));
 
     setVitals((prev) => [...prev, ...newEntries]);
-setCanSave(true);  // Enable Save button after insert
-    
-     // *** Clear form fields here after insertion ***
-  setSelectedDate(new Date());  
-  setDoctorData(null);
-  setDoctorName("");
-  setSelectedServices([]);
-  setRemark("");
- 
+    setCanSave(true); // Enable Save button after insert
+
+    // *** Clear form fields here after insertion ***
+    setSelectedDate(new Date());
+    setDoctorData(null);
+    setDoctorName("");
+    setSelectedServices([]);
+    setRemark("");
   };
 
   const savebtn = async () => {
@@ -130,16 +126,16 @@ setCanSave(true);  // Enable Save button after insert
         setIsSaved(true);
         setRefreshData((prev) => !prev);
         // Reset vitals and form data
-      setVitals([]);
-      setSaveData({});
-      setSelectedDate(null);
-      setDoctorData(null);
-      setDoctorName("");
-      setSelectedServices([]);
-      setRemark("");
-      setErrors({});
-     // Reload data from GET API
-    setCanSave(false);
+        setVitals([]);
+        setSaveData({});
+        setSelectedDate(null);
+        setDoctorData(null);
+        setDoctorName("");
+        setSelectedServices([]);
+        setRemark("");
+        setErrors({});
+        // Reload data from GET API
+        setCanSave(false);
       } else {
         alert("Failed to save data.");
       }
@@ -152,10 +148,7 @@ setCanSave(true);  // Enable Save button after insert
   useEffect(() => {
     setLoading(true);
     axios
-      .get(
-       
-         `${API_ENDPOINTS.getInvDetail}/?visitid=${visitid}`
-      )
+      .get(`${API_ENDPOINTS.getInvDetail}/?visitid=${visitid}`)
       .then((res) => {
         //console.log("🚀 Full API response (res.data):", res.data);
 
@@ -204,7 +197,7 @@ setCanSave(true);  // Enable Save button after insert
       .finally(() => {
         setLoading(false);
       });
-  }, [visitid,refreshData]);
+  }, [visitid, refreshData]);
 
   return (
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
@@ -369,11 +362,11 @@ setCanSave(true);  // Enable Save button after insert
       </div>
 
       <hr className="border-t mt-6 mb-2 border-gray-300" />
-     
 
-        <div className="flex justify-center">
+      <div className="flex justify-center">
         <button
-          onClick={savebtn} disabled={!canSave}
+          onClick={savebtn}
+          disabled={!canSave}
           className={`w-full  px-6 py-2 rounded text-white ${
             !canSave
               ? "bg-gray-400 cursor-not-allowed"

@@ -82,6 +82,22 @@ export default function VitalsTable({
       loadVitalData();
     }
   }, [visitid]);
+  useEffect(() => {
+  if (height && weight) {
+    const h = parseFloat(height);
+    const w = parseFloat(weight);
+
+    if (!isNaN(h) && !isNaN(w) && h > 0) {
+      const bmiValue = w / ((h / 100) * (h / 100));
+      setBmi(bmiValue.toFixed(2)); // Round to 2 decimal places
+    } else {
+      setBmi("");
+    }
+  } else {
+    setBmi("");
+  }
+}, [height, weight]);
+
 
   const loadVitalData = async () => {
     if (!visitid) {
@@ -221,7 +237,7 @@ export default function VitalsTable({
         RR_1: " ",
 
         Headcircumference: Headcircumference || "",
-       
+
         spo2: spo2 || "",
         SpPO2: " ",
         entempid: patientData.empid,
@@ -273,7 +289,7 @@ export default function VitalsTable({
 
   const clearInputs = () => {
     setSelectedDate(new Date());
-    setSelectedTime(getCurrentTimeHHMM());   
+    setSelectedTime(getCurrentTimeHHMM());
     setBp("");
     setPulse("");
     setTemp("");
@@ -319,6 +335,7 @@ export default function VitalsTable({
       alert("An error occurred while saving data.");
     }
   };
+
 
   const handleDeleteEntry = (indexToDelete) => {
     // Log the entry being deleted
@@ -461,10 +478,14 @@ export default function VitalsTable({
       {/* Table */}
       <div className="max-h-[90px] overflow-y-scroll hide-scrollbar mt-1">
         <table className="w-full table-auto text-[5px] text-start border border-collapse">
-          <thead >
-            <tr className="bg-white sticky top-0 z-10 text-blue-800">
-              <TableReuse type="th">Date/Time</TableReuse>
-              <TableReuse type="th">Nur.Services</TableReuse>
+          <thead>
+            <tr className="bg-white sticky top-0 z-10 text-gray-800">
+              <TableReuse type="th" className="min-w-[90px]">
+                Date/Time
+              </TableReuse>
+              <TableReuse type="th" className="min-w-[80px]">
+                Nur.Services
+              </TableReuse>
               <TableReuse type="th">BP</TableReuse>
               <TableReuse type="th">Pulse</TableReuse>
               <TableReuse type="th">Temp</TableReuse>
@@ -489,8 +510,10 @@ export default function VitalsTable({
               const actualIndex = insertedVitals.length - 1 - idx;
               return (
                 <tr key={"inserted-" + idx} className="hover:bg-gray-50 ">
-                  <TableReuse>{entry.vitaldatetime}</TableReuse>
-                  <TableReuse>{performedBy}</TableReuse>
+                  <TableReuse className="text-[8px] font-semibold">
+                    {entry.vitaldatetime}
+                  </TableReuse>
+                  <TableReuse className="text-[6px] font-semibold">{performedBy}</TableReuse>
                   <TableReuse>{entry.bp}</TableReuse>
                   <TableReuse>{entry.pulse}</TableReuse>
                   <TableReuse>{entry.temp}</TableReuse>
@@ -521,8 +544,9 @@ export default function VitalsTable({
 
             {[...vitals].reverse().map((v, idx) => (
               <tr key={"api-" + idx} className="hover:bg-gray-50 ">
-                <TableReuse>{v.date}</TableReuse>
-                <TableReuse>{v.takenby}</TableReuse>
+                <TableReuse className="text-[8px] font-semibold">{v.date}</TableReuse>
+                <TableReuse className="text-[6px] font-semibold">{v.takenby}</TableReuse>
+
                 <TableReuse>{v.bp}</TableReuse>
                 <TableReuse>{v.pulse}</TableReuse>
                 <TableReuse>{v.temp}</TableReuse>

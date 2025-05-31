@@ -13,6 +13,7 @@ import Select from "react-select";
 import useSaveMIData from "../hooks/useSaveMIData";
 
 import MedicineModal from "./Modal/MedicineModal";
+import { getCurrentDate, getCurrentDateTime } from "../utils/dateUtils";
 
 export default function MedicineIndent({
   onSelectDoctor,
@@ -21,6 +22,9 @@ export default function MedicineIndent({
   empid,
   patientData,
 }) {
+  const CurrentDate = getCurrentDate();
+  const fullDateTime = getCurrentDateTime();
+
   const [isSaved, setIsSaved] = useState(false);
   const [isDoctorModalOpen, setDoctorModalOpen] = useState(true);
   const [doctorData, setDoctorData] = useState(null);
@@ -34,7 +38,7 @@ export default function MedicineIndent({
   const [qty, setQty] = useState(1);
   const [loading, setLoading] = useState(false);
   const [table, setTable] = useState([]);
-  const [isEmergency, setIsEmergency] = useState(false);
+  const [isReturn, setIsReturn] = useState(false);
   const [isInsertClicked, setIsInsertClicked] = useState(false);
   const [refreshData, setRefreshData] = useState(false);
   const [isValidToSave, setIsValidToSave] = useState(false);
@@ -44,8 +48,6 @@ export default function MedicineIndent({
 
   const [medicineName, setMedicineName] = useState(""); // Changed from performedBy to medicineName
   const [medicineData, setMedicineData] = useState(null);
-  const [saveData, setSaveData] = useSaveMIData();
-  console.log("Updated DV", saveData);
 
   const handleSelectMedicineName = (selected) => {
     console.log("Medicine selected:", selected);
@@ -68,6 +70,38 @@ export default function MedicineIndent({
     setDoctorModalOpen(false);
   };
 
+  const [saveData, setSaveData] = useState({
+    rowid: 0,
+    indentid: 0,
+    indentdatetime: fullDateTime,
+    indentstoreid: 0,
+    visitid: patientData?.visitid,
+    gssuhid: patientData?.gssuhid,
+    bedno: patientData?.bedno,
+    isremove: 0,
+    removedbyempid: 0,
+    removeremark: " ",
+    isunabletoprocess: 0,
+    isinactive: 0,
+    entempid: patientData?.empid,
+    entdatetime: fullDateTime,
+    entwsname: "GSLAP2",
+    modifyempid: patientData?.modifyempid,
+    modifydatetime: patientData?.modifydatetime,
+    modifywsname: "GSLAP2",
+    locationid: patientData?.locationid,
+    financialyear: "2526",
+    priorityid: 0,
+    indenttypeid: 0,
+    isreturnindent: isReturn ? 1 : 0,
+    isclose: 0,
+    closedbyid: 0,
+    jsonStringnursingpatipdmedicineindentmainmodel: null,
+    jsonStringsubnursingpatipdmedicineindentdetailmodel: [],
+    jsonStringsubpatbilinginfomodel: [],
+  });
+  console.log("update indent", saveData);
+
   const handleInsert = () => {
     setIsInsertClicked(true);
     setErrors({});
@@ -80,120 +114,109 @@ export default function MedicineIndent({
       return;
     }
 
-    const getCurrentDateTime = () => {
-      const now = new Date();
-      const day = String(now.getDate()).padStart(2, "0");
-      const month = String(now.getMonth() + 1).padStart(2, "0");
-      const year = now.getFullYear();
-      let hours = now.getHours();
-      const minutes = String(now.getMinutes()).padStart(2, "0");
-      const ampm = hours >= 12 ? "PM" : "AM";
-      hours = hours % 12 || 12;
-      return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
-    };
-
     const currentDateTime = getCurrentDateTime();
 
     const newEntry = {
       date: currentDateTime,
       doctorName: doctorData.label || doctorData.CName || "N/A",
-      medicineName: medicineData.CName || "N/A", // Added medicineName
+      medicineName: medicineData.CName || "N/A",
       qty: qty || 1,
-      emergency: isEmergency ? 1 : 0,
+      return: isReturn ? 1 : 0,
       source: "local",
+      indentid: selectedIndentType?.value || 0,
     };
+    console.log("new", newEntry);
 
     const newServiceEntry = {
       rowid: 0,
-      consultantvisitid: 0,
-      gssuhid: patientData?.gssuhid,
+      indentid: selectedIndentType?.value || 0,
       visitid: patientData?.visitid,
-      SNo: 1,
-      visitdate: currentDateTime,
-      Date: currentDateTime,
-      visittime: currentDateTime,
-      Time: currentDateTime,
-      visitdatetime: currentDateTime,
-      visitthrough: "VISIT",
-      visittypeid: 0,
+      gssuhid: patientData?.gssuhid,
       consultantid: doctorData.CID,
-      DoctorName: doctorData.CName,
-      medicineName: medicineData.CName || "N/A", // Added medicineName
-      qty: qty || 1,
-      wardcatgid: patientData.reqwardcatgid,
-      isemergency: isEmergency ? 1 : 0,
-      Emergency: isEmergency ? 1 : 0,
-      remark: "",
-      Remove: 0,
+      consultantvisitid: 0,
+      MedicineName: medicineData.CName || "N/A",
+      itemid: medicineData.CID || "N/A",
+      Dose: 0,
+      Frequency: 0,
+      Route: 0,
+      Quantity: " ",
+      qty: qty||0,
+      Remove: " ",
       isremove: 0,
-      removedatetime: currentDateTime,
-      isverified: 0,
-      verificationdatetime: currentDateTime,
-      verifiedbyid: 0,
-      verificationremark: " ",
-      callbyempid: 0,
+      removedbyempid: 0,
+      Remark: " ",
+      removeremark: " ",
+      isunabletoprocess: 0,
       isinactive: 0,
-      entempid: 21,
-      entdatetime: currentDateTime,
+      entempid: patientData?.empid,
+      entdatetime: " ",
       entwsname: "GSLAP2",
-      modifyempid: 21,
-      modifydatetime: currentDateTime,
+      modifyempid: patientData?.modifyempid,
+      modifydatetime: " ",
       modifywsname: "GSLAP2",
-      locationid: patientData.locationid,
+      locationid: patientData?.locationid,
       financialyear: "2526",
-      IsEdit: 0,
+      isEdit: 1,
+      Delete: 0,
     };
+    const updatedEntries = [...serviceEntries, newServiceEntry];
 
     const jsonStringsubpatbilinginfomodel = [
       {
-        visitid: patientData.visitid,
-        gssuhid: patientData.gssuhid,
-        reqwardcatgid: patientData.reqwardcatgid,
-        allotedcatg: patientData.wardcatgid,
-        admissiontypeid: patientData.admissiontypeid,
-        corporateid: patientData.corporateid,
-        billinggroupid: patientData.billgrpid,
-        terriffid: patientData.terriffid,
+        visitid: patientData?.visitid,
+        gssuhid: patientData?.gssuhid,
+        reqwardcatgid: patientData?.reqwardcatgid,
+        allotedcatg: patientData?.wardcatgid,
+        bedno: patientData?.bedno,
+        admissiontypeid: patientData?.admissiontypeid,
       },
     ];
-    const updatedEntries = [...serviceEntries, newServiceEntry];
-
-    setServiceEntries(updatedEntries);
-
     setSaveData((prevData) => ({
       ...prevData,
-      jsonStringdoctorvisit: JSON.stringify(updatedEntries),
+      isreturnindent: isReturn ? 1 : 0,
+      // indenttypeid: selectedIndentType?.value || 0,     
+      
+      jsonStringsubnursingpatipdmedicineindentdetailmodel:
+        JSON.stringify(updatedEntries),
       jsonStringsubpatbilinginfomodel: JSON.stringify(
         jsonStringsubpatbilinginfomodel
       ),
     }));
 
     console.log(
-      "jsonStringdoctorvisit:",
-      updatedEntries,
-      jsonStringsubpatbilinginfomodel
+      "jsonStringsubnursingpatipdmedicineindentdetailmodel:",
+      updatedEntries
     );
+    console.log("Billing Info:", jsonStringsubpatbilinginfomodel);
 
+    setServiceEntries(updatedEntries);
     setVitals((prev) => [...prev, newEntry]);
 
+    // Set isValidToSave to true after a successful insert
+    setIsValidToSave(true);
+
+    // Resetting fields
     setQty(1);
     setDoctorName("");
     setDoctorData(null);
     setMedicineName(""); // Reset medicineName
     setMedicineData(null); // Reset medicineData
-    setIsEmergency(false);
+    setIsReturn(false);
   };
 
   const savebtn = async () => {
     console.log("savebtn ", saveData);
     try {
-      const response = await fetch(API_ENDPOINTS.savePatDoctorVisit, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(saveData),
-      });
+      const response = await fetch(
+        API_ENDPOINTS.savePatNursingMedicineIndentData,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(saveData),
+        }
+      );
 
       const result = await response.json();
       console.log("Response:", result);
@@ -204,7 +227,7 @@ export default function MedicineIndent({
         setVitals([]);
         setSaveData({});
         setQty(1);
-        setIsEmergency(false);
+        setIsReturn(false);
         setDoctorData(null);
         setMedicineName(""); // Reset medicineName
         setSelectedDate(null);
@@ -297,14 +320,29 @@ export default function MedicineIndent({
     console.log("🧾 Updated JSON String:", newJSONString);
   };
 
-  const options = [
-    { value: "option", label: "Option" },
-    { value: "cash", label: "Cash" },
-    { value: "credit", label: "Credit" },
-    { value: "return", label: "Return" },
-  ];
+  useEffect(() => {
+    const fetchIndentTypeData = async () => {
+      try {
+        const response = await axios.get(API_ENDPOINTS.getAllHeadload);
+        const parsedData = JSON.parse(response.data); // Assuming it's a JSON string
+        const data = parsedData.Table1; // Table1 contains the CID and CNAME
+        if (data && Array.isArray(data)) setIndentTypeData(data);
+      } catch (error) {
+        console.error("Error fetching indent type data:", error);
+      }
+    };
+    fetchIndentTypeData();
+  }, []);
 
-  const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [indentTypeData, setIndentTypeData] = useState([]);
+  const [selectedIndentType, setSelectedIndentType] = useState(null);
+
+
+  const indentTypeOptions = indentTypeData.map((item) => ({
+    value: item.CID,
+    label: item.CNAME,
+  }));
+
   return (
     <div className="p-2 rounded-xl w-full max-w-8xl mx-auto text-[12px] space-y-6">
       {/* Modals */}
@@ -330,7 +368,7 @@ export default function MedicineIndent({
         />
       )}
 
-      <div className="border border-gray-100 rounded-lg p-2 space-y-2 text-xs">
+      <div className="border border-gray-100 rounded-lg p-2  text-xs">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 items-end">
           {/* Date & Time */}
           <div className="flex flex-col w-full">
@@ -350,7 +388,7 @@ export default function MedicineIndent({
 
           {/* Doctor Selection */}
           <div className="flex flex-col w-full">
-            <label className="text-xs font-semibold mb-1">Doctor *</label>
+            <label className="text-xs font-serif text-gray-700">Doctor *</label>
             <input
               type="text"
               readOnly
@@ -367,84 +405,85 @@ export default function MedicineIndent({
           </div>
 
           {/* Indent Type */}
-          <div className="flex flex-col w-full">
-            <label className="text-xs font-semibold mb-1">Indent Type</label>
-            <Select
-              options={options}
-              onChange={(selectedOption) => {
-                setSelectedDoctor(selectedOption);
-                if (onSelectDoctor && selectedOption) {
-                  onSelectDoctor({
-                    CID: selectedOption.value,
-                    CName: selectedOption.label,
-                  });
-                }
-              }}
-              placeholder="Select Indent Type"
-              className="text-xs"
-              styles={{
-                control: (base) => ({
-                  ...base,
-                  minHeight: 24, // keep it reasonable so it looks good but small
-                  height: 24, // force exact height
-                  padding: 0,
-                  fontSize: 11,
-                }),
-                valueContainer: (base) => ({
-                  ...base,
-                  padding: "0 6px",
-                  height: 24,
-                  fontSize: 11,
-                }),
-                indicatorsContainer: (base) => ({
-                  ...base,
-                  height: 24,
-                }),
-                input: (base) => ({
-                  ...base,
-                  margin: 0,
-                  padding: 0,
-                  fontSize: 11,
-                }),
-                placeholder: (base) => ({
-                  ...base,
-                  margin: 0,
-                  padding: 0,
-                  fontSize: 11,
-                  lineHeight: "24px",
-                }),
-                singleValue: (base) => ({
-                  ...base,
-                  margin: 0,
-                  padding: 0,
-                  fontSize: 11,
-                  lineHeight: "24px",
-                }),
-                menu: (base) => ({
-                  ...base,
-                  fontSize: 11,
-                }),
-                option: (base, { isFocused, isSelected }) => ({
-                  ...base,
-                  fontSize: 10,
-                  padding: "2px 6px",
-                  backgroundColor: isFocused ? "#e2e8f0" : "white",
-                  color: isSelected ? "#1d4ed8" : "#374151",
-                  cursor: "pointer",
-                }),
-                menuList: (base) => ({
-                  ...base,
-                  maxHeight: "100px",
-                  overflowY: "auto",
-                }),
-              }}
-              value={selectedDoctor}
-            />
-          </div>
+           <div className="flex flex-col w-full">
+            <label className="text-xs font-serif text-gray-700">Indent Type *</label>
+          <Select
+            options={indentTypeOptions}
+            onChange={(selectedOption) => {
+              setSelectedIndentType(selectedOption); 
+              if (onSelectDoctor && selectedOption) {
+                onSelectDoctor({
+                  CID: selectedOption.value,
+                  CName: selectedOption.label,
+                });
+              }
+            }}
+            placeholder="Select Indent Type"
+            className="text-xs"
+            styles={{
+              control: (base) => ({
+                ...base,
+                minHeight: 24,
+                height: 24,
+                padding: 0,
+                fontSize: 11,
+              }),
+              valueContainer: (base) => ({
+                ...base,
+                padding: "0 6px",
+                height: 24,
+                fontSize: 11,
+              }),
+              indicatorsContainer: (base) => ({
+                ...base,
+                height: 24,
+              }),
+              input: (base) => ({
+                ...base,
+                margin: 0,
+                padding: 0,
+                fontSize: 11,
+              }),
+              placeholder: (base) => ({
+                ...base,
+                margin: 0,
+                padding: 0,
+                fontSize: 11,
+                lineHeight: "24px",
+              }),
+              singleValue: (base) => ({
+                ...base,
+                margin: 0,
+                padding: 0,
+                fontSize: 11,
+                lineHeight: "24px",
+              }),
+              menu: (base) => ({
+                ...base,
+                fontSize: 11,
+              }),
+              option: (base, { isFocused, isSelected }) => ({
+                ...base,
+                fontSize: 10,
+                padding: "2px 6px",
+                backgroundColor: isFocused ? "#e2e8f0" : "white",
+                color: isSelected ? "#1d4ed8" : "#374151",
+                cursor: "pointer",
+              }),
+              menuList: (base) => ({
+                ...base,
+                maxHeight: "100px",
+                overflowY: "auto",
+              }),
+            }}
+            value={selectedIndentType}
+          /></div>
 
           {/* Medicine Name */}
           <div className="flex flex-col w-full">
-            <label className="text-xs font-semibold mb-1">Medicine *</label>
+            <label className="text-xs font-serif text-gray-700">
+              Medicine *
+            </label>
             <input
               type="text"
               value={medicineName}
@@ -460,12 +499,9 @@ export default function MedicineIndent({
             )}
           </div>
 
-          {/* Qty + Emergency on same row, smaller width */}
           <div className="flex items-center space-x-2 w-full">
             <div className="flex flex-col w-1/2">
-              <label htmlFor="qty" className="text-xs font-semibold mb-1">
-                Qty
-              </label>
+              <label className="text-xs font-serif text-gray-700">Qty</label>
               <input
                 id="qty"
                 type="text"
@@ -478,20 +514,18 @@ export default function MedicineIndent({
             <div className="flex items-center space-x-1">
               <input
                 type="checkbox"
-                id="emergency"
-                checked={isEmergency}
-                onChange={(e) => setIsEmergency(e.target.checked)}
+                id="return"
+                checked={isReturn}
+                onChange={(e) => setIsReturn(e.target.checked)}
                 className="w-4 h-4"
               />
-              <label htmlFor="emergency" className="text-xs select-none">
-                Return
-              </label>
+
+              <label className="text-xs font-serif text-gray-700">Return</label>
             </div>
           </div>
         </div>
 
-        {/* Buttons below Qty + Emergency, centered */}
-        <div className="flex justify-center gap-2 ">
+        <div className="flex mt-1 justify-end gap-2 ">
           <ActionButton
             label="Insert"
             onClick={handleInsert}
@@ -501,12 +535,12 @@ export default function MedicineIndent({
         </div>
       </div>
 
-      <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
-        <div className="max-h-[125px] overflow-y-auto scrollbar-hide">
-          <table className="w-full text-[11px] text-center border-collapse">
+      <div className="border border-gray-200  rounded-sm overflow-hidden shadow-sm">
+        <div className="max-h-[125px] overflow-y-auto hide-scrollbar">
+          <table className="w-full text-[6px] text-center border-collapse">
             <thead className="bg-blue-50 text-gray-800 font-semibold sticky top-0 z-10">
               <tr>
-               
+                <TableReuse type="th">Date</TableReuse>
                 <TableReuse type="th">Doctor Name</TableReuse>
                 <TableReuse type="th">Medicine Name</TableReuse>
                 <TableReuse type="th">Qty.</TableReuse>
@@ -524,11 +558,12 @@ export default function MedicineIndent({
                   <tr
                     key={"vital-" + idx}
                     className="hover:bg-gray-100 border-t"
-                  >                   
+                  >
+                    <TableReuse>{v.date}</TableReuse>
                     <TableReuse>{v.doctorName}</TableReuse>
                     <TableReuse>{v.medicineName}</TableReuse>
                     <TableReuse>{v.qty}</TableReuse>
-                    <TableReuse>{v.isreturnindent}</TableReuse>
+                    <TableReuse>{v.return}</TableReuse>
                     <TableReuse>
                       <div className="flex justify-center space-x-2">
                         {v.source !== "api" && (
@@ -553,8 +588,9 @@ export default function MedicineIndent({
                   </td>
                 </tr>
               ) : table && table.length > 0 ? (
-                [...table].reverse().map((row, idx) => (
+                [...table].map((row, idx) => (
                   <tr key={"api-" + idx} className="hover:bg-gray-50 border-t">
+                    <TableReuse>{row.entdatetime || "-"}</TableReuse>
                     <TableReuse>{row.consultant || "-"}</TableReuse>
                     <TableReuse>{row.itemname || "-"}</TableReuse>
                     <TableReuse>{row.qty || "-"}</TableReuse>
@@ -578,7 +614,7 @@ export default function MedicineIndent({
         </div>
       </div>
 
-      <div className="flex justify-center">
+      <div className="flex ">
         <button
           onClick={savebtn}
           disabled={!isValidToSave}
