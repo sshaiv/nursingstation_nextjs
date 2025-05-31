@@ -298,7 +298,7 @@ setCanSave(true);  // Enable Save button after insert
       </div>
 
       <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
-        <div className="max-h-[225px] overflow-y-auto scrollbar-hide">
+        <div className="max-h-[250px] overflow-y-auto scrollbar-hide">
           <table className="w-full text-[11px] text-center border-collapse">
             <thead className="bg-blue-50 text-gray-800 font-semibold sticky top-0 z-10">
               <tr>

@@ -44,7 +44,7 @@ const MedicineTable = ({ visitid, gssuhid, empid ,patientData}) => {
       </div>
 
       {/* Content area */}
-      <div className=" border border-gray-300 bg-white rounded-b-md dark:border-gray-700 dark:bg-gray-800 text-sm">
+      <div className=" border border-gray-300 bg-white rounded-b-md dark:border-gray-300 dark:bg-gray-300 text-sm">
         {activeTab === "prescribed" && <PrescribedMedicine />}
         {activeTab === "current" && <CurrentMedicines />}
         {activeTab === "medicineindent" && 

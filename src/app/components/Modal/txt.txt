@@ -1,0 +1,45 @@
+{
+    "rowid": 0,
+    "consultantvisitid": 0,
+    "gssuhid": 0,
+    "visitid": "",
+    "visitdatetime": "",
+    "visitthrough": "",
+    "visittypeid": 0,
+    "consultantid": 0,
+    "wardcatgid": 0,
+    "bedno": "",
+    "remark": "",
+    "isverified": 0,
+    "verificationdatetime": "",
+    "verifiedbyid": 0,
+    "verificationremark": "",
+    "callbyempid": 0,
+    "isinactive": 0,
+    "entempid": 1,
+    "entdatetime": "",
+    "entwsname": "",
+    "modifyempid": 1,
+    "modifydatetime": "",
+    "modifywsname": "",
+    "locationid": 1,
+    "financialyear": "2526",
+    "uhid": "",
+    "orgid": 0,
+    "receiptno": "",
+    "itembelongtoid": 0,
+    "billinggroupid": 0,
+    "jsonStringsubinvreqmain": "[{\"rowid\":0,\"reqid\":0,\"gssuhid\":4561,\"visitid\":\"SNI24250000679\",\"visittype\":\"I\",\"orddate\":\"31/05/2025 10:15 AM\",\"isallresultready\":0,\"bedno\":\"MGW-11\",\"consultantvisitid\":0,\"isremove\":0,\"visitthrough\":\"VISIT\",\"removedatetime\":0,\"isinactive\":0,\"entempid\":\"1\",\"entdatetime\":\"31/05/2025 10:15 AM\",\"entwsname\":\"GSLAP2\",\"modifyempid\":\" \",\"modifydatetime\":\"31/05/2025 10:15 AM\",\"modifywsname\":\"GSLAP2\",\"locationid\":1,\"financialyear\":\" \",\"isprint\":0,\"removeremark\":\"\",\"secondconsultantid\":\"26\"}]",
+    "jsonStringsubinvreqdetail": "[{\"rowid\":0,\"SNo\":1,\"servid\":23,\"InvestigationName\":\"CALCIUM  (200.00 )\",\"consultantid\":\"26\",\"DoctorName\":\"DR. ARUN MAROTHI\",\"isurgent\":0,\"Urgent\":\"\",\"consenttypeid\":0,\"ConsentType\":\"\",\"isconsenttaken\":0,\"ConsentTaken\":\"\",\"Remove\":\"\",\"reqid\":0,\"invdate\":\"\",\"remarks\":\".\",\"issampled\":0,\"isresult\":0,\"isverified\":0,\"isunabletoprocess\":0,\"isemg\":0,\"preparationstatusid\":0,\"preparationremarkid\":0,\"reasonfornotpreparation\":\" \",\"isconsentreq\":0,\"isremove\":0,\"removedatetime\":\" \",\"isprofile\":0,\"profileservid\":0,\"charge\":\" \",\"isinactive\":0,\"entempid\":\"1\",\"entdatetime\":\"31/05/2025 10:15 AM\",\"entwsname\":\"GSLAP2\",\"modifyempid\":\" \",\"modifydatetime\":\"31/05/2025 10:15 AM\",\"modifywsname\":\"GSLAP2\",\"locationid\":1,\"IsEdit\":0,\"financialyear\":\"\",\"servcatgid\":23,\"servsubcatgid\":10,\"deptid\":\" \",\"subdeptid\":\" \",\"statusid\":0,\"Consultant\":\" \",\"reqwardcatgid\":2,\"ispaid\":0,\"Paid\":\"\",\"isrepeat\":0,\"Repeat\":\"\",\"repeatremark\":\"\",\"RepeatRemark\":\"\",\"itemlineid\":1,\"performedbyempid\":0,\"callbyempid\":0,\"callbyremark\":\"\",\"CallByRemark\":\"\",\"postinfinalbill\":0,\"otherconsultantid\":\"26\"},
+    {\"rowid\":0,\"SNo\":2,\"servid\":25,\"InvestigationName\":\"CREATININE  (150.00 )\",\"consultantid\":\"26\",\"DoctorName\":\"DR. ARUN MAROTHI\",\"isurgent\":0,\"Urgent\":\"\",\"consenttypeid\":0,\"ConsentType\":\"\",\"isconsenttaken\":0,\"ConsentTaken\":\"\",\"Remove\":\"\",\"reqid\":0,\"invdate\":\"\",\"remarks\":\".\",\"issampled\":0,\"isresult\":0,\"isverified\":0,\"isunabletoprocess\":0,\"isemg\":0,\"preparationstatusid\":0,\"preparationremarkid\":0,\"reasonfornotpreparation\":\" \",\"isconsentreq\":0,\"isremove\":0,\"removedatetime\":\" \",\"isprofile\":0,\"profileservid\":0,\"charge\":\" \",\"isinactive\":0,\"entempid\":\"1\",\"entdatetime\":\"31/05/2025 10:15 AM\",\"entwsname\":\"GSLAP2\",\"modifyempid\":\" \",\"modifydatetime\":\"31/05/2025 10:15 AM\",\"modifywsname\":\"GSLAP2\",\"locationid\":1,\"IsEdit\":0,\"financialyear\":\"\",\"servcatgid\":25,\"servsubcatgid\":4,\"deptid\":\" \",\"subdeptid\":\" \",\"statusid\":0,\"Consultant\":\" \",\"reqwardcatgid\":2,\"ispaid\":0,\"Paid\":\"\",\"isrepeat\":0,\"Repeat\":\"\",\"repeatremark\":\"\",\"RepeatRemark\":\"\",\"itemlineid\":1,\"performedbyempid\":0,\"callbyempid\":0,\"callbyremark\":\"\",\"CallByRemark\":\"\",\"postinfinalbill\":0,\"otherconsultantid\":\"26\"}]",
+    "jsonStringsubpatipdprovisionaldiagnose": "[]",
+    "jsonStringsubpatbilinginfomodel": "[{\"visitid\":\"SNI24250000679\",\"gssuhid\":4561,\"reqwardcatgid\":2,\"allotedcatg\":2,\"bedno\":\"MGW-11\",\"admissiontypeid\":3,\"corporateid\":1,\"billinggroupid\":1,\"terriffid\":1}]"
+}
+
+
+
+
+
+jsonStringsubinvreqdetail
+: 
+"[{\"rowid\":0,\"SNo\":1,\"servid\":22,\"InvestigationName\":\"AMYLASE  ( 400.00 )\",\"consultantid\":\"180\",\"DoctorName\":\"PANKAJ VERMA\",\"isurgent\":0,\"Urgent\":\"\",\"consenttypeid\":0,\"ConsentType\":\"\",\"isconsenttaken\":0,\"ConsentTaken\":\"\",\"Remove\":\"\",\"reqid\":0,\"invdate\":\"\",\"remarks\":\"\",\"issampled\":0,\"isresult\":0,\"isverified\":0,\"isunabletoprocess\":0,\"isemg\":0,\"preparationstatusid\":0,\"preparationremarkid\":0,\"reasonfornotpreparation\":\" \",\"isconsentreq\":0,\"isremove\":0,\"removedatetime\":\" \",\"isprofile\":0,\"profileservid\":0,\"charge\":400,\"isinactive\":0,\"entempid\":\" \",\"entdatetime\":\"31/05/2025 10:54 AM\",\"entwsname\":\"GSLAP2\",\"modifyempid\":\"21\",\"modifydatetime\":\"31/05/2025 10:54 AM\",\"modifywsname\":\"GSLAP2\",\"locationid\":1,\"IsEdit\":0,\"financialyear\":\"\",\"servcatgid\":22,\"servsubcatgid\":10,\"deptid\":2,\"subdeptid\":39,\"statusid\":0,\"Consultant\":\" \",\"reqwardcatgid\":2,\"ispaid\":0,\"Paid\":\"\",\"isrepeat\":0,\"Repeat\":\"\",\"repeatremark\":\"\",\"RepeatRemark\":\"\",\"itemlineid\":1,\"performedbyempid\":0,\"callbyempid\":0,\"callbyremark\":\"\",\"CallByRemark\":\"\",\"postinfinalbill\":0,\"otherconsultantid\":\"180\"}]"

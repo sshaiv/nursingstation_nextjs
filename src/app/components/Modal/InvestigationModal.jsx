@@ -140,7 +140,7 @@ console.log("url",url);
       removedatetime: " ",
       isprofile: 0,
       profileservid: 0,
-      charge: selectedInvestigation?.charge || " ",
+      charge: selectedInvestigation?.charge || 0,
       isinactive: 0,
       entempid: selectedInvestigation?.entempid || " ",
       entdatetime: currentDateTime,
