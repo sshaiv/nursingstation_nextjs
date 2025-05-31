@@ -394,7 +394,7 @@ export default function MedicineIndent({
               readOnly
               value={doctorName}
               onClick={() => setDoctorModalOpen(true)}
-              className={`cursor-pointer border rounded text-xs bg-gray-100 hover:bg-gray-200 focus:outline-none py-1 px-2 ${
+              className={`cursor-pointer text-black border rounded text-xs bg-gray-100 hover:bg-gray-200 focus:outline-none py-1 px-2 ${
                 errors.doctorName ? "border-red-500" : "border-gray-300"
               }`}
               placeholder="Select doctor"
@@ -489,7 +489,7 @@ export default function MedicineIndent({
               value={medicineName}
               readOnly
               onClick={() => setShowMedicineNameModal(true)}
-              className={`cursor-pointer border rounded text-xs bg-gray-100 hover:bg-gray-200 focus:outline-none py-1 px-2 ${
+              className={`cursor-pointer text-black  border rounded text-xs bg-gray-100 hover:bg-gray-200 focus:outline-none py-1 px-2 ${
                 errors.medicineName ? "border-red-500" : "border-gray-300"
               }`}
               placeholder="Select Medicine"
@@ -507,7 +507,7 @@ export default function MedicineIndent({
                 type="text"
                 value={qty}
                 onChange={(e) => setQty(e.target.value)}
-                className="border-gray-200 border rounded py-1 px-2 text-xs w-full"
+                className="border-gray-200 text-black  border rounded py-1 px-2 text-xs w-full"
                 placeholder="Qty"
               />
             </div>
