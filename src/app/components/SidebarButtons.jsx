@@ -50,7 +50,7 @@ export default function ButtonGrid({ visitid, gssuhid, empid ,patientData}) {
             setShowModal(true);
         }
         else if (label === "Consumables") {
-            setModalContent(<Consumables visitid={visitid} gssuhid={gssuhid} empid={empid} />);
+            setModalContent(<Consumables visitid={visitid} gssuhid={gssuhid} empid={empid} patientData={patientData}/>);
             setShowModal(true);
         }
         else if (label === "Doctor Visit") {

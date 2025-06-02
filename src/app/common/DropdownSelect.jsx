@@ -50,14 +50,14 @@ const DropdownSelect = ({ label, options, selectedValue, onSelect, error, onFocu
                             <div className="px-3 py-2 text-gray-500 text-[10px]">No matches found.</div>
                         )}
                     </div>     <div className="border-t border-gray-200 px-3 py-2 flex justify-between">
-                        <button
+                        {/* <button
                             onClick={() => {
                                 // Handle adding new item if needed
                             }}
                             className="text-blue-600 hover:underline text-[11px]"
                         >
                             + Add “{searchTerm}”
-                        </button>
+                        </button> */}
                         <button
                             onClick={() => setShowModal(false)}
                             className="text-red-500 hover:underline text-[11px]"

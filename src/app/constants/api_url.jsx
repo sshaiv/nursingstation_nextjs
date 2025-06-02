@@ -25,6 +25,7 @@ const API_ENDPOINTS = {
          getServiceDetail :`${BASE_URL}/GetServiceDetail`,
          getAllItems :`${BASE_URL}/GetAllItems`,
          getPrescriptionDetail :`${BASE_URL}/GetPrescriptionDetail`,
+         getStoreEmpAndLocationWise :`${BASE_URL}/getStoreEmpAndLocationWise`,
 
 
 
