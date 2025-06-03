@@ -10,7 +10,7 @@ import DropdownSelect from "../common/DropdownSelect";
 import ReusableInputField from "../common/SmallInputfields";
 import DoctorModal from "./Modal/DoctorModal";
 
-export default function Consumables({ visitid, gssuhid, empid ,patientData}) {
+export default function Consumables({ visitid, gssuhid, empid, patientData }) {
   const [vitals, setVitals] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [time, setTime] = useState("");
@@ -27,7 +27,10 @@ export default function Consumables({ visitid, gssuhid, empid ,patientData}) {
   const [indentQty, setIndentQty] = useState("");
   const [issueQty, setIssueQty] = useState("");
   const [remarks, setRemarks] = useState("");
+  const [itemOptions, setItemOptions] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
 
+  
   // Options for Nursing Service
   const [options, setOptions] = useState([]);
 
@@ -37,7 +40,7 @@ export default function Consumables({ visitid, gssuhid, empid ,patientData}) {
   const [isDoctorModalOpen, setDoctorModalOpen] = useState(true);
   const [doctorData, setDoctorData] = useState(null);
   const [selectedDoctorId, setSelectedDoctorId] = useState(null);
-   const [storeOptions, setStoreOptions] = useState([]);
+  const [storeOptions, setStoreOptions] = useState([]);
 
   const handleSelectDoctor = (doctor) => {
     console.log("Doctor in inv:", doctor);
@@ -125,8 +128,6 @@ export default function Consumables({ visitid, gssuhid, empid ,patientData}) {
       }
     };
 
-  
-
     const fetchPerformedByUsers = async () => {
       try {
         const response = await axios.get(API_ENDPOINTS.getAllHeadload);
@@ -155,11 +156,10 @@ export default function Consumables({ visitid, gssuhid, empid ,patientData}) {
 
     const fetchStores = async () => {
       try {
-        const response = await axios
-        .get(
+        const response = await axios.get(
           "https://doctorapi.medonext.com/api/HMS/getStoreEmpAndLocationWise?locationid=1&entempid=21"
         );
-       // .get(`${API_ENDPOINTS.getStoreEmpAndLocationWise}/?locationid=${patientData.locationid}&entempid=21 `)
+        // .get(`${API_ENDPOINTS.getStoreEmpAndLocationWise}/?locationid=${patientData.locationid}&entempid=21 `)
         const storeData = JSON.parse(response.data);
         if (storeData && Array.isArray(storeData)) {
           const formattedStores = storeData.map((item) => ({
@@ -176,11 +176,46 @@ export default function Consumables({ visitid, gssuhid, empid ,patientData}) {
         console.error("Error fetching stores:", error);
       }
     };
+//    const fetchItemNames = async (storeid) => {
+//   try {
+//     const response = await axios.get(
+//       `https://doctorapi.medonext.com/api/HMS/GetItemOnConsumable?storeid=${storeid}`
+//     );
+
+//     console.log("Raw API response:", response);
+//     console.log("Response data:", response.data);
+
+//     const rawData = response.data;
+
+//     // Remove trailing comma before closing array bracket if string
+//     let itemData;
+//     if (typeof rawData === "string") {
+//       const cleanData = rawData.replace(/,(\s*])/, "$1");
+//       itemData = JSON.parse(cleanData);
+//     } else {
+//       itemData = rawData;
+//     }
+
+//     if (itemData && Array.isArray(itemData)) {
+//       const formattedItems = itemData.map((item) => ({
+//         label: item.itemname,
+//         value: item.itemid,
+//       }));
+//       setItemOptions(formattedItems);
+//     } else {
+//       console.warn("No item data found or data is not in expected format.");
+//       setItemOptions([]); // clear previous items if any
+//     }
+//   } catch (error) {
+//     console.error("❌ Error fetching item names:", error);
+//     setItemOptions([]); // clear previous items on error
+//   }
+// };
 
     const fetchData = async () => {
       await Promise.all([
         fetchNursingServices(),
-        
+        fetchItemNames(),
         fetchStores(),
         fetchPerformedByUsers(),
       ]);
@@ -188,6 +223,47 @@ export default function Consumables({ visitid, gssuhid, empid ,patientData}) {
 
     fetchData();
   }, []);
+
+  // Inside your component
+  const handleStoreSelect = (option) => {
+    setStore(option.label);
+    console.log("aaya store", option.label, option.value);
+
+     fetchItemNames(option.value);
+  };
+
+  const handleItemSelect = (item) => {
+    setSelectedItem(item);
+    console.log("Selected Item Name: ID", item.label," ", item.value);
+ 
+  }; 
+
+  // fetchItemNames yaha define karo
+  const fetchItemNames = async (storeId) => {
+    try {
+      const response = await axios.get(
+        `https://doctorapi.medonext.com/api/HMS/GetItemOnConsumable?storeid=${storeId}`
+      );
+      let rawData = response.data;
+
+      // agar response string hai toh clean karo
+      if (typeof rawData === "string") {
+        rawData = rawData.replace(/,(\s*])/, "$1");
+        rawData = JSON.parse(rawData);
+      }
+
+      if (Array.isArray(rawData)) {
+        const formattedItems = rawData.map((item) => ({
+          label: item.itemname,
+          value: item.itemid,
+        }));
+        setItemOptions(formattedItems);
+      }
+    } catch (error) {
+      console.error("Error fetching item names:", error);
+    }
+  };
+
 
   return (
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
@@ -255,23 +331,26 @@ export default function Consumables({ visitid, gssuhid, empid ,patientData}) {
             <label className="text-xs font-serif text-gray-700">Store *</label>
             <DropdownSelect
               label="Store"
-              options={storeOptions} 
-              selectedValue={store} 
-              onSelect={(option) => {
-                setStore(option.label);
-               
-              }}
-              error={errors.store} 
+              options={storeOptions}
+              selectedValue={store}
+              onSelect={handleStoreSelect}
+              error={errors.store}
             />
           </div>
-          <ReusableInputField
-            className="border-2 rounded-lg"
-            id="itemName"
-            label="Item Name"
-            width="w-full"
-            value={itemName}
-            onChange={(e) => setItemName(e.target.value)}
-          />
+
+          <div className="flex flex-col w-full">
+            <label className="text-xs font-serif text-gray-700">
+              Item Name *
+            </label>
+            <DropdownSelect
+              label="Item Name"
+              options={itemOptions}
+              selectedValue={selectedItem ? selectedItem.label : ""}
+              onSelect={handleItemSelect} 
+              error={errors.item} 
+            />
+          </div>
+
           <ReusableInputField
             className="border-2 rounded-lg"
             id="bundleName"
@@ -316,10 +395,15 @@ export default function Consumables({ visitid, gssuhid, empid ,patientData}) {
         </div>
 
         {/* Insert Button */}
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-2">
           <ActionButton
             label="Insert"
             onClick={handleInsert}
+            className="text-xs px-4 py-1"
+          />
+          <ActionButton
+            label="Indent Detail"
+            // onClick={handleInsert}
             className="text-xs px-4 py-1"
           />
         </div>
