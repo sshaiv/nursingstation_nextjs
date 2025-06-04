@@ -4,7 +4,12 @@ import TableReuse from "@/app/common/TableReuse";
 import React from "react";
 import axios from "axios";
 
-export default function MedicineIndentModal({ onClose }) {
+export default function MedicineIndentModal({
+  onClose,
+  onSelectIndent,
+  patientData,
+  isStoreSelected,
+}) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -13,7 +18,7 @@ export default function MedicineIndentModal({ onClose }) {
     const fetchIndentData = async () => {
       try {
         const response = await axios.get(
-          "https://doctorapi.medonext.com/api/HMS/GetPendingIndent?visitid=SNI24250000679&indentid=0"
+          `https://doctorapi.medonext.com/api/HMS/GetPendingIndent?visitid=${patientData.visitid}&indentid=0`
         );
 
         console.log("API Response:", response.data); // <-- This will log the raw response data
@@ -43,11 +48,15 @@ export default function MedicineIndentModal({ onClose }) {
 
   return (
     <div className="p-4 bg-white rounded-lg shadow-md overflow-auto">
-      <div className="flex flex-wrap items-center justify-between gap-4 sm:gap-64 bg-green-100 py-2 px-4 rounded-t-lg">
-        <div className="text-base  sm:text-lg md:text-xl lg:text-xl font-semibold text-green-700">
+      <div className="flex flex-wrap items-center justify-between  bg-green-100 py-1 px-2 rounded-t-lg">
+        <div className="text-base  sm:text-xs md:text-xs lg:text-sm font-semibold text-green-700">
           INDENT DETAIL
         </div>
-
+        {!isStoreSelected && (
+          <p className="text-red-500">
+            Please select a store before proceeding.
+          </p>
+        )}
         <button
           onClick={onClose}
           className="text-xl hover:text-red-600"
@@ -81,7 +90,21 @@ export default function MedicineIndentModal({ onClose }) {
             </thead>
             <tbody className="text-sm text-black text-center">
               {data.map((row, index) => (
-                <tr key={row.rowid || index}>
+               
+
+                <tr
+                  key={row.rowid || index}
+                  onClick={
+                    isStoreSelected
+                      ? () => onSelectIndent(row.indentid)
+                      : undefined
+                  }
+                  className={`${
+                    isStoreSelected
+                      ? "cursor-pointer"
+                      : "cursor-not-allowed text-gray-400"
+                  }`}
+                >
                   <TableReuse>{index + 1}</TableReuse>
                   <TableReuse>{row.indentid}</TableReuse>
                   <TableReuse>{row.indentdatetime}</TableReuse>

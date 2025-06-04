@@ -11,6 +11,7 @@ import ReusableInputField from "../common/SmallInputfields";
 import DoctorModal from "./Modal/DoctorModal";
 import MedicineIndent from "./MedicineIndent";
 import MedicineIndentModal from "./Modal/MedicineIndentModal";
+import GetIndentDetail from "./Modal/GetIndentDetail";
 
 export default function Consumables({ visitid, gssuhid, empid, patientData }) {
   const [vitals, setVitals] = useState([]);
@@ -32,7 +33,6 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
   const [itemOptions, setItemOptions] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
 
-  
   // Options for Nursing Service
   const [options, setOptions] = useState([]);
 
@@ -159,9 +159,9 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
     const fetchStores = async () => {
       try {
         const response = await axios.get(
-          "https://doctorapi.medonext.com/api/HMS/getStoreEmpAndLocationWise?locationid=1&entempid=21"
+          `https://doctorapi.medonext.com/api/HMS/getStoreEmpAndLocationWise?locationid=${patientData.locationid}&entempid=21`
         );
-        // .get(`${API_ENDPOINTS.getStoreEmpAndLocationWise}/?locationid=${patientData.locationid}&entempid=21 `)
+
         const storeData = JSON.parse(response.data);
         if (storeData && Array.isArray(storeData)) {
           const formattedStores = storeData.map((item) => ({
@@ -196,14 +196,13 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
     setStore(option.label);
     console.log("aaya store", option.label, option.value);
 
-     fetchItemNames(option.value);
+    fetchItemNames(option.value);
   };
 
   const handleItemSelect = (item) => {
     setSelectedItem(item);
-    console.log("Selected Item Name: ID", item.label," ", item.value);
- 
-  }; 
+    console.log("Selected Item Name: ID", item.label, " ", item.value);
+  };
 
   // fetchItemNames yaha define karo
   const fetchItemNames = async (storeId) => {
@@ -231,14 +230,49 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
     }
   };
 
-const [isMedicineIndentModalOpen, setMedicineIndentModalOpen] = useState(false);
+  const [isMedicineIndentModalOpen, setMedicineIndentModalOpen] =
+    useState(false);
 
-   const handleIndentDetail = () => {
-    setMedicineIndentModalOpen(true); // Open the MedicineIndent modal
+  // const handleIndentDetail = () => {
+  //   setMedicineIndentModalOpen(true);
+  // };
+
+  const [isGetIndentDetailModalOpen, setGetIndentDetailModalOpen] =
+    useState(false);
+  const [selectedIndentId, setSelectedIndentId] = useState(null);
+
+  const handleIndentSelect = (indentId) => {
+    console.log("Selected Indent ID:", indentId);
+    setSelectedIndentId(indentId);
+    setMedicineIndentModalOpen(false);
+    setGetIndentDetailModalOpen(true);
   };
 
+  const [isStoreSelected, setIsStoreSelected] = useState(true);
 
-  
+  const handleIndentDetail = () => {
+    if (!store) {
+      setMedicineIndentModalOpen(true);
+      setIsStoreSelected(false); // Set flag to false if store is not selected
+    } else {
+      setIsStoreSelected(true); // Set flag to true if store is selected
+      setMedicineIndentModalOpen(true); // Open the modal if store is selected
+    }
+  };
+
+    const [selectedRowData, setSelectedRowData] = useState(null); // State to hold selected row data
+    // Other state variables...
+
+   const handleRowSelect = (row) => {
+    setSelectedRowData(row); // Store the selected row data
+    console.log("Selected Row Data:", row); // Log the selected row data
+
+    // Set the indent quantity and selected item based on the row data
+    setIndentQty(row.qty); // Set the indent quantity
+    setSelectedItem({ label: row.itemname, value: row.itemid }); // Set the selected item
+};
+
+
   return (
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
       {isDoctorModalOpen && (
@@ -251,13 +285,34 @@ const [isMedicineIndentModalOpen, setMedicineIndentModalOpen] = useState(false);
           empid={empid}
         />
       )}
-        {isMedicineIndentModalOpen && ( 
+      {/* {isMedicineIndentModalOpen && (
         <MedicineIndentModal
           isOpen={isMedicineIndentModalOpen}
           onClose={() => setMedicineIndentModalOpen(false)}
-         
+          onSelectIndent={handleIndentSelect}
+          patientData={patientData}
+        />
+      )} */}
+      {isMedicineIndentModalOpen && (
+        <MedicineIndentModal
+          isOpen={isMedicineIndentModalOpen}
+          onClose={() => setMedicineIndentModalOpen(false)}
+          onSelectIndent={handleIndentSelect}
+          patientData={patientData}
+          isStoreSelected={isStoreSelected} 
         />
       )}
+
+      {isGetIndentDetailModalOpen && (
+        <GetIndentDetail
+          isOpen={isGetIndentDetailModalOpen}
+          onClose={() => setGetIndentDetailModalOpen(false)}
+          indentId={selectedIndentId}
+          patientData={patientData}
+           onRowSelect={handleRowSelect}
+        />
+      )}
+
       <div className="flex items-center justify-center">
         <ModalHeading title="Consumables" />
       </div>
@@ -319,6 +374,8 @@ const [isMedicineIndentModalOpen, setMedicineIndentModalOpen] = useState(false);
             />
           </div>
 
+
+{/* itemname */}
           <div className="flex flex-col w-full">
             <label className="text-xs font-serif text-gray-700">
               Item Name *
@@ -327,8 +384,8 @@ const [isMedicineIndentModalOpen, setMedicineIndentModalOpen] = useState(false);
               label="Item Name"
               options={itemOptions}
               selectedValue={selectedItem ? selectedItem.label : ""}
-              onSelect={handleItemSelect} 
-              error={errors.item} 
+              onSelect={handleItemSelect}
+              error={errors.item}
             />
           </div>
 
@@ -348,6 +405,8 @@ const [isMedicineIndentModalOpen, setMedicineIndentModalOpen] = useState(false);
             value={barcode}
             onChange={(e) => setBarcode(e.target.value)}
           />
+
+          {/* qty */}
           <ReusableInputField
             className="border-2 rounded-lg"
             id="indentQty"
@@ -382,9 +441,14 @@ const [isMedicineIndentModalOpen, setMedicineIndentModalOpen] = useState(false);
             onClick={handleInsert}
             className="text-xs px-4 py-1"
           />
-         <ActionButton
+          <ActionButton
             label="Indent Detail"
-            onClick={handleIndentDetail} 
+            onClick={handleIndentDetail}
+            className="text-xs px-4 py-1"
+          />
+          <ActionButton
+            label="History"
+            // onClick={handleIndentDetail}
             className="text-xs px-4 py-1"
           />
         </div>

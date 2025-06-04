@@ -1,45 +1,71 @@
-{
-    "rowid": 0,
-    "consultantvisitid": 0,
-    "gssuhid": 0,
-    "visitid": "",
-    "visitdatetime": "",
-    "visitthrough": "",
-    "visittypeid": 0,
-    "consultantid": 0,
-    "wardcatgid": 0,
-    "bedno": "",
-    "remark": "",
-    "isverified": 0,
-    "verificationdatetime": "",
-    "verifiedbyid": 0,
-    "verificationremark": "",
-    "callbyempid": 0,
-    "isinactive": 0,
-    "entempid": 1,
-    "entdatetime": "",
-    "entwsname": "",
-    "modifyempid": 1,
-    "modifydatetime": "",
-    "modifywsname": "",
-    "locationid": 1,
-    "financialyear": "2526",
-    "uhid": "",
-    "orgid": 0,
-    "receiptno": "",
-    "itembelongtoid": 0,
-    "billinggroupid": 0,
-    "jsonStringsubinvreqmain": "[{\"rowid\":0,\"reqid\":0,\"gssuhid\":4561,\"visitid\":\"SNI24250000679\",\"visittype\":\"I\",\"orddate\":\"31/05/2025 10:15 AM\",\"isallresultready\":0,\"bedno\":\"MGW-11\",\"consultantvisitid\":0,\"isremove\":0,\"visitthrough\":\"VISIT\",\"removedatetime\":0,\"isinactive\":0,\"entempid\":\"1\",\"entdatetime\":\"31/05/2025 10:15 AM\",\"entwsname\":\"GSLAP2\",\"modifyempid\":\" \",\"modifydatetime\":\"31/05/2025 10:15 AM\",\"modifywsname\":\"GSLAP2\",\"locationid\":1,\"financialyear\":\" \",\"isprint\":0,\"removeremark\":\"\",\"secondconsultantid\":\"26\"}]",
-    "jsonStringsubinvreqdetail": "[{\"rowid\":0,\"SNo\":1,\"servid\":23,\"InvestigationName\":\"CALCIUM  (200.00 )\",\"consultantid\":\"26\",\"DoctorName\":\"DR. ARUN MAROTHI\",\"isurgent\":0,\"Urgent\":\"\",\"consenttypeid\":0,\"ConsentType\":\"\",\"isconsenttaken\":0,\"ConsentTaken\":\"\",\"Remove\":\"\",\"reqid\":0,\"invdate\":\"\",\"remarks\":\".\",\"issampled\":0,\"isresult\":0,\"isverified\":0,\"isunabletoprocess\":0,\"isemg\":0,\"preparationstatusid\":0,\"preparationremarkid\":0,\"reasonfornotpreparation\":\" \",\"isconsentreq\":0,\"isremove\":0,\"removedatetime\":\" \",\"isprofile\":0,\"profileservid\":0,\"charge\":\" \",\"isinactive\":0,\"entempid\":\"1\",\"entdatetime\":\"31/05/2025 10:15 AM\",\"entwsname\":\"GSLAP2\",\"modifyempid\":\" \",\"modifydatetime\":\"31/05/2025 10:15 AM\",\"modifywsname\":\"GSLAP2\",\"locationid\":1,\"IsEdit\":0,\"financialyear\":\"\",\"servcatgid\":23,\"servsubcatgid\":10,\"deptid\":\" \",\"subdeptid\":\" \",\"statusid\":0,\"Consultant\":\" \",\"reqwardcatgid\":2,\"ispaid\":0,\"Paid\":\"\",\"isrepeat\":0,\"Repeat\":\"\",\"repeatremark\":\"\",\"RepeatRemark\":\"\",\"itemlineid\":1,\"performedbyempid\":0,\"callbyempid\":0,\"callbyremark\":\"\",\"CallByRemark\":\"\",\"postinfinalbill\":0,\"otherconsultantid\":\"26\"},
-    {\"rowid\":0,\"SNo\":2,\"servid\":25,\"InvestigationName\":\"CREATININE  (150.00 )\",\"consultantid\":\"26\",\"DoctorName\":\"DR. ARUN MAROTHI\",\"isurgent\":0,\"Urgent\":\"\",\"consenttypeid\":0,\"ConsentType\":\"\",\"isconsenttaken\":0,\"ConsentTaken\":\"\",\"Remove\":\"\",\"reqid\":0,\"invdate\":\"\",\"remarks\":\".\",\"issampled\":0,\"isresult\":0,\"isverified\":0,\"isunabletoprocess\":0,\"isemg\":0,\"preparationstatusid\":0,\"preparationremarkid\":0,\"reasonfornotpreparation\":\" \",\"isconsentreq\":0,\"isremove\":0,\"removedatetime\":\" \",\"isprofile\":0,\"profileservid\":0,\"charge\":\" \",\"isinactive\":0,\"entempid\":\"1\",\"entdatetime\":\"31/05/2025 10:15 AM\",\"entwsname\":\"GSLAP2\",\"modifyempid\":\" \",\"modifydatetime\":\"31/05/2025 10:15 AM\",\"modifywsname\":\"GSLAP2\",\"locationid\":1,\"IsEdit\":0,\"financialyear\":\"\",\"servcatgid\":25,\"servsubcatgid\":4,\"deptid\":\" \",\"subdeptid\":\" \",\"statusid\":0,\"Consultant\":\" \",\"reqwardcatgid\":2,\"ispaid\":0,\"Paid\":\"\",\"isrepeat\":0,\"Repeat\":\"\",\"repeatremark\":\"\",\"RepeatRemark\":\"\",\"itemlineid\":1,\"performedbyempid\":0,\"callbyempid\":0,\"callbyremark\":\"\",\"CallByRemark\":\"\",\"postinfinalbill\":0,\"otherconsultantid\":\"26\"}]",
-    "jsonStringsubpatipdprovisionaldiagnose": "[]",
-    "jsonStringsubpatbilinginfomodel": "[{\"visitid\":\"SNI24250000679\",\"gssuhid\":4561,\"reqwardcatgid\":2,\"allotedcatg\":2,\"bedno\":\"MGW-11\",\"admissiontypeid\":3,\"corporateid\":1,\"billinggroupid\":1,\"terriffid\":1}]"
+'use client';
+import React from 'react';
+
+export default function SelectBatchModal({ onClose }) {
+  const tableData = [
+    {
+      batchNo: '0002',
+      saleRate: 5,
+      expiryDate: '01/12/2030',
+      availableQty: 100,
+      cgst: 6,
+      sgst: 6,
+      igst: 12,
+    },
+  ];
+
+  return (
+    <div className="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg shadow-lg w-full max-w-5xl relative border">
+        {/* Header */}
+        <div className="bg-green-100 text-green-800 text-xl font-semibold text-center py-2 rounded-t-md">
+          Select Batch
+        </div>
+
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-2 right-2 bg-blue-900 hover:bg-blue-800 text-white font-bold rounded-full w-6 h-6 flex items-center justify-center"
+        >
+          ×
+        </button>
+
+        {/* Table */}
+        <div className="overflow-x-auto p-4">
+          <table className="min-w-full text-sm border border-gray-300">
+            <thead className="bg-blue-900 text-white text-center">
+              <tr>
+                <th className="border px-4 py-2">S.No</th>
+                <th className="border px-4 py-2">Batch No</th>
+                <th className="border px-4 py-2">Sale Rate</th>
+                <th className="border px-4 py-2">Expiry date</th>
+                <th className="border px-4 py-2">Select</th>
+                <th className="border px-4 py-2">Avail. Qty</th>
+                <th className="border px-4 py-2">CGST%</th>
+                <th className="border px-4 py-2">SGST%</th>
+                <th className="border px-4 py-2">IGST%</th>
+              </tr>
+            </thead>
+            <tbody className="text-center bg-gray-50">
+              {tableData.map((row, index) => (
+                <tr key={index}>
+                  <td className="border px-4 py-2">{index + 1}</td>
+                  <td className="border px-4 py-2">{row.batchNo}</td>
+                  <td className="border px-4 py-2">{row.saleRate}</td>
+                  <td className="border px-4 py-2">{row.expiryDate}</td>
+                  <td className="border px-4 py-2">
+                    <input type="checkbox" />
+                  </td>
+                  <td className="border px-4 py-2">{row.availableQty}</td>
+                  <td className="border px-4 py-2">{row.cgst}</td>
+                  <td className="border px-4 py-2">{row.sgst}</td>
+                  <td className="border px-4 py-2">{row.igst}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
 }
-
-
-
-
-
-jsonStringsubinvreqdetail
-: 
-"[{\"rowid\":0,\"SNo\":1,\"servid\":22,\"InvestigationName\":\"AMYLASE  ( 400.00 )\",\"consultantid\":\"180\",\"DoctorName\":\"PANKAJ VERMA\",\"isurgent\":0,\"Urgent\":\"\",\"consenttypeid\":0,\"ConsentType\":\"\",\"isconsenttaken\":0,\"ConsentTaken\":\"\",\"Remove\":\"\",\"reqid\":0,\"invdate\":\"\",\"remarks\":\"\",\"issampled\":0,\"isresult\":0,\"isverified\":0,\"isunabletoprocess\":0,\"isemg\":0,\"preparationstatusid\":0,\"preparationremarkid\":0,\"reasonfornotpreparation\":\" \",\"isconsentreq\":0,\"isremove\":0,\"removedatetime\":\" \",\"isprofile\":0,\"profileservid\":0,\"charge\":400,\"isinactive\":0,\"entempid\":\" \",\"entdatetime\":\"31/05/2025 10:54 AM\",\"entwsname\":\"GSLAP2\",\"modifyempid\":\"21\",\"modifydatetime\":\"31/05/2025 10:54 AM\",\"modifywsname\":\"GSLAP2\",\"locationid\":1,\"IsEdit\":0,\"financialyear\":\"\",\"servcatgid\":22,\"servsubcatgid\":10,\"deptid\":2,\"subdeptid\":39,\"statusid\":0,\"Consultant\":\" \",\"reqwardcatgid\":2,\"ispaid\":0,\"Paid\":\"\",\"isrepeat\":0,\"Repeat\":\"\",\"repeatremark\":\"\",\"RepeatRemark\":\"\",\"itemlineid\":1,\"performedbyempid\":0,\"callbyempid\":0,\"callbyremark\":\"\",\"CallByRemark\":\"\",\"postinfinalbill\":0,\"otherconsultantid\":\"180\"}]"
