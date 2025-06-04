@@ -12,6 +12,7 @@ import DoctorModal from "./Modal/DoctorModal";
 import MedicineIndent from "./MedicineIndent";
 import MedicineIndentModal from "./Modal/MedicineIndentModal";
 import GetIndentDetail from "./Modal/GetIndentDetail";
+import SelectBatchModal from "./Modal/SelectBatchModal";
 
 export default function Consumables({ visitid, gssuhid, empid, patientData }) {
   const [vitals, setVitals] = useState([]);
@@ -191,10 +192,13 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
     fetchData();
   }, []);
 
+  const [selectedStore, setSelectedStore] = useState(null);
+
   // Inside your component
   const handleStoreSelect = (option) => {
     setStore(option.label);
-    console.log("aaya store", option.label, option.value);
+    setSelectedStore(option.value); // Store the selected store value
+    console.log("Selected Store:", option.label, option.value);
 
     fetchItemNames(option.value);
   };
@@ -260,16 +264,43 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
     }
   };
 
-    const [selectedRowData, setSelectedRowData] = useState(null); // State to hold selected row data
-    // Other state variables...
+  const [selectedRowData, setSelectedRowData] = useState(null); // State to hold selected row data
+  // Other state variables...
 
-   const handleRowSelect = (row) => {
-    setSelectedRowData(row); // Store the selected row data
-    console.log("Selected Row Data:", row); // Log the selected row data
+  const [isSelectBatchModalOpen, setSelectBatchModalOpen] = useState(false);
 
-    // Set the indent quantity and selected item based on the row data
-    setIndentQty(row.qty); // Set the indent quantity
-    setSelectedItem({ label: row.itemname, value: row.itemid }); // Set the selected item
+ 
+// const handleRowSelect = (row) => {
+//   setSelectedRowData(row);
+//   console.log("Selected Row Data:", row);
+  
+//   // Check if the row has the expected properties
+//   console.log("Indent Qty:", row.qty);
+//   console.log("Item Name:", row.itemname);
+//   console.log("Item id:", row.itemid);
+
+//   setIndentQty(row.qty);
+//   setSelectedItem({ label: row.itemname, value: row.itemId });
+
+//   // Open the SelectBatchModal
+ 
+//   setSelectBatchModalOpen(true)
+//   console.log("SelectBatchModal should now be open.");
+// };
+
+const handleRowSelect = (row) => {
+  setSelectedRowData(row);
+  console.log("Selected Row Data:", row);
+  
+  // Check if the row has the expected properties
+  console.log("Indent Qty:", row.qty);
+  console.log("Item Name:", row.itemname);
+  console.log("Item id:", row.itemid);
+  setIndentQty(row.qty);
+  setSelectedItem({ label: row.itemname, value: row.itemid }); // Ensure you use row.itemid
+  // Open the SelectBatchModal
+  setSelectBatchModalOpen(true);
+  console.log("SelectBatchModal should now be open.");
 };
 
 
@@ -299,7 +330,7 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
           onClose={() => setMedicineIndentModalOpen(false)}
           onSelectIndent={handleIndentSelect}
           patientData={patientData}
-          isStoreSelected={isStoreSelected} 
+          isStoreSelected={isStoreSelected}
         />
       )}
 
@@ -309,10 +340,28 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
           onClose={() => setGetIndentDetailModalOpen(false)}
           indentId={selectedIndentId}
           patientData={patientData}
-           onRowSelect={handleRowSelect}
+          onRowSelect={handleRowSelect}
         />
       )}
 
+      {/* {isSelectBatchModalOpen && (
+        <SelectBatchModal
+          isOpen={isSelectBatchModalOpen}
+          onClose={() => setSelectBatchModalOpen(false)}
+          selectedData={selectedRowData} // Pass any necessary data
+          selectedStore={selectedStore} // Pass the selected store value
+        />
+      )} */}
+// Rendering the SelectBatchModal
+{isSelectBatchModalOpen && (
+  <SelectBatchModal
+    isOpen={isSelectBatchModalOpen}
+    onClose={() => setSelectBatchModalOpen(false)}
+    selectedData={selectedRowData} // Pass the selected row data
+    selectedStore={selectedStore} // Pass the selected store value
+    itemId={selectedRowData?.itemid} // Pass the itemId directly
+  />
+)}
       <div className="flex items-center justify-center">
         <ModalHeading title="Consumables" />
       </div>
@@ -374,8 +423,7 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
             />
           </div>
 
-
-{/* itemname */}
+          {/* itemname */}
           <div className="flex flex-col w-full">
             <label className="text-xs font-serif text-gray-700">
               Item Name *
