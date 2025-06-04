@@ -9,6 +9,8 @@ import API_ENDPOINTS from "../constants/api_url";
 import DropdownSelect from "../common/DropdownSelect";
 import ReusableInputField from "../common/SmallInputfields";
 import DoctorModal from "./Modal/DoctorModal";
+import MedicineIndent from "./MedicineIndent";
+import MedicineIndentModal from "./Modal/MedicineIndentModal";
 
 export default function Consumables({ visitid, gssuhid, empid, patientData }) {
   const [vitals, setVitals] = useState([]);
@@ -176,41 +178,6 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
         console.error("Error fetching stores:", error);
       }
     };
-//    const fetchItemNames = async (storeid) => {
-//   try {
-//     const response = await axios.get(
-//       `https://doctorapi.medonext.com/api/HMS/GetItemOnConsumable?storeid=${storeid}`
-//     );
-
-//     console.log("Raw API response:", response);
-//     console.log("Response data:", response.data);
-
-//     const rawData = response.data;
-
-//     // Remove trailing comma before closing array bracket if string
-//     let itemData;
-//     if (typeof rawData === "string") {
-//       const cleanData = rawData.replace(/,(\s*])/, "$1");
-//       itemData = JSON.parse(cleanData);
-//     } else {
-//       itemData = rawData;
-//     }
-
-//     if (itemData && Array.isArray(itemData)) {
-//       const formattedItems = itemData.map((item) => ({
-//         label: item.itemname,
-//         value: item.itemid,
-//       }));
-//       setItemOptions(formattedItems);
-//     } else {
-//       console.warn("No item data found or data is not in expected format.");
-//       setItemOptions([]); // clear previous items if any
-//     }
-//   } catch (error) {
-//     console.error("❌ Error fetching item names:", error);
-//     setItemOptions([]); // clear previous items on error
-//   }
-// };
 
     const fetchData = async () => {
       await Promise.all([
@@ -264,7 +231,14 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
     }
   };
 
+const [isMedicineIndentModalOpen, setMedicineIndentModalOpen] = useState(false);
 
+   const handleIndentDetail = () => {
+    setMedicineIndentModalOpen(true); // Open the MedicineIndent modal
+  };
+
+
+  
   return (
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
       {isDoctorModalOpen && (
@@ -275,6 +249,13 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
           visitid={visitid}
           gssuhid={gssuhid}
           empid={empid}
+        />
+      )}
+        {isMedicineIndentModalOpen && ( 
+        <MedicineIndentModal
+          isOpen={isMedicineIndentModalOpen}
+          onClose={() => setMedicineIndentModalOpen(false)}
+         
         />
       )}
       <div className="flex items-center justify-center">
@@ -294,7 +275,7 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
               label="Date & Time"
             />
             {errors.dateTime && (
-              <p className="text-red-500 text-[10px] mt-[2px] ml-[2px] col-span-full -mt-2">
+              <p className="text-red-500 text-[10px] mt-[2px] ml-[2px] col-span-full ">
                 {errors.dateTime}
               </p>
             )}
@@ -401,9 +382,9 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
             onClick={handleInsert}
             className="text-xs px-4 py-1"
           />
-          <ActionButton
+         <ActionButton
             label="Indent Detail"
-            // onClick={handleInsert}
+            onClick={handleIndentDetail} 
             className="text-xs px-4 py-1"
           />
         </div>
