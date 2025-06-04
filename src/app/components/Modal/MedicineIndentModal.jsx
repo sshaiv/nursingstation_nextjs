@@ -43,13 +43,14 @@ export default function MedicineIndentModal({ onClose }) {
 
   return (
     <div className="p-4 bg-white rounded-lg shadow-md overflow-auto">
-      <div className="flex items-center justify-end gap-64 bg-green-100 py-2 px-4 rounded-t-lg">
-        <div className="text-xl  font-semibold text-green-700">
+      <div className="flex flex-wrap items-center justify-between gap-4 sm:gap-64 bg-green-100 py-2 px-4 rounded-t-lg">
+        <div className="text-base  sm:text-lg md:text-xl lg:text-xl font-semibold text-green-700">
           INDENT DETAIL
         </div>
+
         <button
           onClick={onClose}
-          className="text-2xl hover:text-red-600"
+          className="text-xl hover:text-red-600"
           aria-label="Close Modal"
         >
           ❌
