@@ -494,7 +494,6 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
         </div>
       </div>
 
-      
       {/* Table */}
       <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
         <div
@@ -507,28 +506,23 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
           <table className="w-full text-[11px] text-center border-collapse">
             <thead className="bg-blue-50 text-gray-800 font-semibold sticky top-0 z-10">
               <tr>
-                <TableReuse type="th">Date/Time</TableReuse>
-                <TableReuse type="th">Nursing Service</TableReuse>
                 <TableReuse type="th">Doctor Name</TableReuse>
-                <TableReuse type="th">Performed By</TableReuse>
-                <TableReuse type="th">Issue No</TableReuse>
-                <TableReuse type="th">Store</TableReuse>
+                <TableReuse type="th">Date/Time</TableReuse>
                 <TableReuse type="th">Item Name</TableReuse>
-                <TableReuse type="th">Bundle Name</TableReuse>
-                <TableReuse type="th">Barcode</TableReuse>
-                <TableReuse type="th">Indent Qty</TableReuse>
-                <TableReuse type="th">Issue Qty</TableReuse>
-                <TableReuse type="th">Remarks</TableReuse>
-                <TableReuse type="th">Actions</TableReuse>
+                <TableReuse type="th">Batch No</TableReuse>
+                <TableReuse type="th">Qty.</TableReuse>
+                <TableReuse type="th">Charge</TableReuse>
+                <TableReuse type="th">Total Amount</TableReuse>
+                <TableReuse type="th">Remove</TableReuse>
+                <TableReuse type="th">Return Qty.</TableReuse>
+                <TableReuse type="th">To be Ret Qty.</TableReuse>
               </tr>
             </thead>
             <tbody>
               {vitals.map((v, idx) => (
                 <tr key={idx} className="hover:bg-gray-100 border-t">
-                  <TableReuse>{v.date}</TableReuse>
-                  <TableReuse>{v.nursingService}</TableReuse>
-                  <TableReuse>{v.doctorName}</TableReuse>
-                  <TableReuse>{v.performedBy}</TableReuse>
+                  <TableReuse>{v.date}</TableReuse>              
+                  <TableReuse>{v.doctorName}</TableReuse>                
                   <TableReuse>{v.issueNo}</TableReuse>
                   <TableReuse>{v.store}</TableReuse>
                   <TableReuse>{v.itemName}</TableReuse>
