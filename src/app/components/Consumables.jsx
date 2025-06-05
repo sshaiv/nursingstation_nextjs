@@ -31,13 +31,10 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
   const [indentQty, setIndentQty] = useState("");
   const [issueQty, setIssueQty] = useState("");
   const [remarks, setRemarks] = useState("");
+  const [charge, setCharge] = useState("");
   const [itemOptions, setItemOptions] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
-
-  // Options for Nursing Service
   const [options, setOptions] = useState([]);
-
-  // Options for Doctors and Performed By Users
   const [doctors, setDoctors] = useState([]);
   const [performedByUsers, setPerformedByUsers] = useState([]);
   const [isDoctorModalOpen, setDoctorModalOpen] = useState(true);
@@ -194,10 +191,9 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
 
   const [selectedStore, setSelectedStore] = useState(null);
 
-  // Inside your component
   const handleStoreSelect = (option) => {
     setStore(option.label);
-    setSelectedStore(option.value); // Store the selected store value
+    setSelectedStore(option.value);
     console.log("Selected Store:", option.label, option.value);
 
     fetchItemNames(option.value);
@@ -208,15 +204,17 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
     console.log("Selected Item Name: ID", item.label, " ", item.value);
   };
 
-  // fetchItemNames yaha define karo
   const fetchItemNames = async (storeId) => {
+    if (!storeId) {
+      // console.error("Store ID is undefined. Cannot fetch item names.");
+      return;
+    }
     try {
       const response = await axios.get(
         `https://doctorapi.medonext.com/api/HMS/GetItemOnConsumable?storeid=${storeId}`
       );
       let rawData = response.data;
 
-      // agar response string hai toh clean karo
       if (typeof rawData === "string") {
         rawData = rawData.replace(/,(\s*])/, "$1");
         rawData = JSON.parse(rawData);
@@ -237,10 +235,6 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
   const [isMedicineIndentModalOpen, setMedicineIndentModalOpen] =
     useState(false);
 
-  // const handleIndentDetail = () => {
-  //   setMedicineIndentModalOpen(true);
-  // };
-
   const [isGetIndentDetailModalOpen, setGetIndentDetailModalOpen] =
     useState(false);
   const [selectedIndentId, setSelectedIndentId] = useState(null);
@@ -257,52 +251,46 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
   const handleIndentDetail = () => {
     if (!store) {
       setMedicineIndentModalOpen(true);
-      setIsStoreSelected(false); // Set flag to false if store is not selected
+      setIsStoreSelected(false);
     } else {
-      setIsStoreSelected(true); // Set flag to true if store is selected
-      setMedicineIndentModalOpen(true); // Open the modal if store is selected
+      setIsStoreSelected(true);
+      setMedicineIndentModalOpen(true);
     }
   };
 
-  const [selectedRowData, setSelectedRowData] = useState(null); // State to hold selected row data
-  // Other state variables...
-
+  const [selectedRowData, setSelectedRowData] = useState(null);
   const [isSelectBatchModalOpen, setSelectBatchModalOpen] = useState(false);
 
- 
-// const handleRowSelect = (row) => {
-//   setSelectedRowData(row);
-//   console.log("Selected Row Data:", row);
-  
-//   // Check if the row has the expected properties
-//   console.log("Indent Qty:", row.qty);
-//   console.log("Item Name:", row.itemname);
-//   console.log("Item id:", row.itemid);
+  const handleRowSelect = (row) => {
+    setSelectedRowData(row);
+    setIndentQty(row.qty);
+    setSelectedItem({ label: row.itemname, value: row.itemid });
+    // Open the modal after setting state
+    setSelectBatchModalOpen(true);
+  };
 
-//   setIndentQty(row.qty);
-//   setSelectedItem({ label: row.itemname, value: row.itemId });
+  const handleSelectedData = (data) => {
+    setBarcode(data.barcode);
+    setExpiryDate(data.expirydate);
+    setMrp(data.mRP);
+    setAvailQty(data.availqty);
+    setSelectBatchModalOpen(false);
+  };
 
-//   // Open the SelectBatchModal
- 
-//   setSelectBatchModalOpen(true)
-//   console.log("SelectBatchModal should now be open.");
-// };
+  const [expiryDate, setExpiryDate] = useState("");
+  const [mrp, setMrp] = useState("");
+  const [availQty, setAvailQty] = useState("");
 
-const handleRowSelect = (row) => {
-  setSelectedRowData(row);
-  console.log("Selected Row Data:", row);
-  
-  // Check if the row has the expected properties
-  console.log("Indent Qty:", row.qty);
-  console.log("Item Name:", row.itemname);
-  console.log("Item id:", row.itemid);
-  setIndentQty(row.qty);
-  setSelectedItem({ label: row.itemname, value: row.itemid }); // Ensure you use row.itemid
-  // Open the SelectBatchModal
-  setSelectBatchModalOpen(true);
-  console.log("SelectBatchModal should now be open.");
-};
-
+  const handleIssueQtyChange = (e) => {
+    const value = e.target.value;
+    setIssueQty(value);
+    if (mrp) {
+      const finalCharge = parseFloat(mrp) * parseFloat(value);
+      setCharge(finalCharge.toFixed(2));
+    } else {
+      setCharge("");
+    }
+  };
 
   return (
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
@@ -316,14 +304,6 @@ const handleRowSelect = (row) => {
           empid={empid}
         />
       )}
-      {/* {isMedicineIndentModalOpen && (
-        <MedicineIndentModal
-          isOpen={isMedicineIndentModalOpen}
-          onClose={() => setMedicineIndentModalOpen(false)}
-          onSelectIndent={handleIndentSelect}
-          patientData={patientData}
-        />
-      )} */}
       {isMedicineIndentModalOpen && (
         <MedicineIndentModal
           isOpen={isMedicineIndentModalOpen}
@@ -333,7 +313,6 @@ const handleRowSelect = (row) => {
           isStoreSelected={isStoreSelected}
         />
       )}
-
       {isGetIndentDetailModalOpen && (
         <GetIndentDetail
           isOpen={isGetIndentDetailModalOpen}
@@ -344,29 +323,20 @@ const handleRowSelect = (row) => {
         />
       )}
 
-      {/* {isSelectBatchModalOpen && (
+      {isSelectBatchModalOpen && (
         <SelectBatchModal
           isOpen={isSelectBatchModalOpen}
           onClose={() => setSelectBatchModalOpen(false)}
-          selectedData={selectedRowData} // Pass any necessary data
-          selectedStore={selectedStore} // Pass the selected store value
+          selectedData={selectedRowData}
+          selectedStore={selectedStore}
+          itemId={selectedRowData?.itemid}
+          onSelect={handleSelectedData}
         />
-      )} */}
-// Rendering the SelectBatchModal
-{isSelectBatchModalOpen && (
-  <SelectBatchModal
-    isOpen={isSelectBatchModalOpen}
-    onClose={() => setSelectBatchModalOpen(false)}
-    selectedData={selectedRowData} // Pass the selected row data
-    selectedStore={selectedStore} // Pass the selected store value
-    itemId={selectedRowData?.itemid} // Pass the itemId directly
-  />
-)}
+      )}
       <div className="flex items-center justify-center">
         <ModalHeading title="Consumables" />
       </div>
       <hr className="border-t mt-6 mb-2 border-gray-300" />
-
       <div className="border border-gray-100 rounded-lg space-y-4">
         {/* Inputs Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end">
@@ -393,7 +363,6 @@ const handleRowSelect = (row) => {
             onChange={(e) => setIssueNo(e.target.value)}
           />
 
-          {/* Doctor Selection */}
           <div className="flex flex-col w-full">
             <label className="text-xs font-serif text-gray-700">Doctor *</label>
             <input
@@ -411,7 +380,6 @@ const handleRowSelect = (row) => {
             )}
           </div>
 
-          {/* */}
           <div className="flex flex-col w-full">
             <label className="text-xs font-serif text-gray-700">Store *</label>
             <DropdownSelect
@@ -423,7 +391,6 @@ const handleRowSelect = (row) => {
             />
           </div>
 
-          {/* itemname */}
           <div className="flex flex-col w-full">
             <label className="text-xs font-serif text-gray-700">
               Item Name *
@@ -446,15 +413,14 @@ const handleRowSelect = (row) => {
             onChange={(e) => setBundleName(e.target.value)}
           />
           <ReusableInputField
-            className="border-2 rounded-lg"
+            className="border-2 read-only rounded-lg"
             id="barcode"
             label="Barcode"
             width="w-full"
             value={barcode}
-            onChange={(e) => setBarcode(e.target.value)}
+            readOnly
           />
 
-          {/* qty */}
           <ReusableInputField
             className="border-2 rounded-lg"
             id="indentQty"
@@ -463,26 +429,52 @@ const handleRowSelect = (row) => {
             value={indentQty}
             onChange={(e) => setIndentQty(e.target.value)}
           />
+
+          <ReusableInputField
+            className="border-2 read-only rounded-lg"
+            id="expiryDate"
+            label="Expiry Date"
+            width="w-full"
+            value={expiryDate}
+            readOnly
+          />
+
+          <ReusableInputField
+            className="border-2 read-only rounded-lg"
+            id="availQty"
+            label="Available Qty"
+            width="w-full"
+            value={availQty}
+            readOnly
+          />
+
+          <ReusableInputField
+            className="border-2 read-only rounded-lg"
+            id="mrp"
+            label="MRP"
+            width="w-full"
+            value={mrp}
+            readOnly
+          />
+
           <ReusableInputField
             className="border-2 rounded-lg"
             id="issueQty"
             label="Issue Qty"
             width="w-full"
             value={issueQty}
-            onChange={(e) => setIssueQty(e.target.value)}
+            onChange={handleIssueQtyChange}
           />
-
           <ReusableInputField
             className="border-2 rounded-lg"
-            id="remarks"
-            label="Remarks"
+            id="charge"
+            label="Final Charge"
             width="w-full"
-            value={remarks}
-            onChange={(e) => setRemarks(e.target.value)}
+            value={charge}
+            readOnly
           />
         </div>
 
-        {/* Insert Button */}
         <div className="flex justify-end gap-2">
           <ActionButton
             label="Insert"
@@ -502,6 +494,7 @@ const handleRowSelect = (row) => {
         </div>
       </div>
 
+      
       {/* Table */}
       <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
         <div
@@ -568,9 +561,7 @@ const handleRowSelect = (row) => {
           </table>
         </div>
       </div>
-
       <hr className="border-t mt-6 mb-2 border-gray-300" />
-
       {/* Save Button */}
       <div className="flex justify-center ">
         <SaveButton label="Save" />

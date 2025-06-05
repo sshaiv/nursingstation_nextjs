@@ -1,11 +1,10 @@
-
-'use client';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import TableReuse from '@/app/common/TableReuse';
 
-export default function SelectBatchModal({ onClose, selectedStore, selectedData, itemId }) {
+export default function SelectBatchModal({ onClose, selectedStore, selectedData, itemId, onSelect }) {
   const [itemCharge, setItemCharge] = useState([]);
+  const [selectedRows, setSelectedRows] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -32,7 +31,6 @@ export default function SelectBatchModal({ onClose, selectedStore, selectedData,
           console.warn("Unexpected API structure:", parsedData);
           setItemCharge([]);
         }
-
       } catch (error) {
         console.error("Failed to fetch batch data:", error);
         setItemCharge([]);
@@ -44,6 +42,17 @@ export default function SelectBatchModal({ onClose, selectedStore, selectedData,
 
     fetchBatchData();
   }, [itemId, selectedStore]);
+
+  const handleCheckboxChange = (index) => {
+    setSelectedRows(prev => {
+      const updated = { ...prev, [index]: !prev[index] };
+      if (updated[index]) {
+        console.log('Selected row data:', itemCharge[index]);
+        onSelect(itemCharge[index]); // Send data to parent
+      }
+      return updated;
+    });
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/30">
@@ -98,7 +107,11 @@ export default function SelectBatchModal({ onClose, selectedStore, selectedData,
                         <TableReuse>{row.salerate}</TableReuse>
                         <TableReuse>{row.expirydate}</TableReuse>
                         <TableReuse>
-                          <input type="checkbox" />
+                          <input
+                            type="checkbox"
+                            checked={!!selectedRows[index]}
+                            onChange={() => handleCheckboxChange(index)}
+                          />
                         </TableReuse>
                         <TableReuse>{row.availqty}</TableReuse>
                         <TableReuse>{row.cgstper}</TableReuse>
@@ -126,4 +139,3 @@ export default function SelectBatchModal({ onClose, selectedStore, selectedData,
     </div>
   );
 }
-

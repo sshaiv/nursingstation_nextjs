@@ -7,7 +7,7 @@ import DateTimeInput from '@/app/common/DateTimeInput';
 import API_ENDPOINTS from '@/app/constants/api_url';
 
 export default function DoctorModal({ isOpen, onClose, onSelectDoctor, visitid, gssuhid, empid }) {
-    console.log("doc pop", visitid, gssuhid, empid);
+   // console.log("doc pop", visitid, gssuhid, empid);
 
     const [selectedDoctor, setSelectedDoctor] = useState('');
     const [doctorList, setDoctorList] = useState([]);

@@ -21,9 +21,9 @@ export default function MedicineIndentModal({
           `https://doctorapi.medonext.com/api/HMS/GetPendingIndent?visitid=${patientData.visitid}&indentid=0`
         );
 
-        console.log("API Response:", response.data); // <-- This will log the raw response data
+       // console.log("API Response:", response.data); 
 
-        // If API returns a JSON string, parse it, else use it directly
+        
         const indentData =
           typeof response.data === "string"
             ? JSON.parse(response.data)
