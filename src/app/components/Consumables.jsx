@@ -13,6 +13,8 @@ import MedicineIndent from "./MedicineIndent";
 import MedicineIndentModal from "./Modal/MedicineIndentModal";
 import GetIndentDetail from "./Modal/GetIndentDetail";
 import SelectBatchModal from "./Modal/SelectBatchModal";
+import useSaveConData from "../hooks/useSaveConData";
+import { getCurrentDateTime } from "../utils/dateUtils";
 
 export default function Consumables({ visitid, gssuhid, empid, patientData }) {
   const [vitals, setVitals] = useState([]);
@@ -42,6 +44,9 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
   const [selectedDoctorId, setSelectedDoctorId] = useState(null);
   const [storeOptions, setStoreOptions] = useState([]);
 
+  const [saveData, setSaveData] = useSaveConData();
+  console.log("Updated Consumable", saveData);
+
   const handleSelectDoctor = (doctor) => {
     console.log("Doctor in inv:", doctor);
     let selectedDoc = doctor;
@@ -67,47 +72,6 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
       newErrors.dateTime = "Date & Time are required.";
 
     return newErrors;
-  };
-
-  const handleInsert = () => {
-    const validationErrors = validateForm();
-
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
-
-    setErrors({});
-
-    const formattedDate = `${selectedDate.toLocaleDateString()} ${time}`;
-    const newEntry = {
-      date: formattedDate,
-      nursingService: nursingService,
-      doctorName: doctorName,
-      performedBy: performedBy,
-      issueNo: issueNo,
-      store: store,
-      itemName: itemName,
-      bundleName: bundleName,
-      barcode: barcode,
-      indentQty: indentQty,
-      issueQty: issueQty,
-      remarks: remarks,
-    };
-
-    setVitals([...vitals, newEntry]);
-    // Reset fields
-    setNursingService("");
-    setDoctorName("");
-    setPerformedBy("");
-    setIssueNo("");
-    setStore("");
-    setItemName("");
-    setBundleName("");
-    setBarcode("");
-    setIndentQty("");
-    setIssueQty("");
-    setRemarks("");
   };
 
   useEffect(() => {
@@ -201,6 +165,8 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
 
   const handleItemSelect = (item) => {
     setSelectedItem(item);
+    console.log("ygsy", item);
+
     console.log("Selected Item Name: ID", item.label, " ", item.value);
   };
 
@@ -224,7 +190,14 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
         const formattedItems = rawData.map((item) => ({
           label: item.itemname,
           value: item.itemid,
+          itemtypeid: item.itemtypeid,
+          itemcatgid: item.itemcatgid,          
+          entwsname: item.entwsname,
+          entempid: item.entempid,
+          modifywsname:item.modifywsname,
         }));
+       // console.log("formattedItems", formattedItems);
+
         setItemOptions(formattedItems);
       }
     } catch (error) {
@@ -260,17 +233,59 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
 
   const [selectedRowData, setSelectedRowData] = useState(null);
   const [isSelectBatchModalOpen, setSelectBatchModalOpen] = useState(false);
+  const [selectedUnitId, setSelectedUnitId] = useState(null);
 
   const handleRowSelect = (row) => {
     setSelectedRowData(row);
     setIndentQty(row.qty);
+    setSelectedUnitId(row.unitid);
     setSelectedItem({ label: row.itemname, value: row.itemid });
+
     // Open the modal after setting state
     setSelectBatchModalOpen(true);
   };
 
+  const [serviceEntries, setServiceEntries] = useState([]);
+
+  const [batch, setBatch] = useState();
+  const [storeid, setStoreid] = useState();
+  const [cgstper, setCgstper] = useState();
+  const [igstper, setIgstper] = useState();
+  const [sgstper, setSgstper] = useState();
+  const [itemid, setItemid] = useState();
+  const [itembelongtoid, setItembelongtoid] = useState();
+  const [expirydate, setExpirydate] = useState();
+  const [PurchaseRate, setPurchaseRate] = useState();
+  const [gstid, setGstid] = useState();
+  const [convfact, setConvfact] = useState();
+  const [isreusable, setIsreusable] = useState();
+  const [mfgdate, setMfgdate] = useState();
+  const [netRate, setNetRate] = useState();
+  const [itempakgid, setItempakgid] = useState();
+  const [hsncode, setHsncode] = useState();
+  const [itemcatgid, setItemcatgid] = useState();
+  const [salerate, setSalerate] = useState();
+
   const handleSelectedData = (data) => {
+    setItemcatgid(data.itemcatgid);
+    setSalerate(data.salerate);
+    setHsncode(data.hsncode);
     setBarcode(data.barcode);
+    setNetRate(data.netRate);
+    setItempakgid(data.itempakgid);
+    setMfgdate(data.mfgdate);
+    setIsreusable(data.isreusable);
+    setConvfact(data.convfact);
+    setItemid(data.itemid);
+    setGstid(data.gstid);
+    setPurchaseRate(data.PurchaseRate);
+    setItembelongtoid(data.itembelongtoid);
+    setExpirydate(data.expirydate);
+    setCgstper(data.cgstper);
+    setSgstper(data.sgstper);
+    setIgstper(data.igstper);
+    setStoreid(data.storeid);
+    setBatch(data.batchserialno);
     setExpiryDate(data.expirydate);
     setMrp(data.mRP);
     setAvailQty(data.availqty);
@@ -291,6 +306,233 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
       setCharge("");
     }
   };
+
+  const handleInsert = () => {
+    const currentDateTime = getCurrentDateTime();
+
+    // Find the selected item details based on the selectedItem
+    const selectedItemDetails = itemOptions.find(
+      (item) => item.value === selectedItem.value
+    );
+    // If the selected item is not found, handle the error
+    if (!selectedItemDetails) {
+      console.error("Selected item details not found.");
+      return;
+    }
+
+    const newEntry = {
+      date: currentDateTime,
+      doctorName: doctorData.label || doctorData.CName || "N/A",
+      issueNo: issueNo || "N/A",
+      store: store || "N/A",
+      itemName: selectedItem ? selectedItem.label : "N/A",
+      bundleName: bundleName || "N/A",
+      barcode: barcode || "N/A",
+      indentQty: indentQty || 0,
+      issueQty: issueQty || 0,
+      remarks: remarks || "N/A",
+      charge: charge || " ",
+      batch: batch || "N/A",
+      // Add any other fields you need
+    };
+    console.log("New Entry:", newEntry);
+
+    const newServiceEntry = {
+      count: " ",
+      rowid: 0,
+      visitid: patientData.visitid,
+      gssuhid: patientData.gssuhid,
+      consultantvisitid: 0,
+      consultantid: doctorData.CID || " ",
+      DoctorName: doctorData.CName || " ",
+      consumabledatetime: currentDateTime,
+      DateTime: currentDateTime,
+      bedno: patientData.bedno,
+      itemid: itemid || " ",
+      itemtypeid: selectedItemDetails ? selectedItemDetails.itemtypeid : "  ",
+      itembelongstoid: itembelongtoid,
+      ItemName: selectedItem ? selectedItem.label : " ",
+      BatchNo: batch || "",
+      qty: indentQty || 0,
+      Qty: indentQty || 0,
+      unitid: selectedUnitId || 0,
+      patientcharge: charge || " ",
+      Charge: charge || " ",
+      TotalAmount: charge || " ",
+      Remove: " ",
+      isremove: 0,
+      removedbyempid: 0,
+      RemoveRemark: " ",
+      removeremark: " ",
+      isinactive: 0,
+      entempid: selectedItemDetails ? selectedItemDetails.entempid:    "  ",
+      entdatetime: " ",
+      entwsname: selectedItemDetails ? selectedItemDetails.entwsname:   "  ",
+      modifyempid: patientData.modifyempid,
+      modifydatetime: patientData.modifydatetime,
+      modifywsname: selectedItemDetails ? selectedItemDetails.modifywsname:   "  ",
+      locationid: patientData.locationid,
+      financialyear: patientData.financialyear,
+      isedit: 0,
+      outtransactiondetlid: 0,
+      outtransactionid: 0,
+      itemcatgid: itemcatgid || " ",
+      hsncode: hsncode || "",
+      batchserialno: batch || " ",
+      expirydate: expirydate || " ",
+      qtycharge: issueQty || " ",
+      purchrate: PurchaseRate || " ",
+      netrate: netRate || "",
+      mrp: mrp || " ",
+      salerate: salerate || " ",
+      totalqty: issueQty || " ",
+      barcode: barcode || " ",
+      storeid: storeid || " ",
+      surgeryid: 0,
+      remark: remarks || " ",
+      cgstper: cgstper || "",
+      cgstamt: cgstper || "",
+      sgstper: sgstper || "",
+      sgstamt: sgstper || "",
+      igstper: igstper || "",
+      igstamt: igstper || "",
+      isreuseable: isreusable || "",
+      applicableqty: 0,
+      transactiontypeid: patientData.transactionid,
+      gstid: gstid || "",
+      convfact: convfact || "",
+      ReturnQty: 0,
+      TobeRetQty: 0,
+      intranactiondetlid: 0,
+      intranscationid: 0,
+      itemcategoryid: 0,
+      mfgdate: mfgdate || " ",
+      Qtycharge: 0,
+      freeQty: 0,
+      PurchaseRate: 0,
+      cgsTAmount: 0,
+      sgsTAmount: 0,
+      igsTAmount: 0,
+      totalamount: charge || " ",
+      netRate: netRate || " ",
+      itempakgid: itempakgid || " ",
+      invoiceno: 0,
+    };
+
+    const updatedEntries = [...serviceEntries, newServiceEntry];
+
+    const jsonStringsubpatbilinginfomodel = [
+      {
+        visitid: patientData?.visitid,
+        gssuhid: patientData?.gssuhid,
+        reqwardcatgid: patientData?.reqwardcatgid,
+        allotedcatg: patientData?.wardcatgid,
+        bedno: patientData?.bedno,
+        admissiontypeid: patientData?.admissiontypeid,
+        corporateid: patientData.corporateid,
+        billinggroupid: patientData.billgrpid,
+        terriffid: patientData.terriffid,
+      },
+    ];
+
+    const jsonStringitemstockoutmain = [
+      {
+        rowid: 0,
+        outtransactionid: 0,
+        transactiondate: currentDateTime,
+        hospvisitid: patientData.visitid,
+        doctorid: doctorData.CID || " ",
+        storeid: storeid || " ",
+        invoiceno: 0,
+        entempid:  selectedItemDetails ? selectedItemDetails.entempid:    "  ",
+        entdatetime: " ",
+        entwsname:  selectedItemDetails ? selectedItemDetails.entwsname:   "  ",
+        modifyempid: patientData.modifyempid,
+        modifydatetime: patientData.modifydatetime,
+        modifywsname: selectedItemDetails ? selectedItemDetails.modifywsname:   "  ",
+        locationid: patientData.locationid,
+        financialyear: patientData.financialyear,
+        uhid: patientData.uhid,
+        upid: 0,
+        isEdit: 0,
+        totcgstamt: cgstper || " ",
+        totsgstamt: sgstper || " ",
+        totigstamt: igstper || " ",
+        totamount: charge || " ",
+        remark: remarks || " ",
+      },
+    ];
+
+    setSaveData((prevData) => ({
+      ...prevData,
+
+      jsonStringsubipdconsumablemodels: JSON.stringify(updatedEntries),
+      jsonStringsubitemstockoutdetl: JSON.stringify(updatedEntries),
+      jsonStringsubpatbilinginfomodel: JSON.stringify(
+        jsonStringsubpatbilinginfomodel
+      ),
+      jsonStringitemstockoutmain: JSON.stringify(jsonStringitemstockoutmain),
+    }));
+
+    console.log("jsonStringsubipdconsumablemodels:", updatedEntries);
+    console.log("jsonStringsubitemstockoutdetl:", updatedEntries);
+    console.log("Billing Info:", jsonStringsubpatbilinginfomodel);
+    console.log("jsonStringitemstockoutmain:", jsonStringitemstockoutmain);
+
+    // setServiceEntries(updatedEntries);
+    // setVitals((prev) => [...prev, newEntry]);
+
+    // Update the vitals state to include the new entry
+    setVitals((prev) => [...prev, newEntry]);
+    // Resetting fields after insertion
+    setIssueNo("");
+    setStore("");
+    setSelectedItem(null);
+    setBundleName("");
+    setBarcode("");
+    setIndentQty("");
+    setIssueQty("");
+    setRemarks("");
+    setCharge("");
+    setAvailQty("");
+    setMrp("");
+    setExpiryDate("");
+    setDoctorName("");
+    setDoctorData(null);
+  };
+
+
+
+    const savebtn = async () => {
+    console.log("savebtn ", saveData);
+    try {
+      const response = await fetch(
+        API_ENDPOINTS.saveIPDConsumable,
+
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(saveData),
+        }
+      );
+
+      const result = await response.json();
+      console.log("Response:", result);
+
+      if (response.ok) {
+        alert("Data saved successfully!");
+    
+      } else {
+        alert("Failed to save data.");
+      }
+    } catch (error) {
+      console.error("Error saving data:", error);
+      alert("An error occurred while saving data.");
+    }
+  };
+
 
   return (
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
@@ -473,6 +715,14 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
             value={charge}
             readOnly
           />
+          <ReusableInputField
+            className="border-2 rounded-lg"
+            id="remarks"
+            label="Remarks"
+            width="w-full"
+            value={remarks}
+            onChange={(e) => setRemarks(e.target.value)} // Update state on change
+          />
         </div>
 
         <div className="flex justify-end gap-2">
@@ -514,29 +764,21 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
                 <TableReuse type="th">Charge</TableReuse>
                 <TableReuse type="th">Total Amount</TableReuse>
                 <TableReuse type="th">Remove</TableReuse>
-                <TableReuse type="th">Return Qty.</TableReuse>
-                <TableReuse type="th">To be Ret Qty.</TableReuse>
               </tr>
             </thead>
             <tbody>
               {vitals.map((v, idx) => (
                 <tr key={idx} className="hover:bg-gray-100 border-t">
-                  <TableReuse>{v.date}</TableReuse>              
-                  <TableReuse>{v.doctorName}</TableReuse>                
-                  <TableReuse>{v.issueNo}</TableReuse>
-                  <TableReuse>{v.store}</TableReuse>
+                  <TableReuse>{v.doctorName}</TableReuse>
+                  <TableReuse>{v.date}</TableReuse>
                   <TableReuse>{v.itemName}</TableReuse>
-                  <TableReuse>{v.bundleName}</TableReuse>
-                  <TableReuse>{v.barcode}</TableReuse>
-                  <TableReuse>{v.indentQty}</TableReuse>
+                  <TableReuse>{v.batch || "N/A"}</TableReuse>
                   <TableReuse>{v.issueQty}</TableReuse>
-                  <TableReuse>{v.remarks}</TableReuse>
+                  <TableReuse>{v.charge}</TableReuse>
+                  <TableReuse>{(v.indentQty * v.charge).toFixed(2)}</TableReuse>
                   <TableReuse>
                     <div className="flex justify-center space-x-2">
-                      <button
-                        className="text-blue-500 hover:underline"
-                        // onClick={() => handleEdit(idx)}
-                      >
+                      <button className="text-blue-500 hover:underline">
                         Edit
                       </button>
                       <button
@@ -558,7 +800,7 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
       <hr className="border-t mt-6 mb-2 border-gray-300" />
       {/* Save Button */}
       <div className="flex justify-center ">
-        <SaveButton label="Save" />
+        <SaveButton label="Save" onClick={savebtn} />
       </div>
     </div>
   );

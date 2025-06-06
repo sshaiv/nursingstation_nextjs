@@ -43,16 +43,20 @@ export default function SelectBatchModal({ onClose, selectedStore, selectedData,
     fetchBatchData();
   }, [itemId, selectedStore]);
 
-  const handleCheckboxChange = (index) => {
-    setSelectedRows(prev => {
-      const updated = { ...prev, [index]: !prev[index] };
-      if (updated[index]) {
+ 
+const handleCheckboxChange = (index) => {
+  setSelectedRows(prev => {
+    const updated = { ...prev, [index]: !prev[index] };
+    if (updated[index]) {
+      // Use setTimeout to defer the state update
+      setTimeout(() => {
         console.log('Selected row data:', itemCharge[index]);
         onSelect(itemCharge[index]); // Send data to parent
-      }
-      return updated;
-    });
-  };
+      }, 0);
+    }
+    return updated;
+  });
+};
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/30">

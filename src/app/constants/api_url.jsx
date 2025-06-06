@@ -39,6 +39,7 @@ const API_ENDPOINTS = {
   savePatNursingService: `${BASE_URL}/SavePatNursingService`, 
   savePatVitalEntry: `${BASE_URL}/SavePatVitalEntry`, 
   savePatNursingMedicineIndentData: `${BASE_URL}/SavePatNursingMedicineIndentData`, 
+  saveIPDConsumable: `${BASE_URL}/SaveIPDConsumable`, 
 };
 
 export default API_ENDPOINTS;

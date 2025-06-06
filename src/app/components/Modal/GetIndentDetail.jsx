@@ -44,8 +44,7 @@ export default function GetIndentDetail({ onClose, indentId, patientData, onRowS
     }, [indentId]); 
 
     const onSelectIndent = (row) => {
-        console.log("Get Indent :", row.rowid ,row.itemname,row.qty);
-       
+        console.log("Get Indent :", row.rowid ,row.itemname,row.qty,row.unitid);       
         onRowSelect(row); 
     };
 
