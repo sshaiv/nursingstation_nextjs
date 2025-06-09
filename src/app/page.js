@@ -22,7 +22,7 @@ const WarningPopup = ({ visible }) => {
 };
 
 
-// Wrapper that disables interaction until scanned
+
 const BlockUntilScanned = ({ children, scanned, onBlockedClick }) => {
   const handleBlockedClick = (e) => {
     if (!scanned) {
@@ -51,7 +51,7 @@ const BlockUntilScanned = ({ children, scanned, onBlockedClick }) => {
 };
 
 function HomeContent() {
-  const [scanned, setScanned] = useState(false); // change to true after scan
+  const [scanned, setScanned] = useState(false); 
   const [showWarning, setShowWarning] = useState(false);
 
   const showScanWarning = () => {

@@ -9,12 +9,12 @@ import API_ENDPOINTS from "../constants/api_url";
 import DropdownSelect from "../common/DropdownSelect";
 import ReusableInputField from "../common/SmallInputfields";
 import DoctorModal from "./Modal/DoctorModal";
-import MedicineIndent from "./MedicineIndent";
 import MedicineIndentModal from "./Modal/MedicineIndentModal";
 import GetIndentDetail from "./Modal/GetIndentDetail";
 import SelectBatchModal from "./Modal/SelectBatchModal";
 import useSaveConData from "../hooks/useSaveConData";
 import { getCurrentDateTime } from "../utils/dateUtils";
+import MedicineHistoryModal from "./Modal/MedicineHistoryModal";
 
 export default function Consumables({ visitid, gssuhid, empid, patientData }) {
   const [vitals, setVitals] = useState([]);
@@ -246,7 +246,6 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
   };
 
   const [serviceEntries, setServiceEntries] = useState([]);
-
   const [batch, setBatch] = useState();
   const [storeid, setStoreid] = useState();
   const [cgstper, setCgstper] = useState();
@@ -396,7 +395,7 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
       sgstamt: sgstper || "",
       igstper: igstper || "",
       igstamt: igstper || "",
-      isreuseable: isreusable || "",
+      isreuseable: isreusable || 0,
       applicableqty: 0,
       transactiontypeid: patientData.transactionid,
       gstid: gstid || "",
@@ -502,7 +501,6 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
   };
 
 
-
     const savebtn = async () => {
     console.log("savebtn ", saveData);
     try {
@@ -533,7 +531,13 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
     }
   };
 
-
+ const handleHistoryOpen = () => {
+    setHistoryModalOpen(true);
+  };
+  const handleHistoryClose = () => {
+    setHistoryModalOpen(false);
+  };
+ const [isHistoryModalOpen, setHistoryModalOpen] = useState(false);
   return (
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
       {isDoctorModalOpen && (
@@ -564,7 +568,6 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
           onRowSelect={handleRowSelect}
         />
       )}
-
       {isSelectBatchModalOpen && (
         <SelectBatchModal
           isOpen={isSelectBatchModalOpen}
@@ -573,6 +576,12 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
           selectedStore={selectedStore}
           itemId={selectedRowData?.itemid}
           onSelect={handleSelectedData}
+        />
+      )}{isHistoryModalOpen && (
+        <MedicineHistoryModal
+          isOpen={isHistoryModalOpen}
+          onClose={handleHistoryClose}
+          patientData={patientData}
         />
       )}
       <div className="flex items-center justify-center">
@@ -736,11 +745,11 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
             onClick={handleIndentDetail}
             className="text-xs px-4 py-1"
           />
-          <ActionButton
-            label="History"
-            // onClick={handleIndentDetail}
-            className="text-xs px-4 py-1"
-          />
+           <ActionButton
+        label="History"
+        onClick={handleHistoryOpen}
+        className="text-xs px-4 py-1"
+      />
         </div>
       </div>
 
