@@ -9,17 +9,17 @@ import axios from "axios";
 import API_ENDPOINTS from "../constants/api_url";
 import useSaveDVData from "../hooks/useSaveDVData";
 import DoctorModal from "./Modal/DoctorModal";
-import { getCurrentDate , getCurrentDateTime } from "../utils/dateUtils";
+import { getCurrentDate, getCurrentDateTime } from "../utils/dateUtils";
 
 export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
-    const CurrentDate = getCurrentDate(); 
-    const fullDateTime = getCurrentDateTime(); 
-  
+  const CurrentDate = getCurrentDate();
+  const fullDateTime = getCurrentDateTime();
+
   const [isSaved, setIsSaved] = useState(false);
   const [isDoctorModalOpen, setDoctorModalOpen] = useState(true);
   const [doctorData, setDoctorData] = useState(null);
   const [selectedDoctorId, setSelectedDoctorId] = useState(null);
-const [isSaveEnabled, setIsSaveEnabled] = useState(false);
+  const [isSaveEnabled, setIsSaveEnabled] = useState(false);
   const [vitals, setVitals] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [time, setTime] = useState("");
@@ -66,8 +66,6 @@ const [isSaveEnabled, setIsSaveEnabled] = useState(false);
       return;
     }
 
-
-
     const newEntry = {
       date: fullDateTime,
       doctorName: doctorData.label || doctorData.CName || "N/A",
@@ -91,53 +89,51 @@ const [isSaveEnabled, setIsSaveEnabled] = useState(false);
     setIsValidToSave(true);
 
     // Single main request info (outside loop)
-    const newServiceEntry = 
-      {
-        rowid: 0,
-        consultantvisitid: 0,
-        gssuhid: patientData?.gssuhid,
-        visitid: patientData?.visitid,
-        SNo: 1,
-        visitdate: fullDateTime,
-        Date: fullDateTime,
-        visittime: fullDateTime,
-        Time: fullDateTime,
-        visitdatetime: fullDateTime,
-        visitthrough: "VISIT",
-        visittypeid: 0,
-        Bedno: patientData?.bedno,
-        BedNo: patientData?.bedno,
-        consultantid: doctorData.CID,
-        DoctorName: doctorData.CName,
-        qty: 1,
-        Quantity: 1,
-        wardcatgid: patientData.reqwardcatgid,
-        isemergency: isEmergency ? 1 : 0,
-        Emergency: isEmergency ? 1 : 0,
-        remark: remark,
-        Remark: remark,
-        Remove: 0,
-        isremove: 0,
-        removedatetime: fullDateTime,
-        isverified: 0,
-        verificationdatetime: fullDateTime,
-        verifiedbyid: 0,
-        verificationremark: " ",
-        callbyempid: 0,
-        isinactive: 0,
-        entempid: 21,
-        entdatetime: fullDateTime,
-        entwsname: "GSLAP2",
-        modifyempid: 21,
-        modifydatetime: fullDateTime,
-        modifywsname: "GSLAP2",
-        locationid: patientData.locationid,
-        financialyear: "2526",
-        IsEdit: 0,
-      };
-    
+    const newServiceEntry = {
+      rowid: 0,
+      consultantvisitid: 0,
+      gssuhid: patientData?.gssuhid,
+      visitid: patientData?.visitid,
+      SNo: 1,
+      visitdate: fullDateTime,
+      Date: fullDateTime,
+      visittime: fullDateTime,
+      Time: fullDateTime,
+      visitdatetime: fullDateTime,
+      visitthrough: "VISIT",
+      visittypeid: 0,
+      Bedno: patientData?.bedno,
+      BedNo: patientData?.bedno,
+      consultantid: doctorData.CID,
+      DoctorName: doctorData.CName,
+      qty: 1,
+      Quantity: 1,
+      wardcatgid: patientData.reqwardcatgid,
+      isemergency: isEmergency ? 1 : 0,
+      Emergency: isEmergency ? 1 : 0,
+      remark: remark,
+      Remark: remark,
+      Remove: 0,
+      isremove: 0,
+      removedatetime: fullDateTime,
+      isverified: 0,
+      verificationdatetime: fullDateTime,
+      verifiedbyid: 0,
+      verificationremark: " ",
+      callbyempid: 0,
+      isinactive: 0,
+      entempid: 21,
+      entdatetime: fullDateTime,
+      entwsname: "GSLAP2",
+      modifyempid: 21,
+      modifydatetime: fullDateTime,
+      modifywsname: "GSLAP2",
+      locationid: patientData.locationid,
+      financialyear: "2526",
+      IsEdit: 0,
+    };
+
     // Add new entry to the list
-    
 
     const jsonStringsubpatbilinginfomodel = [
       {
@@ -152,8 +148,8 @@ const [isSaveEnabled, setIsSaveEnabled] = useState(false);
         terriffid: patientData.terriffid,
       },
     ];
- const updatedEntries = [...serviceEntries, newServiceEntry]
-    
+    const updatedEntries = [...serviceEntries, newServiceEntry];
+
     setServiceEntries(updatedEntries);
 
     // Save all data
@@ -312,31 +308,32 @@ const [isSaveEnabled, setIsSaveEnabled] = useState(false);
       )}
 
       <div className="border border-gray-100 rounded-lg space-y-4">
-        <div className="grid grid-cols-4 md:grid-cols-3 lg:grid-cols-5 gap-5 items-end">
+        <div className="flex flex-wrap items-start gap-x-4 gap-y-3 text-sm">
           {/* Date & Time */}
-          <div className="flex flex-col w-full">
+          <div className="flex flex-col min-w-[180px]">
+            <label className="text-xs text-gray-700 mb-1">Date & Time</label>
             <DateTimeInput
               selectedDate={selectedDate}
               onDateChange={setSelectedDate}
               time={time}
               onTimeChange={(e) => setTime(e.target.value)}
-              label="Date & Time"
             />
             {errors.dateTime && (
-              <p className="text-red-500 text-[10px] mt-[2px] ml-[2px] col-span-full">
+              <p className="text-red-500 text-[10px] mt-[2px] ml-[2px]">
                 {errors.dateTime}
               </p>
             )}
           </div>
 
-          {/* Doctor Selection */}
-          <div className="flex flex-col w-full">
+          {/* Doctor */}
+          <div className="flex flex-col min-w-[180px]">
+            <label className="text-xs text-gray-700 mb-1">Doctor</label>
             <input
               type="text"
               readOnly
               value={doctorName}
               onClick={() => setDoctorModalOpen(true)}
-              className={`cursor-pointer text-black border px-2 py-1 rounded-md text-sm bg-gray-100 hover:bg-gray-200 focus:outline-none ${
+              className={`cursor-pointer text-black border px-2 py-[6px]   h-[25px] rounded-md bg-gray-100 hover:bg-gray-200 focus:outline-none ${
                 errors.doctorName ? "border-red-500" : "border-gray-300"
               }`}
               placeholder="Select doctor"
@@ -349,47 +346,55 @@ const [isSaveEnabled, setIsSaveEnabled] = useState(false);
           </div>
 
           {/* Remarks */}
-          <ReusableInputField
-            className="border-2 rounded-lg"
-            id="remarks"
-            label="Remarks"
-            width="w-full"
-            value={remark}
-            onChange={(e) => setRemark(e.target.value)}
-          />
+          <div className="flex flex-col min-w-[180px]">
+            <label className="text-xs text-gray-700 mb-1">Remarks</label>
+            <input
+              type="text"
+              value={remark}
+              onChange={(e) => setRemark(e.target.value)}
+              className="border px-2 py-[6px] text-black  h-[25px] rounded-md border-gray-300 focus:outline-none"
+              placeholder="Remarks"
+            />
+          </div>
 
           {/* Bed No */}
-          <ReusableInputField
-            className="border-2 rounded-lg read-only:"
-            id="bedNo"
-            label="Bed no"
-            width="w-full"
-            value={patientData?.bedno}
-            onChange={(e) => setBedNo(e.target.value)}
-          />
+          <div className="flex flex-col min-w-[120px]">
+            <label className="text-xs text-gray-700 mb-1">Bed No</label>
+            <input
+              type="text"
+              value={patientData?.bedno}
+              onChange={(e) => setBedNo(e.target.value)}
+              className="border px-2 py-[6px] h-[25px] text-black rounded-md border-gray-300 focus:outline-none"
+              placeholder="Bed No"
+            />
+          </div>
 
-          {/* Emergency Checkbox */}
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-2 min-w-[160px]">
+            <label htmlFor="emergency" className="text-xs text-gray-700">
+              Emergency
+            </label>
             <input
               type="checkbox"
               id="emergency"
               checked={isEmergency}
               onChange={(e) => setIsEmergency(e.target.checked)}
-              className="w-4 h-4 "
+              className="w-4 h-4"
             />
-            <label htmlFor="emergency" className="text-sm text-black">
-              Emergency
-            </label>
+            <span className="text-sm text-black">Yes</span>
           </div>
-
           {/* Buttons */}
-          <div className="flex justify-center gap-4 col-span-full">
-            <ActionButton
-              label="Insert"
-              onClick={handleInsert}
-              className="text-xs px-4 py-1"
-            />
-            <ActionButton label="Posted Data" className="text-xs px-4 py-1" />
+          <div className="flex flex-col min-w-[160px] items-end self-end">
+            <label className="text-xs text-gray-700 mb-1 invisible">
+              Actions
+            </label>
+            <div className="flex items-center gap-2 h-[25px]">
+              <ActionButton
+                label="Insert"
+                onClick={handleInsert}
+                className="text-xs px-4 py-1"
+              />
+              <ActionButton label="Posted Data" className="text-xs px-4 py-1" />
+            </div>
           </div>
         </div>
       </div>
@@ -434,8 +439,8 @@ const [isSaveEnabled, setIsSaveEnabled] = useState(false);
                             //   setVitals(
                             //     vitals.filter((_, i) => i !== actualIndex)
                             //   )
-                            // } 
-                             onClick={() => handleDeleteEntry(actualIndex)}
+                            // }
+                            onClick={() => handleDeleteEntry(actualIndex)}
                           >
                             Delete
                           </button>

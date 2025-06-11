@@ -409,6 +409,7 @@ export default function VitalsTable({
 
           {/* Performed By Input */}
           <div className="flex flex-col w-40">
+            <label className="text-gray-600 text-[10px] mb-[1px]">Performed by *</label>
             <input
               id="performedBy"
               type="text"
@@ -466,7 +467,7 @@ export default function VitalsTable({
                 type="text"
                 value={input.value}
                 onChange={(e) => input.setValue(e.target.value || "")}
-                className={`border rounded w-[60px] text-[9px] h-[18px] px-[2px] py-[1px] focus:outline-none focus:border-blue-500 ${
+                className={`border text-black rounded w-[60px] text-[9px] h-[25px] px-[2px] py-[1px] focus:outline-none focus:border-blue-500 ${
                   input.value ? "border-blue-500" : "border-gray-300"
                 }`}
               />
@@ -476,14 +477,14 @@ export default function VitalsTable({
       </div>
 
       {/* Table */}
-      <div className="max-h-[90px] overflow-y-scroll hide-scrollbar mt-1">
+      <div className="max-h-[80px] overflow-y-scroll hide-scrollbar mt-1">
         <table className="w-full table-auto text-[5px] text-start border border-collapse">
           <thead>
             <tr className="bg-white sticky top-0 z-10 text-gray-800">
               <TableReuse type="th" className="min-w-[90px]">
                 Date/Time
               </TableReuse>
-              <TableReuse type="th" className="min-w-[80px]">
+              <TableReuse type="th" className="min-w-[100px]">
                 Nur.Services
               </TableReuse>
               <TableReuse type="th">BP</TableReuse>
@@ -513,7 +514,7 @@ export default function VitalsTable({
                   <TableReuse className="text-[8px] font-semibold">
                     {entry.vitaldatetime}
                   </TableReuse>
-                  <TableReuse className="text-[6px] font-semibold">{performedBy}</TableReuse>
+                  <TableReuse className="text-[8px] font-semibold">{performedBy}</TableReuse>
                   <TableReuse>{entry.bp}</TableReuse>
                   <TableReuse>{entry.pulse}</TableReuse>
                   <TableReuse>{entry.temp}</TableReuse>
@@ -545,7 +546,7 @@ export default function VitalsTable({
             {[...vitals].reverse().map((v, idx) => (
               <tr key={"api-" + idx} className="hover:bg-gray-50 ">
                 <TableReuse className="text-[8px] font-semibold">{v.date}</TableReuse>
-                <TableReuse className="text-[6px] font-semibold">{v.takenby}</TableReuse>
+                <TableReuse className="text-[8px] font-semibold">{v.takenby}</TableReuse>
 
                 <TableReuse>{v.bp}</TableReuse>
                 <TableReuse>{v.pulse}</TableReuse>

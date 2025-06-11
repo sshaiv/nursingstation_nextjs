@@ -14,7 +14,11 @@ import useSaveNSData from "../hooks/useSaveNSData";
 import ReusableInputField from "../common/SmallInputfields";
 import PerformedByModal from "./Modal/PerformedByModal";
 
-import { getCurrentDate, getCurrentDateTime, getgetCurrentDateTime } from "../utils/dateUtils";
+import {
+  getCurrentDate,
+  getCurrentDateTime,
+  getgetCurrentDateTime,
+} from "../utils/dateUtils";
 
 export default function NursingServices({
   visitid,
@@ -22,8 +26,8 @@ export default function NursingServices({
   empid,
   patientData,
 }) {
-  const CurrentDate = getCurrentDate(); 
-  const fullDateTime = getCurrentDateTime(); 
+  const CurrentDate = getCurrentDate();
+  const fullDateTime = getCurrentDateTime();
 
   const [isSaved, setIsSaved] = useState(false);
   const [isDoctorModalOpen, setDoctorModalOpen] = useState(true);
@@ -116,11 +120,9 @@ export default function NursingServices({
       return;
     }
 
-  
-
     const newEntry = {
       date: fullDateTime,
-    
+
       bedno: patientData?.bedno || "N/A",
       doctorName: doctorData?.label || doctorData?.CName || "N/A",
       nursingservice:
@@ -404,24 +406,28 @@ export default function NursingServices({
       )}
 
       <div className="border border-gray-100 rounded-lg space-y-4">
-        <div className="grid grid-cols-4 md:grid-cols-3 lg:grid-cols-5 gap-5 items-end">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-start">
+          {/* Date & Time */}
           <div className="flex flex-col w-full">
+            <label className="text-xs text-gray-700 font-medium mb-1">
+              Date & Time
+            </label>
             <DateTimeInput
               selectedDate={selectedDate}
               onDateChange={setSelectedDate}
               time={time}
               onTimeChange={(e) => setTime(e.target.value)}
-              label="Date & Time"
             />
             {errors.dateTime && (
-              <p className="text-red-500 text-[10px] mt-[2px] ml-[2px] col-span-full ">
+              <p className="text-red-500 text-[10px] mt-[2px] ml-[2px]">
                 {errors.dateTime}
               </p>
             )}
           </div>
 
+          {/* Doctor */}
           <div className="flex flex-col w-full">
-            <label className="text-sm text-black font-medium mb-1">
+            <label className="text-xs text-gray-700 font-medium mb-1">
               Doctor *
             </label>
             <input
@@ -429,10 +435,10 @@ export default function NursingServices({
               readOnly
               value={doctorName}
               onClick={() => setDoctorModalOpen(true)}
-              className={`cursor-pointer text-black border px-2 py-1 rounded-md text-sm bg-gray-100 hover:bg-gray-200 focus:outline-none ${
+              className={`text-sm text-black px-2 py-1 border rounded-md bg-gray-100 hover:bg-gray-200 focus:outline-none cursor-pointer ${
                 errors.doctorName ? "border-red-500" : "border-gray-300"
               }`}
-              placeholder=" select doctor"
+              placeholder="Select doctor"
             />
             {errors.doctorName && (
               <p className="text-red-500 text-[10px] mt-[2px] ml-[2px]">
@@ -440,8 +446,10 @@ export default function NursingServices({
               </p>
             )}
           </div>
+
+          {/* Nursing Service */}
           <div className="flex flex-col w-full">
-            <label className="text-sm text-black font-medium mb-1">
+            <label className="text-xs text-gray-700 font-medium mb-1">
               Nursing service *
             </label>
             <input
@@ -449,7 +457,7 @@ export default function NursingServices({
               readOnly
               value={investigationName}
               onClick={() => setShowSecondModal(false)}
-              className={`cursor-pointer text-black border px-2 py-1  rounded-md text-sm bg-gray-100 hover:bg-gray-200 focus:outline-none ${
+              className={`text-sm text-black px-2 py-1 border rounded-md bg-gray-100 hover:bg-gray-200 focus:outline-none cursor-pointer ${
                 errors.services ? "border-red-500" : "border-gray-300"
               }`}
               placeholder="Select services"
@@ -461,10 +469,10 @@ export default function NursingServices({
             )}
           </div>
 
-          {/*  Performed By */}
+          {/* Performed By */}
           <div className="flex flex-col w-full">
-            <label className="text-sm text-black font-medium mb-1">
-              PerformedBy
+            <label className="text-xs text-gray-700 font-medium mb-1">
+              Performed By
             </label>
             <input
               id="performedBy"
@@ -472,7 +480,7 @@ export default function NursingServices({
               value={performedBy}
               readOnly
               onClick={() => setShowPerformedByModal(true)}
-              className={`px-2 py-1 text-black text-sm border rounded-lg cursor-pointer bg-gray-100 hover:bg-gray-200 focus:outline-none ${
+              className={`text-sm text-black px-2 py-1 border rounded-md bg-gray-100 hover:bg-gray-200 focus:outline-none cursor-pointer ${
                 errors.performedBy ? "border-red-500" : "border-gray-300"
               }`}
               placeholder="Select PerformedBy"
@@ -484,29 +492,36 @@ export default function NursingServices({
             )}
           </div>
 
-          <ReusableInputField
-            className={`border text-black rounded-lg ${
-              errors.qty ? "border-red-500" : "border-gray-300"
-            }`}
-            id="qty"
-            label="Quantity*"
-            width="w-full"
-            value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
-          />
-          {errors.qty && (
-            <p className="text-red-500 text-[10px] mt-[2px] ml-[2px]">
-              {errors.qty}
-            </p>
-          )}
+          {/* Quantity */}
+          <div className="flex flex-col w-full">
+            <label className="text-xs text-gray-700 font-medium mb-1">
+              Quantity *
+            </label>
+            <ReusableInputField
+              className={`text-sm text-black px-2 py-1 border rounded-md focus:outline-none ${
+                errors.qty ? "border-red-500" : "border-gray-300"
+              }`}
+              id="qty"
+              label=""
+              width="w-full"
+              value={quantity}
+              onChange={(e) => setQuantity(e.target.value)}
+            />
+            {errors.qty && (
+              <p className="text-red-500 text-[10px] mt-[2px] ml-[2px]">
+                {errors.qty}
+              </p>
+            )}
+          </div>
         </div>
+
         <div className="flex justify-end items-center w-full gap-4">
           <ActionButton
             label="Insert"
             onClick={handleInsert}
             className="text-xs px-4 py-1"
           />
-          <ActionButton label="Posted Data" className="text-xs px-4 py-1" />
+          {/* <ActionButton label="Posted Data" className="text-xs px-4 py-1" /> */}
         </div>
       </div>
 

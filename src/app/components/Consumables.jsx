@@ -63,14 +63,14 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
 
   const validateForm = () => {
     const newErrors = {};
-
     if (!nursingService)
       newErrors.nursingService = "Nursing Service is required.";
     if (!doctorName) newErrors.doctorName = "Doctor Name is required.";
     if (!performedBy) newErrors.performedBy = "Performed By is required.";
     if (!selectedDate || !time)
       newErrors.dateTime = "Date & Time are required.";
-
+    if (!store) newErrors.store = "Store is required.";
+    if (!selectedItem) newErrors.itemName = "Item Name is required.";
     return newErrors;
   };
 
@@ -191,12 +191,12 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
           label: item.itemname,
           value: item.itemid,
           itemtypeid: item.itemtypeid,
-          itemcatgid: item.itemcatgid,          
+          itemcatgid: item.itemcatgid,
           entwsname: item.entwsname,
           entempid: item.entempid,
-          modifywsname:item.modifywsname,
+          modifywsname: item.modifywsname,
         }));
-       // console.log("formattedItems", formattedItems);
+        // console.log("formattedItems", formattedItems);
 
         setItemOptions(formattedItems);
       }
@@ -307,6 +307,10 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
   };
 
   const handleInsert = () => {
+
+const newErrors = validateForm();
+    setErrors(newErrors);
+
     const currentDateTime = getCurrentDateTime();
 
     // Find the selected item details based on the selectedItem
@@ -315,7 +319,7 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
     );
     // If the selected item is not found, handle the error
     if (!selectedItemDetails) {
-      console.error("Selected item details not found.");
+      // console.error("Selected item details not found.");
       return;
     }
 
@@ -364,12 +368,14 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
       RemoveRemark: " ",
       removeremark: " ",
       isinactive: 0,
-      entempid: selectedItemDetails ? selectedItemDetails.entempid:    "  ",
+      entempid: selectedItemDetails ? selectedItemDetails.entempid : "  ",
       entdatetime: " ",
-      entwsname: selectedItemDetails ? selectedItemDetails.entwsname:   "  ",
+      entwsname: selectedItemDetails ? selectedItemDetails.entwsname : "  ",
       modifyempid: patientData.modifyempid,
       modifydatetime: patientData.modifydatetime,
-      modifywsname: selectedItemDetails ? selectedItemDetails.modifywsname:   "  ",
+      modifywsname: selectedItemDetails
+        ? selectedItemDetails.modifywsname
+        : "  ",
       locationid: patientData.locationid,
       financialyear: patientData.financialyear,
       isedit: 0,
@@ -443,12 +449,14 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
         doctorid: doctorData.CID || " ",
         storeid: storeid || " ",
         invoiceno: 0,
-        entempid:  selectedItemDetails ? selectedItemDetails.entempid:    "  ",
+        entempid: selectedItemDetails ? selectedItemDetails.entempid : "  ",
         entdatetime: " ",
-        entwsname:  selectedItemDetails ? selectedItemDetails.entwsname:   "  ",
+        entwsname: selectedItemDetails ? selectedItemDetails.entwsname : "  ",
         modifyempid: patientData.modifyempid,
         modifydatetime: patientData.modifydatetime,
-        modifywsname: selectedItemDetails ? selectedItemDetails.modifywsname:   "  ",
+        modifywsname: selectedItemDetails
+          ? selectedItemDetails.modifywsname
+          : "  ",
         locationid: patientData.locationid,
         financialyear: patientData.financialyear,
         uhid: patientData.uhid,
@@ -500,8 +508,7 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
     setDoctorData(null);
   };
 
-
-    const savebtn = async () => {
+  const savebtn = async () => {
     console.log("savebtn ", saveData);
     try {
       const response = await fetch(
@@ -521,7 +528,6 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
 
       if (response.ok) {
         alert("Data saved successfully!");
-    
       } else {
         alert("Failed to save data.");
       }
@@ -531,13 +537,14 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
     }
   };
 
- const handleHistoryOpen = () => {
+  const handleHistoryOpen = () => {
     setHistoryModalOpen(true);
   };
   const handleHistoryClose = () => {
     setHistoryModalOpen(false);
   };
- const [isHistoryModalOpen, setHistoryModalOpen] = useState(false);
+  const [isHistoryModalOpen, setHistoryModalOpen] = useState(false);
+  
   return (
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
       {isDoctorModalOpen && (
@@ -577,7 +584,8 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
           itemId={selectedRowData?.itemid}
           onSelect={handleSelectedData}
         />
-      )}{isHistoryModalOpen && (
+      )}
+      {isHistoryModalOpen && (
         <MedicineHistoryModal
           isOpen={isHistoryModalOpen}
           onClose={handleHistoryClose}
@@ -590,148 +598,222 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
       <hr className="border-t mt-6 mb-2 border-gray-300" />
       <div className="border border-gray-100 rounded-lg space-y-4">
         {/* Inputs Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end">
+       
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-1 items-start">
+          {/* Date & Time */}
           <div className="flex flex-col w-full">
+            <label className="text-xs text-gray-700 font-medium mb-1">
+              Date & Time
+            </label>
             <DateTimeInput
               selectedDate={selectedDate}
               onDateChange={setSelectedDate}
               time={time}
               onTimeChange={(e) => setTime(e.target.value)}
-              label="Date & Time"
             />
             {errors.dateTime && (
-              <p className="text-red-500 text-[10px] mt-[2px] ml-[2px] col-span-full ">
+              <p className="text-red-500 text-[10px] mt-[2px] ml-[2px]">
                 {errors.dateTime}
               </p>
             )}
           </div>
-          <ReusableInputField
-            className="border-2 rounded-lg"
-            id="issueNo"
-            label="Issue No"
-            width="w-full"
-            value={issueNo}
-            onChange={(e) => setIssueNo(e.target.value)}
-          />
 
+          {/* Issue No */}
           <div className="flex flex-col w-full">
-            <label className="text-xs font-serif text-gray-700">Doctor *</label>
+            <label className="text-xs text-gray-700 font-medium mb-1">
+              Issue No
+            </label>
+            <ReusableInputField
+              className="text-sm px-2 py-1 border border-gray-300 rounded-md"
+              id="issueNo"
+              width="w-full"
+              value={issueNo}
+              onChange={(e) => setIssueNo(e.target.value)}
+            />
+          </div>
+
+          {/* Doctor */}
+          <div className="flex flex-col w-full">
+            <label className="text-xs text-gray-700 font-medium mb-1">
+              Doctor *
+            </label>
             <input
               type="text"
               readOnly
               value={doctorName}
               onClick={() => setDoctorModalOpen(true)}
-              className={`cursor-pointer text-black border rounded text-xs bg-gray-100 hover:bg-gray-200 focus:outline-none py-1 px-2 ${
+              className={`text-sm px-2 py-1 border text-black rounded-md bg-gray-100 hover:bg-gray-200 cursor-pointer focus:outline-none ${
                 errors.doctorName ? "border-red-500" : "border-gray-300"
               }`}
               placeholder="Select doctor"
             />
             {errors.doctorName && (
-              <p className="text-red-500 mt-0.5">{errors.doctorName}</p>
+              <p className="text-red-500 text-[10px] mt-[2px] ml-[2px]">
+                {errors.doctorName}
+              </p>
             )}
           </div>
 
+          {/* Store Dropdown */}
           <div className="flex flex-col w-full">
-            <label className="text-xs font-serif text-gray-700">Store *</label>
+            <label className="text-xs text-gray-700 font-medium mb-1">
+              Store *
+            </label>
             <DropdownSelect
-              label="Store"
+              label="Select Store"
               options={storeOptions}
               selectedValue={store}
               onSelect={handleStoreSelect}
               error={errors.store}
+              className="bg-gray-100 text-sm px-2 py-1 border border-gray-300 rounded-md focus:outline-none cursor-pointer"
             />
           </div>
 
+          {/* Item Name Dropdown */}
           <div className="flex flex-col w-full">
-            <label className="text-xs font-serif text-gray-700">
+            <label className="text-xs text-gray-700 font-medium mb-1">
               Item Name *
             </label>
             <DropdownSelect
-              label="Item Name"
+              label=" Select Item "
               options={itemOptions}
               selectedValue={selectedItem ? selectedItem.label : ""}
               onSelect={handleItemSelect}
               error={errors.item}
+              className="bg-gray-100  text-sm px-2 py-1 border border-gray-300 rounded-md focus:outline-none cursor-pointer"
+            />
+            {errors.selectedItemDetails && (
+              <p className="text-red-500 text-[10px] mt-[2px] ml-[2px]">
+                {errors.selectedItemDetails}
+              </p>
+            )}
+          </div>
+
+          {/* Bundle Name */}
+          <div className="flex flex-col w-full">
+            <label className="text-xs text-gray-700 font-medium mb-1">
+              Bundle Name
+            </label>
+            <ReusableInputField
+              className="text-sm px-2 py-1 border border-gray-300 rounded-md"
+              id="bundleName"
+              width="w-full"
+              value={bundleName}
+              onChange={(e) => setBundleName(e.target.value)}
             />
           </div>
 
-          <ReusableInputField
-            className="border-2 rounded-lg"
-            id="bundleName"
-            label="Bundle Name"
-            width="w-full"
-            value={bundleName}
-            onChange={(e) => setBundleName(e.target.value)}
-          />
-          <ReusableInputField
-            className="border-2 read-only rounded-lg"
-            id="barcode"
-            label="Barcode"
-            width="w-full"
-            value={barcode}
-            readOnly
-          />
+          {/* Barcode (Read-only) */}
+          <div className="flex flex-col w-full">
+            <label className="text-xs text-gray-700 font-medium mb-1">
+              Barcode
+            </label>
+            <ReusableInputField
+              className="text-sm px-2 py-1 border border-gray-300 bg-gray-100 rounded-md"
+              id="barcode"
+              width="w-full"
+              value={barcode}
+              readOnly
+            />
+          </div>
 
-          <ReusableInputField
-            className="border-2 rounded-lg"
-            id="indentQty"
-            label="Indent Qty"
-            width="w-full"
-            value={indentQty}
-            onChange={(e) => setIndentQty(e.target.value)}
-          />
+          {/* Indent Qty */}
+          <div className="flex flex-col w-full">
+            <label className="text-xs text-gray-700 font-medium mb-1">
+              Indent Qty
+            </label>
+            <ReusableInputField
+              className="text-sm px-2 py-1 border border-gray-300 rounded-md"
+              id="indentQty"
+              width="w-full"
+              value={indentQty}
+              onChange={(e) => setIndentQty(e.target.value)}
+            />
+          </div>
 
-          <ReusableInputField
-            className="border-2 read-only rounded-lg"
-            id="expiryDate"
-            label="Expiry Date"
-            width="w-full"
-            value={expiryDate}
-            readOnly
-          />
+          {/* Expiry Date (Read-only) */}
+          <div className="flex flex-col w-full">
+            <label className="text-xs text-gray-700 font-medium mb-1">
+              Expiry Date
+            </label>
+            <ReusableInputField
+              className="text-sm px-2 py-1 border border-gray-300 bg-gray-100 rounded-md"
+              id="expiryDate"
+              width="w-full"
+              value={expiryDate}
+              readOnly
+            />
+          </div>
 
-          <ReusableInputField
-            className="border-2 read-only rounded-lg"
-            id="availQty"
-            label="Available Qty"
-            width="w-full"
-            value={availQty}
-            readOnly
-          />
+          {/* Available Qty (Read-only) */}
+          <div className="flex flex-col w-full">
+            <label className="text-xs text-gray-700 font-medium mb-1">
+              Available Qty
+            </label>
+            <ReusableInputField
+              className="text-sm px-2 py-1 border border-gray-300 bg-gray-100 rounded-md"
+              id="availQty"
+              width="w-full"
+              value={availQty}
+              readOnly
+            />
+          </div>
 
-          <ReusableInputField
-            className="border-2 read-only rounded-lg"
-            id="mrp"
-            label="MRP"
-            width="w-full"
-            value={mrp}
-            readOnly
-          />
+          {/* MRP (Read-only) */}
+          <div className="flex flex-col w-full">
+            <label className="text-xs text-gray-700 font-medium mb-1">
+              MRP
+            </label>
+            <ReusableInputField
+              className="text-sm px-2 py-1 border border-gray-300 bg-gray-100 rounded-md"
+              id="mrp"
+              width="w-full"
+              value={mrp}
+              readOnly
+            />
+          </div>
 
-          <ReusableInputField
-            className="border-2 rounded-lg"
-            id="issueQty"
-            label="Issue Qty"
-            width="w-full"
-            value={issueQty}
-            onChange={handleIssueQtyChange}
-          />
-          <ReusableInputField
-            className="border-2 rounded-lg"
-            id="charge"
-            label="Final Charge"
-            width="w-full"
-            value={charge}
-            readOnly
-          />
-          <ReusableInputField
-            className="border-2 rounded-lg"
-            id="remarks"
-            label="Remarks"
-            width="w-full"
-            value={remarks}
-            onChange={(e) => setRemarks(e.target.value)} // Update state on change
-          />
+          {/* Issue Qty */}
+          <div className="flex flex-col w-full">
+            <label className="text-xs text-gray-700 font-medium mb-1">
+              Issue Qty
+            </label>
+            <ReusableInputField
+              className="text-sm px-2 py-1 border border-gray-300 rounded-md"
+              id="issueQty"
+              width="w-full"
+              value={issueQty}
+              onChange={handleIssueQtyChange}
+            />
+          </div>
+
+          {/* Final Charge */}
+          <div className="flex flex-col w-full">
+            <label className="text-xs text-gray-700 font-medium mb-1">
+              Final Charge
+            </label>
+            <ReusableInputField
+              className="text-sm px-2 py-1 border border-gray-300 rounded-md"
+              id="charge"
+              width="w-full"
+              value={charge}
+              readOnly
+            />
+          </div>
+
+          {/* Remarks */}
+          <div className="flex flex-col w-full">
+            <label className="text-xs text-gray-700 font-medium mb-1">
+              Remarks
+            </label>
+            <ReusableInputField
+              className="text-sm px-2 py-1 border border-gray-300 rounded-md"
+              id="remarks"
+              width="w-full"
+              value={remarks}
+              onChange={(e) => setRemarks(e.target.value)}
+            />
+          </div>
         </div>
 
         <div className="flex justify-end gap-2">
@@ -745,11 +827,11 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
             onClick={handleIndentDetail}
             className="text-xs px-4 py-1"
           />
-           <ActionButton
-        label="History"
-        onClick={handleHistoryOpen}
-        className="text-xs px-4 py-1"
-      />
+          <ActionButton
+            label="History"
+            onClick={handleHistoryOpen}
+            className="text-xs px-4 py-1"
+          />
         </div>
       </div>
 

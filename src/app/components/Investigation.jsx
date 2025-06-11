@@ -233,32 +233,40 @@ export default function Investigation({
       )}
 
       <div className="border border-gray-100 rounded-lg space-y-4">
-        <div className="grid grid-cols-4 md:grid-cols-3 lg:grid-cols-5 gap-5 items-end">
+     
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-start">
+          {/* Date & Time */}
           <div className="flex flex-col w-full">
+            <label className="text-xs text-gray-700 font-medium mb-1">
+              Date & Time
+            </label>
             <DateTimeInput
               selectedDate={selectedDate}
               onDateChange={setSelectedDate}
               time={time}
               onTimeChange={(e) => setTime(e.target.value)}
-              label="Date & Time"
             />
             {errors.dateTime && (
-              <p className="text-red-500 text-[10px] mt-[2px] ml-[2px] col-span-full ">
+              <p className="text-red-500 text-[10px] mt-[2px] ml-[2px]">
                 {errors.dateTime}
               </p>
             )}
           </div>
 
+          {/* Doctor */}
           <div className="flex flex-col w-full">
+            <label className="text-xs text-gray-700 font-medium mb-1">
+              Doctor *
+            </label>
             <input
               type="text"
               readOnly
               value={doctorName}
               onClick={() => setDoctorModalOpen(true)}
-              className={`cursor-pointer text-black border px-2 py-1 rounded-md text-sm bg-gray-100 hover:bg-gray-200 focus:outline-none ${
+              className={`text-sm text-black px-2 py-1 border rounded-md bg-gray-100 hover:bg-gray-200 focus:outline-none cursor-pointer ${
                 errors.doctorName ? "border-red-500" : "border-gray-300"
               }`}
-              placeholder=" select doctor"
+              placeholder="Select doctor"
             />
             {errors.doctorName && (
               <p className="text-red-500 text-[10px] mt-[2px] ml-[2px]">
@@ -267,25 +275,39 @@ export default function Investigation({
             )}
           </div>
 
-          <ReusableInputField
-            className="border-2 rounded-lg"
-            id="remarks"
-            label="Remarks"
-            width="w-full"
-            value={remark}
-            onChange={(e) => setRemark(e.target.value)}
-          />
-          <div className="flex justify-center gap-4">
+          {/* Remark */}
+          <div className="flex flex-col w-full">
+            <label className="text-xs text-gray-700 font-medium mb-1">
+              Remark 
+            </label>
+            <ReusableInputField
+              className={`text-sm text-black px-2 py-1 border rounded-md focus:outline-none ${
+                errors.remark ? "border-red-500" : "border-gray-300"
+              }`}
+              id="remarks"
+              label=""
+              width="w-full"
+              value={remark}
+              onChange={(e) => setRemark(e.target.value)}
+            />
+            {errors.remark && (
+              <p className="text-red-500 text-[10px] mt-[2px] ml-[2px]">
+                {errors.remark}
+              </p>
+            )}
+          </div>
+
+          <div className="flex gap-3 items-end mt-5 w-full col-span-full lg:col-span-2">
             <ActionButton
               label="Insert"
               onClick={handleInsert}
               className="text-xs px-4 py-1"
             />
-            <ActionButton
-              label="Posted Data"
-              // onClick={handleInsert}
-              className="text-xs px-4 py-1"
-            />
+            {/* <ActionButton
+      label="Posted Data"
+      onClick={() => console.log("Posted Data Clicked")}
+      className="text-xs px-4 py-1"
+    /> */}
           </div>
         </div>
       </div>

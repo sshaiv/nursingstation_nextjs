@@ -17,7 +17,7 @@ const ReusableTextareaField = ({
     <div className={`relative ${width}`}>
       <textarea
         id={id}
-        rows={1} // smaller default height
+        rows={1}
         value={value}
         onChange={onChange}
         onFocus={() => setFocusedOrFilled(true)}

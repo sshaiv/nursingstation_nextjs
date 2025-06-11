@@ -139,7 +139,7 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
             <ReusableTextareaField
               id="allergies"
               label="🔍 "
-              className="border rounded text-[10px]"
+              className="border text-black rounded text-[10px]"
               rows={1}
               style={{ minHeight: '28px', padding: '6px 8px' }}
               value={allergyQuery}
@@ -155,7 +155,7 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex flex-col gap-3 w-full md:w-1/2">
               <ReusableTextareaField
-                className='border-2 text-[10px]'
+                className='border-2 text-black text-[10px]'
                 id="historygiven"
                 label="History Given By:"
                 rows={1}
@@ -194,12 +194,12 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
                 }
               />
 
-              <div className="flex gap-2">
+              {/* <div className="flex gap-2">
                 <button onClick={clearSignature} className="bg-purple-100 text-purple-800 px-2 py-1 rounded text-[10px]">Clear</button>
                 <button className="bg-purple-100 text-purple-800 px-2 py-1 rounded text-[10px]">Show</button>
-              </div>
+              </div> */}
             </div>
-            <div className="border border-gray-800 w-full md:w-1/2 h-[70px]" />
+            {/* <div className="border border-gray-800 w-full md:w-1/2 h-[70px]" /> */}
           </div>
         </div>
 
@@ -207,7 +207,7 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
         <div className="space-y-3">
           <H3 >📋 Presenting Complaint</H3>
           <ReusableTextareaField
-            className="border w-full  text-[10px]"
+            className="border text-black w-full  text-[10px]"
             id="presentingcomplaints"
             rows={1}
             style={{ minHeight: '28px', padding: '6px 8px' }}
@@ -221,21 +221,21 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
         <div className="space-y-3">
           <div className="flex items-center gap-4 mb-3 flex-wrap">
             <H3 >📋 Family History</H3>
-            <Label className="text-[10px] flex items-center gap-1">
+            <Label className="text-[10px] text-black flex items-center gap-1">
               <input type="checkbox" checked={isDM} onChange={() => setIsDM(!isDM)} />
               DM
             </Label>
-            <Label className="text-[10px] flex items-center gap-1">
+            <Label className="text-[10px] text-black flex items-center gap-1">
               <input type="checkbox" checked={isHypertension} onChange={() => setIsHypertension(!isHypertension)} />
               Hypertension
             </Label>
-            <Label className="text-[10px] flex items-center gap-1">
+            <Label className="text-[10px] text-black flex items-center gap-1">
               <input type="checkbox" checked={isCAD} onChange={() => setIsCAD(!isCAD)} />
               CAD
             </Label>
           </div>
           <ReusableTextareaField
-            className="border w-full  text-[10px]"
+            className="border text-black w-full  text-[10px]"
             id="familyother"
             rows={1}
             style={{ minHeight: '28px', padding: '6px 8px' }}
@@ -250,7 +250,7 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
         <div className="space-y-3">
           <H3 >📝 Past History</H3>
           <ReusableTextareaField
-            className="border text-[10px]"
+            className="border text-black text-[10px]"
             id="medical"
             rows={1}
             style={{ minHeight: '28px', padding: '6px 8px' }}
@@ -259,7 +259,7 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
             onChange={(e) => setMedicalHistory(e.target.value)}
           />
           <ReusableTextareaField
-            className="border text-[10px]"
+            className="border text-black text-[10px]"
             id="surgical"
             rows={1}
             style={{ minHeight: '28px', padding: '6px 8px' }}
@@ -268,7 +268,7 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
             onChange={(e) => setSurgicalHistory(e.target.value)}
           />
           <ReusableTextareaField
-            className="border text-[10px]"
+            className="border text-black text-[10px]"
             id="pastother"
             rows={1}
             style={{ minHeight: '28px', padding: '6px 8px' }}
@@ -282,17 +282,17 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
         <div className="space-y-3">
           <div className="flex items-center gap-4 mb-3 flex-wrap">
             <H3>📋 Personal History</H3>
-            <Label className="text-[10px] flex items-center gap-1">
+            <Label className="text-[10px] text-black flex items-center gap-1">
               <input type="checkbox" checked={isAlcohol} onChange={() => setIsAlcohol(!isAlcohol)} />
               Alcohol
             </Label>
-            <Label className="text-[10px] flex items-center gap-1">
+            <Label className="text-[10px] text-black flex items-center gap-1">
               <input type="checkbox" checked={isTobacco} onChange={() => setIsTobacco(!isTobacco)} />
               Tobacco
             </Label>
           </div>
           <ReusableTextareaField
-            className="border w-full  text-[10px]"
+            className="border w-full text-black text-[10px]"
             id="personalother"
             rows={1}
             style={{ minHeight: '28px', padding: '6px 8px' }}

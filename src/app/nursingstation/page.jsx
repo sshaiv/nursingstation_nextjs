@@ -143,7 +143,9 @@ function NursingStationContent() {
             <AssessmentCard title="Chief Complaints" />
             <AssessmentCard title="Diagnosis" />
             <AssessmentCard title="Allergies" />
-            <NotesBox />
+            <AssessmentCard icons="🔍" title=" Notes"  />
+           
+    
           </div>
           <MedicineTable
            visitid={visitid}

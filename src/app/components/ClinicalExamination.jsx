@@ -40,13 +40,13 @@ export default function ClinicalExamination({ visitid, gssuhid, empid }) {
   const [iscvss2, setIscvss2] = useState(false);
   const [iscvsaddedsound, setIscvsaddedsound] = useState(false);
   const [iscvsmurmur, setIscvsmurmur] = useState(false);
-  const [cvsResponse, setCvsResponse] = useState(null); // null, true for yes, false for no
+  const [cvsResponse, setCvsResponse] = useState(null); 
 
   // RS
   const [isrsnormalbreath, setIsrsnormalbreath] = useState(false);
   const [isrscrepts, setIsrscrepts] = useState(false);
   const [isrsronchi, setIsrsronchi] = useState(false);
-  const [rsResponse, setRsResponse] = useState(null); // null, true for yes, false for no
+  const [rsResponse, setRsResponse] = useState(null); 
 
   // Abdomen
   const [issoft_tense, setIssoft_tense] = useState(false);
@@ -58,8 +58,8 @@ export default function ClinicalExamination({ visitid, gssuhid, empid }) {
   const [organomegaly, setOrganomegaly] = useState("");
 
   // CNS unified state for conscious status
-  const [cnsState, setCnsState] = useState(null); // values: 'conscious', 'altered', 'comatose', or null
-  const [motorDeficit, setMotorDeficit] = useState(null); // null, true for yes, false for no
+  const [cnsState, setCnsState] = useState(null); 
+  const [motorDeficit, setMotorDeficit] = useState(null); 
   const [cnsanyother, setCnsanyother] = useState("");
 
   // Others
@@ -67,9 +67,8 @@ export default function ClinicalExamination({ visitid, gssuhid, empid }) {
   const [others, setOthers] = useState("");
   const [provisionaldiagnosis, setProvisionaldiagnosis] = useState("");
 
-  // Nutritional
-  // Fix initialization here to match the values used in radio buttons
-  const [nutState, setNutState] = useState(null); // values: 'nutconscious', 'nutaltered', 'nutcomatose', or null
+  // Nutritional  
+  const [nutState, setNutState] = useState(null); 
   const [nutritionalstatusother, setNutritionalstatusother] = useState("");
 
   // Plans

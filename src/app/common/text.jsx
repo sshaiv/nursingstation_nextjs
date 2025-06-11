@@ -27,14 +27,6 @@ export function Label({ children, htmlFor, ...props }) {
 }
 
 // modal heading
-// export function ModalHeading({ title, icon = '📋' }) {
-//   return (
-//     <h4 className="font-semibold text-lg md:text-base text-purple-900 font-serif flex items-center justify-center gap-2">
-//       {icon} {title}
-//     </h4>
-//   );
-// }
-// modal heading
 export function ModalHeading({ title, icon = '📋' }) {
   return (
     <h4 className="font-semibold text-lg md:text-base text-purple-900 font-serif flex items-center justify-center gap-2">
@@ -45,11 +37,13 @@ export function ModalHeading({ title, icon = '📋' }) {
 }
 
 
-// main heading
-export function MainHeadings({ title, icon = '📋' }) {
+
+// common/text.jsx
+export function MainHeadings({ title, icons = '📋' }) {
   return (
-    <h4 className="font-semibold text-base md:text-sm text-purple-900 font-mono flex items-center gap-2">
-      {icon} {title}
+    <h4 className="font-semibold text-base md:text-xs text-purple-900 font-mono flex items-center gap-2">
+      {typeof icons === 'string' ? <span>{icons}</span> : icons}
+      {title}
     </h4>
   );
 }

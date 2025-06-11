@@ -18,10 +18,10 @@ const DropdownSelect = ({ label, options, selectedValue, onSelect, error, onFocu
                 }}
                 readOnly
                 placeholder={label}
-                className=" text-black border border-black rounded-md text-[9px] px-2 py-[4px] focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer w-full"
+                className=" text-black border border-gray-300 bg-gray-100 rounded-md text-[12px] px-2 py-[4px] focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer w-full"
             />
             {error && (
-                <p className=" text-black text-red-500 text-[10px] mt-[2px] ml-[2px]">{error}</p>
+                <p className=" text-red-500 text-[10px] mt-[2px] ml-[2px]">{error}</p>
             )}
               {showModal && (
                 <div className=" text-black absolute top-full left-0 z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg text-[11px]">

@@ -98,25 +98,28 @@ const MedicineHistoryModal = ({ isOpen, onClose, patientData }) => {
               </thead>
               <tbody>
                 {Array.isArray(filteredData) && filteredData.length > 0 ? (
-                  filteredData.map((item, index) => (
-                    <tr
-                      key={index}
-                      className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
-                    >
-                      <TableReuse>{item.consumabledatetime}</TableReuse>
-                      <TableReuse>{item.bedno}</TableReuse>
-                      <TableReuse>{item.itemname}</TableReuse>
-                      <TableReuse>{item.consultantname}</TableReuse>
-                      <TableReuse>{item.outtransactionid}</TableReuse>
-                      <TableReuse>{item.batchno}</TableReuse>
-                      <TableReuse>{item.qty}</TableReuse>
-                      <TableReuse>{item.salerate?.toFixed(2)}</TableReuse>
-                      <TableReuse>{item.expirydate}</TableReuse>
-                      <TableReuse>{item.totalamt?.toFixed(2)}</TableReuse>
-                      <TableReuse>{item.storename}</TableReuse>
-                      <TableReuse>{item.issuedby}</TableReuse>
-                    </tr>
-                  ))
+                  filteredData
+                    .slice() // make a shallow copy
+                    .reverse() // reverse the order
+                    .map((item, index) => (
+                      <tr
+                        key={index}
+                        className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
+                      >
+                        <TableReuse>{item.consumabledatetime}</TableReuse>
+                        <TableReuse>{item.bedno}</TableReuse>
+                        <TableReuse>{item.itemname}</TableReuse>
+                        <TableReuse>{item.consultantname}</TableReuse>
+                        <TableReuse>{item.outtransactionid}</TableReuse>
+                        <TableReuse>{item.batchno}</TableReuse>
+                        <TableReuse>{item.qty}</TableReuse>
+                        <TableReuse>{item.salerate?.toFixed(2)}</TableReuse>
+                        <TableReuse>{item.expirydate}</TableReuse>
+                        <TableReuse>{item.totalamt?.toFixed(2)}</TableReuse>
+                        <TableReuse>{item.storename}</TableReuse>
+                        <TableReuse>{item.issuedby}</TableReuse>
+                      </tr>
+                    ))
                 ) : (
                   <tr>
                     <TableReuse colSpan={12}>No records found.</TableReuse>
