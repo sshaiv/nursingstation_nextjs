@@ -70,7 +70,7 @@ export default function ButtonGrid({ visitid, gssuhid, empid ,patientData}) {
             setShowModal(true);
         }
         else if (label === "Nutritional Assessment") {
-            setModalContent(<NutritionalAssessmentProfile visitid={visitid} gssuhid={gssuhid} empid={empid} />);
+            setModalContent(<NutritionalAssessmentProfile visitid={visitid} gssuhid={gssuhid} empid={empid} patientData={patientData} />);
             setShowModal(true);
         }
         else if (label === "xyz") {

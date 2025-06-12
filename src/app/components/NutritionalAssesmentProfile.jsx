@@ -8,12 +8,13 @@ import API_ENDPOINTS from "../constants/api_url";
 import axios from "axios";
 import Select from "react-select";
 import DateTimeInput from "../common/DateTimeInput";
-import { getCurrentDateTime } from "../utils/dateUtils";
+import { getCurrentDateTime ,getCurrentDate } from "../utils/dateUtils";
 
 export default function NutritionalAssessmentProfile({
   visitid,
   gssuhid,
   empid,
+  patientData,
 }) {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [time, setTime] = useState("");
@@ -158,61 +159,100 @@ export default function NutritionalAssessmentProfile({
     fetchData();
   }, []);
 
-  const handleSelect = (name, { CID, CNAME }) => {
-    console.log(`${name} selected: CID = ${CID}, CNAME = ${CNAME}`);
-    switch (name) {
-      case "foodHabit":
-        setFoodHabit(CNAME);
-        break;
-      case "foodIntake":
-        setFoodIntake(CNAME);
-        break;
-      case "weightChange":
-        setOverallWeightChange(CNAME);
-        break;
-      case "nutritionalStatus":
-        setNutritionalStatus(CNAME);
-        break;
-      case "nutritionalRisk":
-        setCvsResponse(CNAME);
-        break;
-      default:
-        break;
-    }
-  };
+  const [isAlcohol, setIsAlcohol] = useState(false);
+  const [isSmoking, setIsSmoking] = useState(false);
+  const [isTobaccoChewing, setIsTobaccoChewing] = useState(false);
+  const [isNone, setIsNone] = useState(false);
 
-  const derivedJson = {
-    visitid,
-    gssuhid,
-    empid,
-    date: getCurrentDateTime(),
-    foodhabit: foodHabit,
-    foodallergy: foodAllergy,
-    foodallergyspecify: foodAllergySpecify,
-    pasthistory: pastHistory,
-    presentmedicalillness: presentMedicalIllness,
-    foodintake: foodIntake,
-    weight: overallWeightChange,
-    foodnutritional: nutritionalStatus,
-    isdm: isDM ? 1 : 0,
-    ishypertension: isHypertension ? 1 : 0,
-    isrenal: isRenal ? 1 : 0,
-    iscardiac: isCardiac ? 1 : 0,
-    isrespiratorydisease: isRespiratory ? 1 : 0,
-    isliverdisease: isLiver ? 1 : 0,
-    isotherdisease: isOtherDisease ? 1 : 0,
-    ishyperacidity: isHyperacidity ? 1 : 0,
-    isconstipation: isConstipation ? 1 : 0,
-    isnausea: isNausea ? 1 : 0,
-    isdiarrhoea: isDiarrhoea ? 1 : 0,
-    isvomiting: isVomiting ? 1 : 0,
-    isanorexia: isAnorexia ? 1 : 0,
-    isflatulence: isFlatulence ? 1 : 0,
-    isoralulcer: isOralUlcer ? 1 : 0,
-    issignsnone: isSignsNone ? 1 : 0,
-    isothercomplaint: isOtherComplaint ? 1 : 0,
-    dietplan: dietPlan,
-  };
+const [foodHabitId, setFoodHabitId] = useState(null); 
+const [foodIntakeId, setFoodIntakeId] = useState(null); 
+const [foodAllergyId, setFoodAllergyId] = useState(null); 
+const [weightChangeId, setWeightChangeId] = useState(null); 
+const [nutritionalStatusId, setNutritionalStatusId] = useState(null); 
+const [cvsResponseId, setCvsResponseId] = useState(null);
+
+const handleSelect = (name, { CID, CNAME }) => {
+  console.log(`${name} selected: CID = ${CID}, CNAME = ${CNAME}`);
+  switch (name) {
+    case "foodHabit":
+      setFoodHabit(CNAME);
+      setFoodHabitId(CID); 
+      break;
+    case "foodAllergy":
+      setFoodAllergyId(CNAME);
+      setFoodAllergyId(CID);
+      break;
+    case "foodIntake":
+      setFoodIntake(CNAME);
+      setFoodIntakeId(CID);
+      break;
+    case "weightChange":
+      setOverallWeightChange(CNAME);
+      setWeightChangeId(CID);
+      break;
+    case "nutritionalStatus":
+      setNutritionalStatus(CNAME);
+      setNutritionalStatusId(CID);
+      break;
+    case "nutritionalRisk":
+      setCvsResponse(CNAME);
+      setCvsResponseId(CID);
+      break;
+    default:
+      break;
+  }
+};
+
+const derivedJson = {
+  rowid: 0,
+  gssuhid: patientData.gssuhid,
+  visitid: patientData.visitid,
+  date: getCurrentDate,
+  foodhabitsid: foodHabitId, 
+  foodallergyid: foodAllergyId, 
+  foodallergyspecify: foodAllergySpecify,
+  otherhabitsscore: 2,
+  isalcohol: isAlcohol ? 1 : 0,
+  issmoking: isSmoking ? 1 : 0,
+  istobaccochewing: isTobaccoChewing ? 1 : 0,
+  isotherhabitsnone: isNone ? 1 : 0,
+  pasthistory: pastHistory,
+  isdm: isDM ? 1 : 0,
+  ishypertension: isHypertension ? 1 : 0,
+  isrenal: isRenal ? 1 : 0,
+  iscardiac: isCardiac ? 1 : 0,
+  isrespiratorydisease: isRespiratory ? 1 : 0,
+  isliverdisease: isLiver ? 1 : 0,
+  isotherdisease: isOtherDisease ? 1 : 0,
+  presentmedicalillness: presentMedicalIllness,
+  nutritionalassessmentscore: 2,
+  foodintakeid: foodIntakeId, // Use the ID for food intake
+  overallweightchangeid: weightChangeId, // Use the ID for weight change
+  overallnutritionalstatusid: nutritionalStatusId, // Use the ID for nutritional status
+  nutritionalsignssymptomscore: 2,
+  ishyperacidity: isHyperacidity ? 1 : 0,
+  isconstipation: isConstipation ? 1 : 0,
+  isnausea: isNausea ? 1 : 0,
+  isdiarrhoea: isDiarrhoea ? 1 : 0,
+  isvomiting: isVomiting ? 1 : 0,
+  isanorexia: isAnorexia ? 1 : 0,
+  isflatulence: isFlatulence ? 1 : 0,
+  isoralulcer: isOralUlcer ? 1 : 0,
+  issignsnone: isSignsNone ? 1 : 0,
+  isothercomplaint: isOtherComplaint ? 1 : 0,
+  dietplan: dietPlan,
+  entempid: patientData.empid,
+  entdatetime: patientData.entdatetime,
+  entwsname: patientData.wsname,
+  modifyempid: patientData.modifyempid,
+  modifydatetime: patientData.modifydatetime,
+  modifywsname: patientData.wsname,
+  locationid: patientData.locationid,
+  financialyear: patientData.financialyear,
+};
+
+
+  console.log("update", derivedJson);
 
   const handleSave = async () => {
     try {
@@ -226,7 +266,6 @@ export default function NutritionalAssessmentProfile({
       alert("Failed to save data. Please try again.");
     }
   };
-  const [isNone, setIsNone] = useState(false);
 
   return (
     <div className="p-4 bg-purple-50 min-h-screen text-sm text-gray-700">
@@ -236,22 +275,22 @@ export default function NutritionalAssessmentProfile({
         {/* Personal Details */}
         <H3 className="text-xs">📋 Personal Details</H3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             <Label className="w-24 text-[10px]">Height</Label>
             <input
               type="number"
               placeholder="cms"
               className="border p-1 rounded w-full text-[10px]"
             />
-          </div>
-          <div className="flex items-center gap-2">
+          </div> */}
+          {/* <div className="flex items-center gap-2">
             <Label className="w-24 text-[10px]">Weight</Label>
             <input
               type="number"
               placeholder="kgs"
               className="border p-1 rounded w-full text-[10px]"
             />
-          </div>
+          </div> */}
           <div className="flex items-center gap-2">
             <Label className="w-40 text-[10px]">Body Mass Index</Label>
             <input
@@ -330,15 +369,22 @@ export default function NutritionalAssessmentProfile({
           </div>
 
           <div className="flex items-center gap-6 flex-wrap mt-1">
-            {["Alcohol", "Smoking", "Tobacco Chewing", "None"].map((habit) => (
-              <Label
-                key={habit}
-                className="flex items-center gap-1 text-[10px]"
-              >
-                <input type="checkbox" />
-                {habit}
-              </Label>
-            ))}
+           {["Alcohol", "Smoking", "Tobacco Chewing", "None"].map((habit) => (
+  <Label key={habit} className="flex items-center gap-1 text-[10px]">
+    <input
+      type="checkbox"
+      checked={habit === "Alcohol" ? isAlcohol : habit === "Smoking" ? isSmoking : habit === "Tobacco Chewing" ? isTobaccoChewing : isNone}
+      onChange={() => {
+        if (habit === "Alcohol") setIsAlcohol(!isAlcohol);
+        if (habit === "Smoking") setIsSmoking(!isSmoking);
+        if (habit === "Tobacco Chewing") setIsTobaccoChewing(!isTobaccoChewing);
+        if (habit === "None") setIsNone(!isNone);
+      }}
+    />
+    {habit}
+  </Label>
+))}
+
           </div>
         </div>
 
