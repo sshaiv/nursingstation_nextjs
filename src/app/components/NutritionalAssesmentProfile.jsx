@@ -37,7 +37,6 @@ export default function NutritionalAssessmentProfile({
   const [historyGivenBy, setHistoryGivenBy] = useState("");
   const clearSignature = () => sigCanvasRef.current?.clear();
   const sigCanvasRef = useRef(null);
-  // Diet Plan text
   const [dietPlan, setDietPlan] = useState("");
 
   const [foodAllergy, setFoodAllergy] = useState("");
@@ -58,10 +57,8 @@ export default function NutritionalAssessmentProfile({
   const [isSignsNone, setIsSignsNone] = useState(false);
   const [isOtherComplaint, setIsOtherComplaint] = useState(false);
 
-  // Add this state at the beginning of your component
-  const [relationOptions, setRelationOptions] = useState([]); // Define the state for relation options
+  const [relationOptions, setRelationOptions] = useState([]);
 
-  // Update the fetchRelationData function to use setRelationOptions
   useEffect(() => {
     const fetchRelationData = async () => {
       try {
@@ -83,7 +80,6 @@ export default function NutritionalAssessmentProfile({
     fetchRelationData();
   }, []);
 
-  // Fetch data from API on mount
   useEffect(() => {
     const fetchNutritionalData = async () => {
       try {
@@ -95,7 +91,6 @@ export default function NutritionalAssessmentProfile({
           const d = data.Table[0];
 
           setSelectedDate(new Date(d.date));
-          // Time string extraction (HH:mm)
           if (d.date) {
             const dt = new Date(d.date);
             setTime(dt.toTimeString().slice(0, 5));
@@ -106,7 +101,6 @@ export default function NutritionalAssessmentProfile({
           setFoodAllergySpecify(d.foodallergyspecify || "");
           setPastHistory(d.pasthistory || "");
           setPresentMedicalIllness(d.presentmedicalillness || "");
-
           setFoodIntake(d.foodintake || "");
           setOverallWeightChange(d.weight || "");
           setNutritionalStatus(d.foodnutritional || "");
@@ -139,71 +133,87 @@ export default function NutritionalAssessmentProfile({
     fetchNutritionalData();
   }, [visitid, gssuhid, empid]);
 
-  // Fetch relation data for select options
+  const [weightChangeOptions, setWeightChangeOptions] = useState([]);
+  const [yesNoOptions, setYesNoOptions] = useState([]);
+  const [nutritionalStatusOptions, setNutritionalStatusOptions] = useState([]);
+  const [foodIntakeOptions, setFoodIntakeOptions] = useState([]);
+  const [foodHabitOptions, setFoodHabitOptions] = useState([]);
+
   useEffect(() => {
-    const fetchRelationData = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get(API_ENDPOINTS.getAllHeadload);
-        const parsedData = JSON.parse(response.data);
-        const data = parsedData.Table;
-        if (data && Array.isArray(data)) {
-          setRelationOptions(
-            data.map((item) => ({
-              value: item.CID,
-              label: item.CNAME,
-            }))
-          );
-        }
+        const response = await axios.get(
+          "https://doctorapi.medonext.com/Api/HMS/GetAllHeadload"
+        );
+        const data = JSON.parse(response.data);
+        setWeightChangeOptions(data.Table2);
+        setYesNoOptions(data.Table3);
+        setNutritionalStatusOptions(data.Table4);
+        setFoodIntakeOptions(data.Table5);
+        setFoodHabitOptions(data.Table6);
       } catch (error) {
-        console.error("Error fetching relation data:", error);
+        console.error("Error fetching data:", error);
       }
     };
-    fetchRelationData();
+    fetchData();
   }, []);
 
- console.log("Food Habit:", foodHabit);
-console.log("Food Allergy:", foodAllergy);
-console.log("Past History:", pastHistory);
+  const handleSelect = (name, { CID, CNAME }) => {
+    console.log(`${name} selected: CID = ${CID}, CNAME = ${CNAME}`);
+    switch (name) {
+      case "foodHabit":
+        setFoodHabit(CNAME);
+        break;
+      case "foodIntake":
+        setFoodIntake(CNAME);
+        break;
+      case "weightChange":
+        setOverallWeightChange(CNAME);
+        break;
+      case "nutritionalStatus":
+        setNutritionalStatus(CNAME);
+        break;
+      case "nutritionalRisk":
+        setCvsResponse(CNAME);
+        break;
+      default:
+        break;
+    }
+  };
 
+  const derivedJson = {
+    visitid,
+    gssuhid,
+    empid,
+    date: getCurrentDateTime(),
+    foodhabit: foodHabit,
+    foodallergy: foodAllergy,
+    foodallergyspecify: foodAllergySpecify,
+    pasthistory: pastHistory,
+    presentmedicalillness: presentMedicalIllness,
+    foodintake: foodIntake,
+    weight: overallWeightChange,
+    foodnutritional: nutritionalStatus,
+    isdm: isDM ? 1 : 0,
+    ishypertension: isHypertension ? 1 : 0,
+    isrenal: isRenal ? 1 : 0,
+    iscardiac: isCardiac ? 1 : 0,
+    isrespiratorydisease: isRespiratory ? 1 : 0,
+    isliverdisease: isLiver ? 1 : 0,
+    isotherdisease: isOtherDisease ? 1 : 0,
+    ishyperacidity: isHyperacidity ? 1 : 0,
+    isconstipation: isConstipation ? 1 : 0,
+    isnausea: isNausea ? 1 : 0,
+    isdiarrhoea: isDiarrhoea ? 1 : 0,
+    isvomiting: isVomiting ? 1 : 0,
+    isanorexia: isAnorexia ? 1 : 0,
+    isflatulence: isFlatulence ? 1 : 0,
+    isoralulcer: isOralUlcer ? 1 : 0,
+    issignsnone: isSignsNone ? 1 : 0,
+    isothercomplaint: isOtherComplaint ? 1 : 0,
+    dietplan: dietPlan,
+  };
 
-const derivedJson = {
-  visitid,
-  gssuhid,
-  empid,
-  date: getCurrentDateTime(),
-  foodhabit: foodHabit,
-  foodallergy: foodAllergy,
-  foodallergyspecify: foodAllergySpecify,
-  pasthistory: pastHistory,
-  presentmedicalillness: presentMedicalIllness,
-  foodintake: foodIntake,
-  weight: overallWeightChange,
-  foodnutritional: nutritionalStatus,
-  isdm: isDM ? 1 : 0,
-  ishypertension: isHypertension ? 1 : 0,
-  isrenal: isRenal ? 1 : 0,
-  iscardiac: isCardiac ? 1 : 0,
-  isrespiratorydisease: isRespiratory ? 1 : 0,
-  isliverdisease: isLiver ? 1 : 0,
-  isotherdisease: isOtherDisease ? 1 : 0,
-  ishyperacidity: isHyperacidity ? 1 : 0,
-  isconstipation: isConstipation ? 1 : 0,
-  isnausea: isNausea ? 1 : 0,
-  isdiarrhoea: isDiarrhoea ? 1 : 0,
-  isvomiting: isVomiting ? 1 : 0,
-  isanorexia: isAnorexia ? 1 : 0,
-  isflatulence: isFlatulence ? 1 : 0,
-  isoralulcer: isOralUlcer ? 1 : 0,
-  issignsnone: isSignsNone ? 1 : 0,
-  isothercomplaint: isOtherComplaint ? 1 : 0,
-  dietplan: dietPlan,
-};
-
-console.log("Derived JSON:", derivedJson);
-
-  
-
-  // Save handler
   const handleSave = async () => {
     try {
       const response = await axios.post(
@@ -216,312 +226,213 @@ console.log("Derived JSON:", derivedJson);
       alert("Failed to save data. Please try again.");
     }
   };
-
-  useEffect(() => {
-    const fetchRelationData = async () => {
-      try {
-        const response = await axios.get(API_ENDPOINTS.getAllHeadload);
-        const parsedData = JSON.parse(response.data);
-        const data = parsedData.Table;
-        if (data && Array.isArray(data)) setRelationData(data);
-      } catch (error) {
-        console.error("Error fetching relation data:", error);
-      }
-    };
-    fetchRelationData();
-  }, []);
-
-  // const [foodHabit, setFoodHabit] = useState(""); // State for food habit
-    const [routeOfFeeding, setRouteOfFeeding] = useState(""); 
-
-    
+  const [isNone, setIsNone] = useState(false);
 
   return (
     <div className="p-4 bg-purple-50 min-h-screen text-sm text-gray-700">
       <ModalHeading title="Nutritional Assessment Profile" />
       <hr className="border-t mt-6 mb-2 border-gray-300" />
-      {/* Personal History */}
-      <div className="space-y-3">
-        <div className="flex items-center gap-4 mb-3 flex-wrap">
-          <H3>📋 Personal History</H3>
-          <Label>
+      <div className="space-y-4 text-[10px] text-gray-700">
+        {/* Personal Details */}
+        <H3 className="text-xs">📋 Personal Details</H3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="flex items-center gap-2">
+            <Label className="w-24 text-[10px]">Height</Label>
             <input
-              type="checkbox"
-              // checked={isAlcohol}
-              // onChange={() => setIsAlcohol(!isAlcohol)}
+              type="number"
+              placeholder="cms"
+              className="border p-1 rounded w-full text-[10px]"
             />
-            Alcohol
-          </Label>
-          <Label>
+          </div>
+          <div className="flex items-center gap-2">
+            <Label className="w-24 text-[10px]">Weight</Label>
             <input
-              type="checkbox"
-              // checked={isTobacco}
-              // onChange={() => setIsTobacco(!isTobacco)}
+              type="number"
+              placeholder="kgs"
+              className="border p-1 rounded w-full text-[10px]"
             />
-            Tobacco
-          </Label>
-          <Label>
+          </div>
+          <div className="flex items-center gap-2">
+            <Label className="w-40 text-[10px]">Body Mass Index</Label>
             <input
-              type="checkbox"
-              // checked={isTobacco}
-              // onChange={() => setIsTobacco(!isTobacco)}
+              type="text"
+              placeholder="Kg/M2"
+              className="border p-1 rounded w-full text-[10px]"
             />
-            Smoking
-          </Label>
-          <Label>
-            <input
-              type="checkbox"
-              // checked={isTobacco}
-              // onChange={() => setIsTobacco(!isTobacco)}
-            />
-            None
-          </Label>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Food Habit */}
-          {/* Food Habit Section */}
-            <div className="flex items-center gap-2">
-                <Label>Food Habit</Label>
-                <Label>
-                    Veg
-                    <input
-                        name="foodHabit"
-                        type="radio"
-                        className="ml-1"
-                        value="Veg"
-                        checked={foodHabit === 'Veg'}
-                        onChange={() => setFoodHabit('Veg')}
-                    />
-                </Label>
-                 <Label>
-                    Non-Veg
-                    <input
-                        name="foodHabit"
-                        type="radio"
-                        className="ml-1"
-                        value="Non-Veg"
-                        checked={foodHabit === 'Non-Veg'}
-                        onChange={() => setFoodHabit('Non-Veg')}
-                    />
-                </Label>
-            </div>
-          {/* <div className="flex items-center gap-2">
-            <Label>Food Habit</Label>
-            <Label>
-              Veg
-              <input
-                name="foodHabit"
-                type="radio"
-                className="ml-1"
-                checked={cvsResponse === true}
-                onChange={() => setCvsResponse(true)}
-              />
-            </Label>
-            <Label>
-              Non-Veg
-              <input
-                name="foodHabit"
-                type="radio"
-                className="ml-1"
-                checked={cvsResponse === false}
-                onChange={() => setCvsResponse(false)}
-              />
-            </Label>
-          </div> */}
-
-          {/* Clinical Data & Other Habits - moved here */}
-          <div className="flex items-center gap-2 w-full">
-            {/* Clinical Data */}
-            <div className="flex items-center gap-2 w-1/2">
-              <Label>Clinical Data</Label>
-              <Select
-                className="w-full text-sm"
-                styles={{
-                  menu: (base) => ({ ...base, fontSize: "12px" }),
-                  menuList: (base) => ({
-                    ...base,
-                    maxHeight: "80px",
-                    overflowY: "auto",
-                  }),
-                  control: (base) => ({
-                    ...base,
-                    minHeight: "30px",
-                    fontSize: "12px",
-                  }),
-                  indicatorsContainer: (base) => ({ ...base, height: "30px" }),
-                  dropdownIndicator: (base) => ({ ...base, padding: "4px" }),
-                }}
-                options={relationOptions}
-                value={relationOptions.find((opt) => opt.value === relation)}
-                onChange={(selected) => setRelation(selected.value)}
-                placeholder="Relation"
-                isSearchable
-                filterOption={(option, inputValue) =>
-                  option.label
-                    .toLowerCase()
-                    .startsWith(inputValue.toLowerCase())
-                }
-              />
-            </div>
-
-            {/* Other Habits */}
-            <div className="flex items-center gap-2 w-1/2">
-              <Label>Other Habits</Label>
-              <Select
-                className="w-full text-sm"
-                styles={{
-                  menu: (base) => ({ ...base, fontSize: "12px" }),
-                  menuList: (base) => ({
-                    ...base,
-                    maxHeight: "80px",
-                    overflowY: "auto",
-                  }),
-                  control: (base) => ({
-                    ...base,
-                    minHeight: "30px",
-                    fontSize: "12px",
-                  }),
-                  indicatorsContainer: (base) => ({ ...base, height: "30px" }),
-                  dropdownIndicator: (base) => ({ ...base, padding: "4px" }),
-                }}
-                options={relationOptions}
-                value={relationOptions.find((opt) => opt.value === relation1)}
-                onChange={(selected) => setRelation1(selected.value)}
-                placeholder="Relation"
-                isSearchable
-                filterOption={(option, inputValue) =>
-                  option.label
-                    .toLowerCase()
-                    .startsWith(inputValue.toLowerCase())
-                }
-              />
-            </div>
+        {/* Food Habits */}
+        <div className="flex items-center gap-4 flex-wrap">
+          <Label className="w-28 text-[10px]">Food Habits</Label>
+          <div className="flex gap-4">
+            {foodHabitOptions.map((option) => (
+              <label
+                key={option.CID}
+                className="flex items-center gap-1 cursor-pointer text-[10px]"
+              >
+                <input
+                  type="radio"
+                  name="foodHabit"
+                  value={option.CNAME}
+                  onChange={() => handleSelect("foodHabit", option)}
+                />
+                <span className="text-[10px]">{option.CNAME}</span>
+              </label>
+            ))}
           </div>
-          {/* Body Mass Index */}
-          <div className="flex items-center gap-2">
-            <Label>Body Mass Index</Label>
+        </div>
 
-            <ReusableTextareaField
-              id="organomegaly"
-              className="border-1 w-full"
-              label="kg/m2"
-              // value={organomegaly}
-              // onChange={(e) => setOrganomegaly(e.target.value)}
+        {/* Food Allergy */}
+        <div className="flex items-center gap-4 flex-wrap">
+          <Label className="w-28 text-[10px]">Food Allergy</Label>
+          <div className="flex gap-4">
+            {yesNoOptions.map((option) => (
+              <label
+                key={option.CID}
+                className="flex items-center gap-1 cursor-pointer text-[10px]"
+              >
+                <input
+                  type="radio"
+                  name="foodAllergy"
+                  value={option.CNAME}
+                  onChange={() => handleSelect("foodAllergy", option)}
+                />
+                <span className="text-[10px]">{option.CNAME}</span>
+              </label>
+            ))}
+          </div>
+          <input
+            type="text"
+            placeholder="If yes, specify"
+            className="border p-1 rounded w-64 text-[10px]"
+          />
+        </div>
+
+        {/* Other Habits */}
+        <div>
+          <div className="flex items-center gap-4 flex-wrap">
+            <Label className="whitespace-nowrap text-[10px] flex items-center gap-1">
+              <H3 className="text-[10px] font-semibold m-0 inline">
+                Other Habits
+              </H3>
+              <span>
+                (Any 1 = score 1, 2–3 = score 2, {">"}3 = score 3, None = score
+                0)
+              </span>
+            </Label>
+
+            <input
+              type="text"
+              placeholder=""
+              className="border p-1 rounded w-64 text-[10px]"
             />
           </div>
 
-          {/* Food Allergy */}
+          <div className="flex items-center gap-6 flex-wrap mt-1">
+            {["Alcohol", "Smoking", "Tobacco Chewing", "None"].map((habit) => (
+              <Label
+                key={habit}
+                className="flex items-center gap-1 text-[10px]"
+              >
+                <input type="checkbox" />
+                {habit}
+              </Label>
+            ))}
+          </div>
+        </div>
 
-          <div className="flex items-center gap-4 w-full mb-2">
-            <div className="flex items-center gap-2">
-              <Label>Food Allergy</Label>
-              <Label>
-                Yes
-                <input
-                  name="foodAllergy"
-                  type="radio"
-                  className="ml-1"
-                  value="yes"
-                  checked={foodAllergy === "yes"}
-                  onChange={() => setFoodAllergy("yes")}
-                />
-              </Label>
-              <Label>
-                No
-                <input
-                  name="foodAllergy"
-                  type="radio"
-                  className="ml-1"
-                  value="no"
-                  checked={foodAllergy === "no"}
-                  onChange={() => setFoodAllergy("no")}
-                />
-              </Label>
-            </div>
-            {foodAllergy === "yes" && (
-              <ReusableTextareaField
-                id="foodAllergySpecify"
-                className="border-1 w-full"
-                label="If yes, please specify"
-                value={foodAllergySpecify}
-                onChange={(e) => setFoodAllergySpecify(e.target.value)}
-              />
-            )}
+        {/* Clinical Data */}
+        <div>
+          <div className="flex items-center gap-4 flex-wrap">
+            <Label className="whitespace-nowrap text-[10px] flex items-center gap-1">
+              <H3 className="text-[10px] font-semibold m-0 inline">
+                Clinical Data
+              </H3>
+              <span>
+                (Any 1 = score 1, 2–3 = score 2, {">"}3 = score 3, None = score
+                0)
+              </span>
+            </Label>
+
+            <input
+              type="text"
+              placeholder=""
+              className="border p-1 rounded w-64 text-[10px]"
+            />
           </div>
         </div>
       </div>
 
-      <div className="mt-4 space-y-4">
-        <div className="flex flex-wrap items-center gap-4 text-xs">
-          <H3>📋 Past History</H3>
-          <Label>
+      <div className="mt-4 space-y-2 text-[10px] text-gray-700">
+        <div className="flex flex-wrap items-center gap-3">
+          <H3 className="text-xs">📋 Past History</H3>
+          <Label className="flex items-center gap-1">
             <input
               type="checkbox"
-              className="mr-1"
+              className="text-[10px]"
               checked={isDM}
               onChange={() => setIsDM(!isDM)}
-            />{" "}
+            />
             DM
           </Label>
-          <Label>
+          <Label className="flex items-center gap-1">
             <input
               type="checkbox"
-              className="mr-1"
+              className="text-[10px]"
               checked={isHypertension}
               onChange={() => setIsHypertension(!isHypertension)}
-            />{" "}
+            />
             Hypertension
           </Label>
-          <Label>
+          <Label className="flex items-center gap-1">
             <input
               type="checkbox"
-              className="mr-1"
+              className="text-[10px]"
               checked={isRenal}
               onChange={() => setIsRenal(!isRenal)}
-            />{" "}
+            />
             Renal
           </Label>
-          <Label>
+          <Label className="flex items-center gap-1">
             <input
               type="checkbox"
-              className="mr-1"
+              className="text-[10px]"
               checked={isCardiac}
               onChange={() => setIsCardiac(!isCardiac)}
-            />{" "}
+            />
             Cardiac
           </Label>
-          <Label>
+          <Label className="flex items-center gap-1">
             <input
               type="checkbox"
-              className="mr-1"
+              className="text-[10px]"
               checked={isRespiratory}
               onChange={() => setIsRespiratory(!isRespiratory)}
-            />{" "}
+            />
             Respiratory Disease
           </Label>
-          <Label>
+          <Label className="flex items-center gap-1">
             <input
               type="checkbox"
-              className="mr-1"
+              className="text-[10px]"
               checked={isLiver}
               onChange={() => setIsLiver(!isLiver)}
-            />{" "}
+            />
             Liver Disease
           </Label>
-          <Label>
+          <Label className="flex items-center gap-1">
             <input
               type="checkbox"
-              className="mr-1"
+              className="text-[10px]"
               checked={isOtherDisease}
               onChange={() => setIsOtherDisease(!isOtherDisease)}
-            />{" "}
+            />
             Other Disease
           </Label>
         </div>
       </div>
 
-      {/* Present Medical illness */}
       <div className="mt-4 flex items-start gap-4">
         <H3>Present Medical illness</H3>
         <div className="flex-1">
@@ -529,49 +440,44 @@ console.log("Derived JSON:", derivedJson);
             id="provisionaldiagnosis"
             className="border-1"
             label="🖊️"
-
-            //   value={provisionaldiagnosis} onChange={(e) => setProvisionaldiagnosis(e.target.value)}
           />
         </div>
       </div>
-      <hr className="border-t mt-6 mb-2 border-gray-300" />
 
-      {/* Daily Nutritional Assessment */}
+      {/* <hr className="border-t mt-6 mb-2 border-gray-300" />
       <div className="space-y-4">
         <H3>✅ Daily Nutritional Assessment</H3>
 
         <div className="flex flex-col md:flex-row gap-4">
-          {/* Left Column */}
           <div className="flex flex-col gap-3 w-full md:w-1/2">
-
-
-             {/* Route of Feeding Section */}
             <div className="flex items-center gap-2">
-                <Label>Route of Feeding</Label>
-                <Label>
-                    Oral
-                    <input
-                        name="routeOfFeeding"
-                        type="radio"
-                        className="ml-1"
-                        value="Oral"
-                        checked={routeOfFeeding === 'Oral'}
-                        onChange={() => setRouteOfFeeding('Oral')}
-                    />
-                </Label> <Label>
-                    Enteral (RT)
-                    <input
-                        name="routeOfFeeding"
-                        type="radio"
-                        className="ml-1"
-                        value="Enteral"
-                        checked={routeOfFeeding === 'Enteral'}
-                        onChange={() => setRouteOfFeeding('Enteral')}
-                    />
-                </Label>
+              <Label>Route of Feeding</Label>
+              <Label>
+                Oral
+                <input
+                  name="routeOfFeeding"
+                  type="radio"
+                  className="ml-1"
+                  value="Oral"
+                  onChange={() =>
+                    handleSelect("routeOfFeeding", { CID: 1, CNAME: "Oral" })
+                  } 
+                />
+              </Label>{" "}
+              <Label>
+                Enteral (RT)
+                <input
+                  name="routeOfFeeding"
+                  type="radio"
+                  className="ml-1"
+                  value="Enteral"
+                  onChange={() =>
+                    handleSelect("routeOfFeeding", { CID: 2, CNAME: "Enteral" })
+                  } 
+                />
+              </Label>
             </div>
 
-            {/* Diet */}
             <ReusableTextareaField
               className="border-2 text-[10px]"
               id="diet"
@@ -582,7 +488,6 @@ console.log("Derived JSON:", derivedJson);
               onChange={(e) => setHistoryGivenBy(e.target.value)}
             />
 
-            {/* Remark */}
             <ReusableTextareaField
               className="border-2 text-[10px]"
               id="remark"
@@ -593,191 +498,116 @@ console.log("Derived JSON:", derivedJson);
               onChange={(e) => setHistoryGivenBy(e.target.value)}
             />
           </div>
-
-          {/* Right Column - Signature Box */}
-          {/* <div className="border border-gray-800 w-full md:w-1/2 h-[90px] mt-5" /> */}
         </div>
 
-        {/* Date & Time and Buttons - Positioned Below Both Columns */}
-        {/* <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div className="w-full md:w-1/2">
-            <DateTimeInput
-              selectedDate={selectedDate}
-              onDateChange={setSelectedDate}
-              time={time}
-              onTimeChange={(e) => setTime(e.target.value)}
-              label="Date & Time"
-            />
-          </div>
-          <div className="flex gap-2">
-            <button
-              onClick={clearSignature}
-              className="bg-purple-100 text-purple-800 px-2 py-1 rounded text-[10px]"
-            >
-              Clear
-            </button>
-            <button className="bg-purple-100 text-purple-800 px-2 py-1 rounded text-[10px]">
-              Show
-            </button>
-          </div>
-        </div> */}
-      </div>
+      
+      </div> 
+      <hr className="border-t mt-6 mb-2 border-gray-300" />*/}
 
-      <hr className="border-t mt-6 mb-2 border-gray-300" />
-      {/* Personal History */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Nutritional Assessment */}
-        <div className="flex items-center gap-2 w-full">
-          <div className="flex items-center gap-2 w-1/2">
-            <Label>Nutritional Assessment</Label>
-            <Select
-              className="w-full text-sm"
-              styles={{
-                menu: (base) => ({ ...base, fontSize: "12px" }),
-                menuList: (base) => ({
-                  ...base,
-                  maxHeight: "80px",
-                  overflowY: "auto",
-                }),
-                control: (base) => ({
-                  ...base,
-                  minHeight: "30px",
-                  fontSize: "12px",
-                }),
-                indicatorsContainer: (base) => ({ ...base, height: "30px" }),
-                dropdownIndicator: (base) => ({ ...base, padding: "4px" }),
-              }}
-              options={relationOptions}
-              value={relationOptions.find((opt) => opt.value === relation2)}
-              onChange={(selected) => setRelation2(selected.value)}
-              placeholder="Relation"
-              isSearchable
-              filterOption={(option, inputValue) =>
-                option.label.toLowerCase().startsWith(inputValue.toLowerCase())
-              }
-            />
-          </div>
-        </div>
+      <div className="rounded-md space-y-4 text-[10px] text-gray-700">
+        <H3 className="text-xs">📋 Nutritional Assessment</H3>
 
         {/* Food Intake */}
-        <div className="flex items-center gap-4 w-full mb-2">
-          <div className="flex items-center gap-2">
-            <Label>Food Intake --</Label>
-            {["Normal", "Decreased", "Increased"].map((label) => (
-              <Label key={label}>
+        <div>
+          <Label className="block mb-1">Food Intake</Label>
+          <div className="flex flex-wrap gap-4">
+            {foodIntakeOptions.map((option) => (
+              <label
+                key={option.CID}
+                className="flex items-center gap-1 cursor-pointer"
+              >
                 <input
-                  name="foodIntake"
                   type="radio"
-                  className="ml-1"
-                  checked={cvsResponse === label}
-                  onChange={() => setCvsResponse(label)}
-                />{" "}
+                  name="foodIntake"
+                  value={option.CNAME}
+                  onChange={() => handleSelect("foodIntake", option)}
+                  className="text-[10px]"
+                />
+                <span>{option.CNAME}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/* Weight Change */}
+        <div>
+          <Label className="block mb-1">
+            Overall weight change (over past 3 months)
+          </Label>
+          <div className="flex flex-wrap gap-4">
+            {weightChangeOptions.map((option) => (
+              <label
+                key={option.CID}
+                className="flex items-center gap-1 cursor-pointer"
+              >
+                <input
+                  type="radio"
+                  name="weightChange"
+                  value={option.CNAME}
+                  onChange={() => handleSelect("weightChange", option)}
+                  className="text-[10px]"
+                />
+                <span>{option.CNAME}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/* Nutritional Status */}
+        <div>
+          <Label className="block mb-1">
+            Overall nutritional status (physical signs)
+          </Label>
+          <div className="flex flex-wrap gap-4">
+            {nutritionalStatusOptions.map((option) => (
+              <label
+                key={option.CID}
+                className="flex items-center gap-1 cursor-pointer"
+              >
+                <input
+                  type="radio"
+                  name="nutritionalStatus"
+                  value={option.CNAME}
+                  onChange={() => handleSelect("nutritionalStatus", option)}
+                  className="text-[10px]"
+                />
+                <span>{option.CNAME}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/* Nutritional Signs / Symptoms */}
+        <div>
+          <Label className="block mb-1">Nutritional Signs / Symptoms</Label>
+          <div className="flex flex-wrap items-center gap-4">
+            {[
+              ["Hyperacidity", isHyperacidity, setIsHyperacidity],
+              ["Constipation", isConstipation, setIsConstipation],
+              ["Nausea", isNausea, setIsNausea],
+              ["Diarrhoea", isDiarrhoea, setIsDiarrhoea],
+              ["Vomiting", isVomiting, setIsVomiting],
+              ["Anorexia", isAnorexia, setIsAnorexia],
+              ["Flatulence", isFlatulence, setIsFlatulence],
+              ["Oral ulcer", isOralUlcer, setIsOralUlcer],
+              ["Other Complaint", isOtherComplaint, setIsOtherComplaint],
+              ["None", isNone, setIsNone],
+            ].map(([label, value, setValue]) => (
+              <Label key={label} className="flex items-center gap-1">
+                <input
+                  type="checkbox"
+                  className="mr-1 text-[10px]"
+                  checked={value}
+                  onChange={() => setValue(!value)}
+                />
                 {label}
               </Label>
             ))}
           </div>
         </div>
-
-        {/* Overall Weight Change */}
-        <div className="flex flex-col items-start gap-2 w-full mb-2">
-          <Label>Overall weight change (over past 3 months) --</Label>
-          {["No Change", "Decreased", "Increased"].map((label) => (
-            <Label key={label}>
-              <input
-                name="weightChange"
-                type="radio"
-                className="ml-1"
-                checked={cvsResponse === label}
-                onChange={() => setCvsResponse(label)}
-              />{" "}
-              {label}
-            </Label>
-          ))}
-        </div>
-
-        {/* Nutritional Status */}
-        <div className="flex flex-col items-start gap-2 w-full mb-2">
-          <Label>Overall Nutritional status (physical signs) --</Label>
-          {[
-            "well nourished",
-            "moderately malnourished",
-            "severely malnourished",
-          ].map((label) => (
-            <Label key={label}>
-              <input
-                name="nutritionStatus"
-                type="radio"
-                className="ml-1"
-                checked={cvsResponse === label}
-                onChange={() => setCvsResponse(label)}
-              />{" "}
-              {label}
-            </Label>
-          ))}
-        </div>
-
-        {/* Nutritional Signs/Symptoms */}
-        <div className="flex items-center gap-2 mb-2 w-full">
-          <div className="flex items-center gap-2 w-1/2">
-            <Label>Nutritional Signs/Symptoms</Label>
-            <Select
-              className="w-full text-sm"
-              styles={{
-                menu: (base) => ({ ...base, fontSize: "12px" }),
-                menuList: (base) => ({
-                  ...base,
-                  maxHeight: "80px",
-                  overflowY: "auto",
-                }),
-                control: (base) => ({
-                  ...base,
-                  minHeight: "30px",
-                  fontSize: "12px",
-                }),
-                indicatorsContainer: (base) => ({ ...base, height: "30px" }),
-                dropdownIndicator: (base) => ({ ...base, padding: "4px" }),
-              }}
-              options={relationOptions}
-              value={relationOptions.find((opt) => opt.value === relation3)}
-              onChange={(selected) => setRelation3(selected.value)}
-              placeholder="Relation"
-              isSearchable
-              filterOption={(option, inputValue) =>
-                option.label.toLowerCase().startsWith(inputValue.toLowerCase())
-              }
-            />
-          </div>
-        </div>
       </div>
 
-      {/* Symptoms Checkboxes */}
-      <div className="flex flex-wrap items-center gap-4 text-xs">
-        {[
-         ["Hyperacidity", isHyperacidity, setIsHyperacidity],
-    ["Constipation", isConstipation, setIsConstipation],
-    ["Nausea", isNausea, setIsNausea],
-    ["Diarrhoea", isDiarrhoea, setIsDiarrhoea],
-    ["Vomiting", isVomiting, setIsVomiting],
-    ["Anorexia", isAnorexia, setIsAnorexia],
-    ["Flatulence", isFlatulence, setIsFlatulence],
-    ["Oral ulcer", isOralUlcer, setIsOralUlcer],
-    //["None", isNone, setIsNone],
-    ["Other Complaint", isOtherComplaint, setIsOtherComplaint],
-        ].map(([label, value, setValue]) => (
-          <Label key={label}>
-            <input
-              type="checkbox"
-              className="mr-1"
-              checked={value}
-              onChange={() => setValue(!value)}
-            />{" "}
-            {label}
-          </Label>
-        ))}
-      </div>
-
-      {/* Nutritional Risk Assessment */}
-      <div className="flex items-center gap-4 w-full mb-2">
+      <div className="flex items-center gap-4 w-full mt-4 mb-2">
         <div className="flex items-center gap-2">
           <Label>
             Based on the above, total scores of the patients is at --
@@ -793,7 +623,7 @@ console.log("Derived JSON:", derivedJson);
                 type="radio"
                 className="ml-1"
                 checked={cvsResponse === label}
-                onChange={() => setCvsResponse(label)}
+                onChange={() => handleSelect("nutritionalRisk", label)}
               />{" "}
               {label}
             </Label>
@@ -801,19 +631,19 @@ console.log("Derived JSON:", derivedJson);
         </div>
       </div>
 
-      {/* Diet Plan */}
       <div className="mt-4 flex items-start gap-4">
         <H3>Diet Plan</H3>
         <div className="flex-1">
           <ReusableTextareaField
-            id="provisionaldiagnosis"
+            id="dietPlan"
             className="border-1"
             label="🖊️"
+            value={dietPlan}
+            onChange={(e) => setDietPlan(e.target.value)}
           />
         </div>
       </div>
 
-      {/* ......................................................................................... */}
       <hr className="border-t mt-6 mb-2 border-gray-300" />
       <div className="flex justify-center mt-6">
         <SaveButton label="Save" onClick={handleSave} />
