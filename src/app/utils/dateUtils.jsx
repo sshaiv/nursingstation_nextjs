@@ -21,3 +21,24 @@ export const getCurrentDateTime = () => {
 
   return `${day}/${month}/${year} ${paddedHours}:${minutes} ${ampm}`;
 };
+
+
+
+
+export const getCurrentDateISO = () => {
+ 
+  return new Date().toISOString().slice(0, 19); 
+};
+
+export const toISOFromDisplay = (displayStr) => {
+ 
+  const [datePart, timePart, meridian] = displayStr.split(/[\s:]/);   
+  const [day, month, year]             = datePart.split("/");
+
+  let hours   = parseInt(timePart, 10);
+  const mins  = displayStr.slice(-5, -3);                           
+  if (meridian === "PM" && hours < 12) hours += 12;
+  if (meridian === "AM" && hours === 12) hours = 0;
+
+  return `${year}-${month}-${day}T${String(hours).padStart(2,"0")}:${mins}:00`;
+};

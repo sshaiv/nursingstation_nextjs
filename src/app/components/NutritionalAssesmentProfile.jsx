@@ -8,7 +8,11 @@ import API_ENDPOINTS from "../constants/api_url";
 import axios from "axios";
 import Select from "react-select";
 import DateTimeInput from "../common/DateTimeInput";
-import { getCurrentDateTime ,getCurrentDate } from "../utils/dateUtils";
+import {
+  getCurrentDateTime,
+  getCurrentDate,
+  getCurrentDateISO,
+} from "../utils/dateUtils";
 
 export default function NutritionalAssessmentProfile({
   visitid,
@@ -80,6 +84,11 @@ export default function NutritionalAssessmentProfile({
     };
     fetchRelationData();
   }, []);
+    const [isOtherHabitsNone, setIsOtherHabitsNone] = useState(false);
+
+  const [overallWeightChangeId, setOverallWeightChangeId] = useState("");
+  const [overallNutritionalStatusId, setOverallNutritionalStatusId] =
+    useState("");
 
   useEffect(() => {
     const fetchNutritionalData = async () => {
@@ -106,6 +115,12 @@ export default function NutritionalAssessmentProfile({
           setOverallWeightChange(d.weight || "");
           setNutritionalStatus(d.foodnutritional || "");
 
+          setIsAlcohol(!!d.isalcohol);
+          setIsSmoking(!!d.issmoking);
+          setIsTobaccoChewing(!!d.istobaccochewing);
+          setIsOtherHabitsNone(!!d.isotherhabitsnone);
+
+
           setIsDM(!!d.isdm);
           setIsHypertension(!!d.ishypertension);
           setIsRenal(!!d.isrenal);
@@ -126,6 +141,15 @@ export default function NutritionalAssessmentProfile({
           setIsOtherComplaint(!!d.isothercomplaint);
 
           setDietPlan(d.dietplan || "");
+
+          setFoodHabitId(d.foodhabitsid || "");
+          setFoodAllergyId(d.foodallergyid || "");
+          setFoodIntakeId(d.foodintakeid || "");
+          setOverallWeightChangeId(d.overallweightchangeid || "");
+          setOverallNutritionalStatusId(d.overallnutritionalstatusid || "");
+          if (d.foodhabitsid) setFoodHabitId(d.foodhabitsid);
+          if (d.foodallergyid) setFoodAllergyId(d.foodallergyid);
+          if (d.foodintakeid) setFoodIntakeId(d.foodintakeid);
         }
       } catch (error) {
         console.error("Error fetching nutritional data:", error);
@@ -164,93 +188,95 @@ export default function NutritionalAssessmentProfile({
   const [isTobaccoChewing, setIsTobaccoChewing] = useState(false);
   const [isNone, setIsNone] = useState(false);
 
-const [foodHabitId, setFoodHabitId] = useState(null); 
-const [foodIntakeId, setFoodIntakeId] = useState(null); 
-const [foodAllergyId, setFoodAllergyId] = useState(null); 
-const [weightChangeId, setWeightChangeId] = useState(null); 
-const [nutritionalStatusId, setNutritionalStatusId] = useState(null); 
-const [cvsResponseId, setCvsResponseId] = useState(null);
+  const [foodHabitId, setFoodHabitId] = useState(null);
+  const [foodIntakeId, setFoodIntakeId] = useState(null);
+  const [foodAllergyId, setFoodAllergyId] = useState(null);
 
-const handleSelect = (name, { CID, CNAME }) => {
-  console.log(`${name} selected: CID = ${CID}, CNAME = ${CNAME}`);
-  switch (name) {
-    case "foodHabit":
-      setFoodHabit(CNAME);
-      setFoodHabitId(CID); 
-      break;
-    case "foodAllergy":
-      setFoodAllergyId(CNAME);
-      setFoodAllergyId(CID);
-      break;
-    case "foodIntake":
-      setFoodIntake(CNAME);
-      setFoodIntakeId(CID);
-      break;
-    case "weightChange":
-      setOverallWeightChange(CNAME);
-      setWeightChangeId(CID);
-      break;
-    case "nutritionalStatus":
-      setNutritionalStatus(CNAME);
-      setNutritionalStatusId(CID);
-      break;
-    case "nutritionalRisk":
-      setCvsResponse(CNAME);
-      setCvsResponseId(CID);
-      break;
-    default:
-      break;
-  }
-};
+  const [weightChangeId, setWeightChangeId] = useState(null);
+  const [nutritionalStatusId, setNutritionalStatusId] = useState(null);
+  const [cvsResponseId, setCvsResponseId] = useState(null);
 
-const derivedJson = {
-  rowid: 0,
-  gssuhid: patientData.gssuhid,
-  visitid: patientData.visitid,
-  date: getCurrentDate,
-  foodhabitsid: foodHabitId, 
-  foodallergyid: foodAllergyId, 
-  foodallergyspecify: foodAllergySpecify,
-  otherhabitsscore: 2,
-  isalcohol: isAlcohol ? 1 : 0,
-  issmoking: isSmoking ? 1 : 0,
-  istobaccochewing: isTobaccoChewing ? 1 : 0,
-  isotherhabitsnone: isNone ? 1 : 0,
-  pasthistory: pastHistory,
-  isdm: isDM ? 1 : 0,
-  ishypertension: isHypertension ? 1 : 0,
-  isrenal: isRenal ? 1 : 0,
-  iscardiac: isCardiac ? 1 : 0,
-  isrespiratorydisease: isRespiratory ? 1 : 0,
-  isliverdisease: isLiver ? 1 : 0,
-  isotherdisease: isOtherDisease ? 1 : 0,
-  presentmedicalillness: presentMedicalIllness,
-  nutritionalassessmentscore: 2,
-  foodintakeid: foodIntakeId, // Use the ID for food intake
-  overallweightchangeid: weightChangeId, // Use the ID for weight change
-  overallnutritionalstatusid: nutritionalStatusId, // Use the ID for nutritional status
-  nutritionalsignssymptomscore: 2,
-  ishyperacidity: isHyperacidity ? 1 : 0,
-  isconstipation: isConstipation ? 1 : 0,
-  isnausea: isNausea ? 1 : 0,
-  isdiarrhoea: isDiarrhoea ? 1 : 0,
-  isvomiting: isVomiting ? 1 : 0,
-  isanorexia: isAnorexia ? 1 : 0,
-  isflatulence: isFlatulence ? 1 : 0,
-  isoralulcer: isOralUlcer ? 1 : 0,
-  issignsnone: isSignsNone ? 1 : 0,
-  isothercomplaint: isOtherComplaint ? 1 : 0,
-  dietplan: dietPlan,
-  entempid: patientData.empid,
-  entdatetime: patientData.entdatetime,
-  entwsname: patientData.wsname,
-  modifyempid: patientData.modifyempid,
-  modifydatetime: patientData.modifydatetime,
-  modifywsname: patientData.wsname,
-  locationid: patientData.locationid,
-  financialyear: patientData.financialyear,
-};
 
+  const handleSelect = (name, { CID, CNAME }) => {
+    console.log(`${name} selected: CID = ${CID}, CNAME = ${CNAME}`);
+    switch (name) {
+      case "foodHabit":
+        setFoodHabit(CNAME);
+        setFoodHabitId(CID);
+        break;
+      case "foodAllergy":
+        setFoodAllergyId(CNAME);
+        setFoodAllergyId(CID);
+        break;
+      case "foodIntake":
+        setFoodIntake(CNAME);
+        setFoodIntakeId(CID);
+        break;
+      case "weightChange":
+        setOverallWeightChange(CNAME);
+        setWeightChangeId(CID);
+        break;
+      case "nutritionalStatus":
+        setNutritionalStatus(CNAME);
+        setNutritionalStatusId(CID);
+        break;
+      case "nutritionalRisk":
+        setCvsResponse(CNAME);
+        setCvsResponseId(CID);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const derivedJson = {
+    rowid: 0,
+    gssuhid: patientData.gssuhid,
+    visitid: patientData.visitid,
+    // date: getCurrentDateTime(),
+    date: getCurrentDateISO(),
+    foodhabitsid: foodHabitId,
+    foodallergyid: foodAllergyId,
+    foodallergyspecify: foodAllergySpecify,
+    otherhabitsscore: 2,
+    isalcohol: isAlcohol ? 1 : 0,
+    issmoking: isSmoking ? 1 : 0,
+    istobaccochewing: isTobaccoChewing ? 1 : 0,
+    isotherhabitsnone: isOtherHabitsNone ? 1 : 0,
+    pasthistory: pastHistory,
+    isdm: isDM ? 1 : 0,
+    ishypertension: isHypertension ? 1 : 0,
+    isrenal: isRenal ? 1 : 0,
+    iscardiac: isCardiac ? 1 : 0,
+    isrespiratorydisease: isRespiratory ? 1 : 0,
+    isliverdisease: isLiver ? 1 : 0,
+    isotherdisease: isOtherDisease ? 1 : 0,
+    presentmedicalillness: presentMedicalIllness,
+    nutritionalassessmentscore: 2,
+    foodintakeid: foodIntakeId,
+    overallweightchangeid: overallWeightChangeId,
+    overallnutritionalstatusid: overallNutritionalStatusId,
+    nutritionalsignssymptomscore: 2,
+    ishyperacidity: isHyperacidity ? 1 : 0,
+    isconstipation: isConstipation ? 1 : 0,
+    isnausea: isNausea ? 1 : 0,
+    isdiarrhoea: isDiarrhoea ? 1 : 0,
+    isvomiting: isVomiting ? 1 : 0,
+    isanorexia: isAnorexia ? 1 : 0,
+    isflatulence: isFlatulence ? 1 : 0,
+    isoralulcer: isOralUlcer ? 1 : 0,
+    issignsnone: isSignsNone ? 1 : 0,    
+    isothercomplaint: isOtherComplaint ? 1 : 0,
+    dietplan: dietPlan,
+    entempid: patientData.empid,
+    entdatetime: patientData.entdatetime,
+    entwsname: patientData.wsname,
+    modifyempid: patientData.modifyempid,
+    modifydatetime: patientData.modifydatetime,
+    modifywsname: patientData.wsname,
+    locationid: patientData.locationid,
+    financialyear: patientData.financialyear,
+  };
 
   console.log("update", derivedJson);
 
@@ -260,6 +286,10 @@ const derivedJson = {
         "https://doctorapi.medonext.com/API/HMS/SavePatIpdNutritionalAssessmentProfile",
         derivedJson
       );
+      console.log("save btn", derivedJson);
+
+      console.log("save btn", response.data);
+
       alert("Data saved successfully!");
     } catch (error) {
       console.error("Error saving nutritional assessment:", error);
@@ -313,8 +343,12 @@ const derivedJson = {
                 <input
                   type="radio"
                   name="foodHabit"
-                  value={option.CNAME}
-                  onChange={() => handleSelect("foodHabit", option)}
+                  value={option.CID}
+                  checked={foodHabitId === option.CID}
+                  onChange={() => {
+                    handleSelect("foodHabit", option);
+                    setFoodHabitId(option.CID);
+                  }}
                 />
                 <span className="text-[10px]">{option.CNAME}</span>
               </label>
@@ -334,15 +368,23 @@ const derivedJson = {
                 <input
                   type="radio"
                   name="foodAllergy"
-                  value={option.CNAME}
-                  onChange={() => handleSelect("foodAllergy", option)}
+                  value={option.CID}
+                  checked={foodAllergyId === option.CID} 
+                  onChange={() => {
+                    handleSelect("foodAllergy", option);
+                    setFoodAllergyId(option.CID); 
+                  }}
                 />
                 <span className="text-[10px]">{option.CNAME}</span>
               </label>
             ))}
           </div>
+
+          {/* Input for "If yes, specify" */}
           <input
             type="text"
+            value={foodAllergySpecify}
+            onChange={(e) => setFoodAllergySpecify(e.target.value)}
             placeholder="If yes, specify"
             className="border p-1 rounded w-64 text-[10px]"
           />
@@ -367,24 +409,50 @@ const derivedJson = {
               className="border p-1 rounded w-64 text-[10px]"
             />
           </div>
-
           <div className="flex items-center gap-6 flex-wrap mt-1">
-           {["Alcohol", "Smoking", "Tobacco Chewing", "None"].map((habit) => (
-  <Label key={habit} className="flex items-center gap-1 text-[10px]">
-    <input
-      type="checkbox"
-      checked={habit === "Alcohol" ? isAlcohol : habit === "Smoking" ? isSmoking : habit === "Tobacco Chewing" ? isTobaccoChewing : isNone}
-      onChange={() => {
-        if (habit === "Alcohol") setIsAlcohol(!isAlcohol);
-        if (habit === "Smoking") setIsSmoking(!isSmoking);
-        if (habit === "Tobacco Chewing") setIsTobaccoChewing(!isTobaccoChewing);
-        if (habit === "None") setIsNone(!isNone);
-      }}
-    />
-    {habit}
-  </Label>
-))}
-
+            {["Alcohol", "Smoking", "Tobacco Chewing", "None"].map((habit) => (
+              <Label
+                key={habit}
+                className="flex items-center gap-1 text-[10px]"
+              >
+                <input
+                  type="checkbox"
+                  checked={
+                    habit === "Alcohol"
+                      ? isAlcohol
+                      : habit === "Smoking"
+                      ? isSmoking
+                      : habit === "Tobacco Chewing"
+                      ? isTobaccoChewing
+                      : isOtherHabitsNone // <-- use correct state
+                  }
+                  onChange={() => {
+                    if (habit === "Alcohol") {
+                      setIsAlcohol(!isAlcohol);
+                      setIsOtherHabitsNone(false);
+                    }
+                    if (habit === "Smoking") {
+                      setIsSmoking(!isSmoking);
+                      setIsOtherHabitsNone(false);
+                    }
+                    if (habit === "Tobacco Chewing") {
+                      setIsTobaccoChewing(!isTobaccoChewing);
+                      setIsOtherHabitsNone(false);
+                    }
+                    if (habit === "None") {
+                      const newValue = !isOtherHabitsNone;
+                      setIsOtherHabitsNone(newValue);
+                      if (newValue) {
+                        setIsAlcohol(false);
+                        setIsSmoking(false);
+                        setIsTobaccoChewing(false);
+                      }
+                    }
+                  }}
+                />
+                {habit}
+              </Label>
+            ))}
           </div>
         </div>
 
@@ -560,14 +628,17 @@ const derivedJson = {
             {foodIntakeOptions.map((option) => (
               <label
                 key={option.CID}
-                className="flex items-center gap-1 cursor-pointer"
+                className="flex items-center gap-1 cursor-pointer text-[10px]"
               >
                 <input
                   type="radio"
                   name="foodIntake"
-                  value={option.CNAME}
-                  onChange={() => handleSelect("foodIntake", option)}
-                  className="text-[10px]"
+                  value={option.CID}
+                  checked={foodIntakeId === option.CID} // ✅ controlled selection
+                  onChange={() => {
+                    handleSelect("foodIntake", option); // optional (CNAME usage)
+                    setFoodIntakeId(option.CID); // ✅ set selected ID
+                  }}
                 />
                 <span>{option.CNAME}</span>
               </label>
@@ -577,21 +648,24 @@ const derivedJson = {
 
         {/* Weight Change */}
         <div>
-          <Label className="block mb-1">
+          <Label className="block mb-1 text-[10px]">
             Overall weight change (over past 3 months)
           </Label>
           <div className="flex flex-wrap gap-4">
             {weightChangeOptions.map((option) => (
               <label
                 key={option.CID}
-                className="flex items-center gap-1 cursor-pointer"
+                className="flex items-center gap-1 cursor-pointer text-[10px]"
               >
                 <input
                   type="radio"
                   name="weightChange"
-                  value={option.CNAME}
-                  onChange={() => handleSelect("weightChange", option)}
-                  className="text-[10px]"
+                  value={option.CID}
+                  checked={overallWeightChangeId === option.CID}
+                  onChange={() => {
+                    handleSelect("weightChange", option);
+                    setOverallWeightChangeId(option.CID);
+                  }}
                 />
                 <span>{option.CNAME}</span>
               </label>
@@ -601,21 +675,24 @@ const derivedJson = {
 
         {/* Nutritional Status */}
         <div>
-          <Label className="block mb-1">
+          <Label className="block mb-1 text-[10px]">
             Overall nutritional status (physical signs)
           </Label>
           <div className="flex flex-wrap gap-4">
             {nutritionalStatusOptions.map((option) => (
               <label
                 key={option.CID}
-                className="flex items-center gap-1 cursor-pointer"
+                className="flex items-center gap-1 cursor-pointer text-[10px]"
               >
                 <input
                   type="radio"
                   name="nutritionalStatus"
-                  value={option.CNAME}
-                  onChange={() => handleSelect("nutritionalStatus", option)}
-                  className="text-[10px]"
+                  value={option.CID}
+                  checked={overallNutritionalStatusId === option.CID} // ✅ controlled selection
+                  onChange={() => {
+                    handleSelect("nutritionalStatus", option); // Optional: for CNAME
+                    setOverallNutritionalStatusId(option.CID); // ✅ set ID
+                  }}
                 />
                 <span>{option.CNAME}</span>
               </label>
@@ -624,33 +701,53 @@ const derivedJson = {
         </div>
 
         {/* Nutritional Signs / Symptoms */}
-        <div>
-          <Label className="block mb-1">Nutritional Signs / Symptoms</Label>
-          <div className="flex flex-wrap items-center gap-4">
-            {[
-              ["Hyperacidity", isHyperacidity, setIsHyperacidity],
-              ["Constipation", isConstipation, setIsConstipation],
-              ["Nausea", isNausea, setIsNausea],
-              ["Diarrhoea", isDiarrhoea, setIsDiarrhoea],
-              ["Vomiting", isVomiting, setIsVomiting],
-              ["Anorexia", isAnorexia, setIsAnorexia],
-              ["Flatulence", isFlatulence, setIsFlatulence],
-              ["Oral ulcer", isOralUlcer, setIsOralUlcer],
-              ["Other Complaint", isOtherComplaint, setIsOtherComplaint],
-              ["None", isNone, setIsNone],
-            ].map(([label, value, setValue]) => (
-              <Label key={label} className="flex items-center gap-1">
-                <input
-                  type="checkbox"
-                  className="mr-1 text-[10px]"
-                  checked={value}
-                  onChange={() => setValue(!value)}
-                />
-                {label}
-              </Label>
-            ))}
-          </div>
-        </div>
+      <div>
+  <Label className="block mb-1">Nutritional Signs / Symptoms</Label>
+  <div className="flex flex-wrap items-center gap-4 text-[10px]">
+    {[
+      ["Hyperacidity", isHyperacidity, setIsHyperacidity],
+      ["Constipation", isConstipation, setIsConstipation],
+      ["Nausea", isNausea, setIsNausea],
+      ["Diarrhoea", isDiarrhoea, setIsDiarrhoea],
+      ["Vomiting", isVomiting, setIsVomiting],
+      ["Anorexia", isAnorexia, setIsAnorexia],
+      ["Flatulence", isFlatulence, setIsFlatulence],
+      ["Oral ulcer", isOralUlcer, setIsOralUlcer],
+      ["Other Complaint", isOtherComplaint, setIsOtherComplaint],
+      ["None", isSignsNone, setIsSignsNone], // Important: use correct variable
+    ].map(([label, value, setValue]) => (
+      <Label key={label} className="flex items-center gap-1">
+        <input
+          type="checkbox"
+          checked={value}
+          onChange={() => {
+            if (label === "None") {
+              const newNoneValue = !value;
+              setIsSignsNone(newNoneValue);
+              if (newNoneValue) {
+                // Uncheck all others
+                setIsHyperacidity(false);
+                setIsConstipation(false);
+                setIsNausea(false);
+                setIsDiarrhoea(false);
+                setIsVomiting(false);
+                setIsAnorexia(false);
+                setIsFlatulence(false);
+                setIsOralUlcer(false);
+                setIsOtherComplaint(false);
+              }
+            } else {
+              setValue(!value);
+              setIsSignsNone(false); // Uncheck "None" if any other selected
+            }
+          }}
+        />
+        {label}
+      </Label>
+    ))}
+  </div>
+</div>
+
       </div>
 
       <div className="flex items-center gap-4 w-full mt-4 mb-2">
