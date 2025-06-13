@@ -84,7 +84,7 @@ export default function NutritionalAssessmentProfile({
     };
     fetchRelationData();
   }, []);
-    const [isOtherHabitsNone, setIsOtherHabitsNone] = useState(false);
+  const [isOtherHabitsNone, setIsOtherHabitsNone] = useState(false);
 
   const [overallWeightChangeId, setOverallWeightChangeId] = useState("");
   const [overallNutritionalStatusId, setOverallNutritionalStatusId] =
@@ -119,7 +119,6 @@ export default function NutritionalAssessmentProfile({
           setIsSmoking(!!d.issmoking);
           setIsTobaccoChewing(!!d.istobaccochewing);
           setIsOtherHabitsNone(!!d.isotherhabitsnone);
-
 
           setIsDM(!!d.isdm);
           setIsHypertension(!!d.ishypertension);
@@ -196,7 +195,6 @@ export default function NutritionalAssessmentProfile({
   const [nutritionalStatusId, setNutritionalStatusId] = useState(null);
   const [cvsResponseId, setCvsResponseId] = useState(null);
 
-
   const handleSelect = (name, { CID, CNAME }) => {
     console.log(`${name} selected: CID = ${CID}, CNAME = ${CNAME}`);
     switch (name) {
@@ -265,7 +263,7 @@ export default function NutritionalAssessmentProfile({
     isanorexia: isAnorexia ? 1 : 0,
     isflatulence: isFlatulence ? 1 : 0,
     isoralulcer: isOralUlcer ? 1 : 0,
-    issignsnone: isSignsNone ? 1 : 0,    
+    issignsnone: isSignsNone ? 1 : 0,
     isothercomplaint: isOtherComplaint ? 1 : 0,
     dietplan: dietPlan,
     entempid: patientData.empid,
@@ -369,10 +367,10 @@ export default function NutritionalAssessmentProfile({
                   type="radio"
                   name="foodAllergy"
                   value={option.CID}
-                  checked={foodAllergyId === option.CID} 
+                  checked={foodAllergyId === option.CID}
                   onChange={() => {
                     handleSelect("foodAllergy", option);
-                    setFoodAllergyId(option.CID); 
+                    setFoodAllergyId(option.CID);
                   }}
                 />
                 <span className="text-[10px]">{option.CNAME}</span>
@@ -548,12 +546,14 @@ export default function NutritionalAssessmentProfile({
       </div>
 
       <div className="mt-4 flex items-start gap-4">
-        <H3>Present Medical illness</H3>
+        <H3>Present Medical Illness</H3>
         <div className="flex-1">
           <ReusableTextareaField
             id="provisionaldiagnosis"
             className="border-1"
             label="🖊️"
+            value={presentMedicalIllness}
+            onChange={(e) => setPresentMedicalIllness(e.target.value)}
           />
         </div>
       </div>
@@ -701,53 +701,52 @@ export default function NutritionalAssessmentProfile({
         </div>
 
         {/* Nutritional Signs / Symptoms */}
-      <div>
-  <Label className="block mb-1">Nutritional Signs / Symptoms</Label>
-  <div className="flex flex-wrap items-center gap-4 text-[10px]">
-    {[
-      ["Hyperacidity", isHyperacidity, setIsHyperacidity],
-      ["Constipation", isConstipation, setIsConstipation],
-      ["Nausea", isNausea, setIsNausea],
-      ["Diarrhoea", isDiarrhoea, setIsDiarrhoea],
-      ["Vomiting", isVomiting, setIsVomiting],
-      ["Anorexia", isAnorexia, setIsAnorexia],
-      ["Flatulence", isFlatulence, setIsFlatulence],
-      ["Oral ulcer", isOralUlcer, setIsOralUlcer],
-      ["Other Complaint", isOtherComplaint, setIsOtherComplaint],
-      ["None", isSignsNone, setIsSignsNone], // Important: use correct variable
-    ].map(([label, value, setValue]) => (
-      <Label key={label} className="flex items-center gap-1">
-        <input
-          type="checkbox"
-          checked={value}
-          onChange={() => {
-            if (label === "None") {
-              const newNoneValue = !value;
-              setIsSignsNone(newNoneValue);
-              if (newNoneValue) {
-                // Uncheck all others
-                setIsHyperacidity(false);
-                setIsConstipation(false);
-                setIsNausea(false);
-                setIsDiarrhoea(false);
-                setIsVomiting(false);
-                setIsAnorexia(false);
-                setIsFlatulence(false);
-                setIsOralUlcer(false);
-                setIsOtherComplaint(false);
-              }
-            } else {
-              setValue(!value);
-              setIsSignsNone(false); // Uncheck "None" if any other selected
-            }
-          }}
-        />
-        {label}
-      </Label>
-    ))}
-  </div>
-</div>
-
+        <div>
+          <Label className="block mb-1">Nutritional Signs / Symptoms</Label>
+          <div className="flex flex-wrap items-center gap-4 text-[10px]">
+            {[
+              ["Hyperacidity", isHyperacidity, setIsHyperacidity],
+              ["Constipation", isConstipation, setIsConstipation],
+              ["Nausea", isNausea, setIsNausea],
+              ["Diarrhoea", isDiarrhoea, setIsDiarrhoea],
+              ["Vomiting", isVomiting, setIsVomiting],
+              ["Anorexia", isAnorexia, setIsAnorexia],
+              ["Flatulence", isFlatulence, setIsFlatulence],
+              ["Oral ulcer", isOralUlcer, setIsOralUlcer],
+              ["Other Complaint", isOtherComplaint, setIsOtherComplaint],
+              ["None", isSignsNone, setIsSignsNone], // Important: use correct variable
+            ].map(([label, value, setValue]) => (
+              <Label key={label} className="flex items-center gap-1">
+                <input
+                  type="checkbox"
+                  checked={value}
+                  onChange={() => {
+                    if (label === "None") {
+                      const newNoneValue = !value;
+                      setIsSignsNone(newNoneValue);
+                      if (newNoneValue) {
+                        // Uncheck all others
+                        setIsHyperacidity(false);
+                        setIsConstipation(false);
+                        setIsNausea(false);
+                        setIsDiarrhoea(false);
+                        setIsVomiting(false);
+                        setIsAnorexia(false);
+                        setIsFlatulence(false);
+                        setIsOralUlcer(false);
+                        setIsOtherComplaint(false);
+                      }
+                    } else {
+                      setValue(!value);
+                      setIsSignsNone(false); // Uncheck "None" if any other selected
+                    }
+                  }}
+                />
+                {label}
+              </Label>
+            ))}
+          </div>
+        </div>
       </div>
 
       <div className="flex items-center gap-4 w-full mt-4 mb-2">
