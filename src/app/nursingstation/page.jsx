@@ -69,102 +69,181 @@ function NursingStationContent() {
     }
   }, [searchParams]);
 
-  return (
-    <div className="p-4 space-y-4 bg-gray-50">
-      <NurHeader />
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="md:col-span-3 space-y-4">
-          <div className="flex flex-col md:flex-row gap-3">
-            {/* <div className="md:w-5/12 w-full"> */}
-            <div className="md:w-5/12 w-full">
-              {loading ? (
-                // Skeleton loader
-                <div className="mx-auto w-full max-w-sm rounded-md border border-blue-300 p-4">
-                  <div className="flex animate-pulse space-x-4">
-                    <div className="h-10 w-10 rounded-full bg-gray-200"></div>
-                    <div className="flex-1 space-y-6 py-1">
-                      <div className="h-2 rounded bg-gray-200"></div>
-                      <div className="space-y-3">
-                        <div className="grid grid-cols-3 gap-4">
-                          <div className="col-span-2 h-2 rounded bg-gray-200"></div>
-                          <div className="col-span-1 h-2 rounded bg-gray-200"></div>
-                        </div>
-                        <div className="h-2 rounded bg-gray-200"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ) : patientData ? (
-                <PatientInfoCard
-                  name={patientData.patname || "N/A"}
-                  age={patientData.Age || "N/A"}
-                  gender={patientData.gendername || "N/A"}
-                  bedNo={patientData.bedno || "N/A"}
-                  doctor={patientData.primconsultant || "N/A"}
-                  billingGroup={patientData.billgrpname || "N/A"}
-                  phone={patientData.mobileno || "N/A"}
-                />
-              ) : (
-                // Styled "No data" box
-                <div className="mx-auto w-full max-w-lg rounded-md border border-blue-300 p-4">
-                  <div className="flex animate-pulse space-x-4">
-                    <div className="h-10 w-10 rounded-full bg-gray-200"></div>
-                    <div className="flex-1 space-y-6 py-1">
-                      <div className="h-2 rounded bg-gray-200">
-                        Loading patient{" "}
-                      </div>
-                      <div className="space-y-3">
-                        <div className="grid grid-cols-3 gap-4">
-                          <div className="col-span-2 h-2 rounded bg-gray-200"></div>
-                          <div className="col-span-1 h-2 rounded bg-gray-200"></div>
-                        </div>
-                        <div className="h-2 rounded bg-gray-200"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
+  // return (
+  //   <div className="p-4 space-y-4 bg-gray-50">
+  //     <NurHeader />
+  //     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+  //       <div className="md:col-span-3 space-y-4">
+  //         <div className="flex flex-col gap-3">
+          
 
-            {/* <div className="md:w-7/12 w-full"> */}
-            <div className="md:w-8/12 w-full">
-              <VitalsTable
-                title="Vitals"
-                visitid={visitid}
-                gssuhid={gssuhid}
-                empid={empid}
-                patientData={patientData}
-              />
-              
+  //           <div className="flex flex-col gap-4 w-full">
+  //             <div className="w-full">
+  //               {loading ? (
+  //                 // Skeleton loader
+  //                 <div className="mx-auto w-full max-w-sm rounded-md border border-blue-300 p-4">
+  //                   <div className="flex animate-pulse space-x-4">
+  //                     <div className="h-10 w-10 rounded-full bg-gray-200"></div>
+  //                     <div className="flex-1 space-y-6 py-1">
+  //                       <div className="h-2 rounded bg-gray-200"></div>
+  //                       <div className="space-y-3">
+  //                         <div className="grid grid-cols-3 gap-4">
+  //                           <div className="col-span-2 h-2 rounded bg-gray-200"></div>
+  //                           <div className="col-span-1 h-2 rounded bg-gray-200"></div>
+  //                         </div>
+  //                         <div className="h-2 rounded bg-gray-200"></div>
+  //                       </div>
+  //                     </div>
+  //                   </div>
+  //                 </div>
+  //               ) : patientData ? (
+  //                 <PatientInfoCard
+  //                   name={patientData.patname || "N/A"}
+  //                   age={patientData.Age || "N/A"}
+  //                   gender={patientData.gendername || "N/A"}
+  //                   bedNo={patientData.bedno || "N/A"}
+  //                   doctor={patientData.primconsultant || "N/A"}
+  //                   billingGroup={patientData.billgrpname || "N/A"}
+  //                   phone={patientData.mobileno || "N/A"}
+  //                 />
+  //               ) : (
+  //                 <div className="mx-auto w-full max-w-lg rounded-md border border-blue-300 p-4">
+  //                   <div className="flex animate-pulse space-x-4">
+  //                     <div className="h-10 w-10 rounded-full bg-gray-200"></div>
+  //                     <div className="flex-1 space-y-6 py-1">
+  //                       <div className="h-2 rounded bg-gray-200">
+  //                         Loading patient
+  //                       </div>
+  //                       <div className="space-y-3">
+  //                         <div className="grid grid-cols-3 gap-4">
+  //                           <div className="col-span-2 h-2 rounded bg-gray-200"></div>
+  //                           <div className="col-span-1 h-2 rounded bg-gray-200"></div>
+  //                         </div>
+  //                         <div className="h-2 rounded bg-gray-200"></div>
+  //                       </div>
+  //                     </div>
+  //                   </div>
+  //                 </div>
+  //               )}
+  //             </div>
+
+  //             <div className="w-full">
+  //               <VitalsTable
+  //                 title="Vitals"
+  //                 visitid={visitid}
+  //                 gssuhid={gssuhid}
+  //                 empid={empid}
+  //                 patientData={patientData}
+  //               />
+  //             </div>
+  //           </div>
+
+  //           {/* <div className="md:w-7/12 w-full"> */}
+      
+  //         </div>
+
+  //         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+  //           <AssessmentCard title="Chief Complaints" />
+  //           <AssessmentCard title="Diagnosis" />
+  //           <AssessmentCard title="Allergies" />
+  //           <AssessmentCard icons="🔍" title=" Notes" />
+  //         </div>
+  //         <MedicineTable
+  //           visitid={visitid}
+  //           gssuhid={gssuhid}
+  //           empid={empid}
+  //           patientData={patientData}
+  //         />
+  //       </div>
+  //       <div>
+  //         <ButtonGrid
+  //           visitid={visitid}
+  //           gssuhid={gssuhid}
+  //           empid={empid}
+  //           patientData={patientData}
+  //         />
+  //       </div>
+  //     </div>
+  //   </div>
+  // );
+
+return (
+  <div className="p-4 space-y-4 bg-gray-50">
+    <NurHeader />
+
+    {/* PATIENT INFO ALWAYS ON TOP */}
+    <div className="w-full">
+      {loading ? (
+        // Skeleton loader
+        <div className="mx-auto w-full max-w-sm rounded-md border border-blue-300 p-4">
+          <div className="flex animate-pulse space-x-4">
+            <div className="h-10 w-10 rounded-full bg-gray-200"></div>
+            <div className="flex-1 space-y-6 py-1">
+              <div className="h-2 rounded bg-gray-200"></div>
+              <div className="space-y-3">
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="col-span-2 h-2 rounded bg-gray-200"></div>
+                  <div className="col-span-1 h-2 rounded bg-gray-200"></div>
+                </div>
+                <div className="h-2 rounded bg-gray-200"></div>
+              </div>
             </div>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <AssessmentCard title="Chief Complaints" />
-            <AssessmentCard title="Diagnosis" />
-            <AssessmentCard title="Allergies" />
-            <AssessmentCard icons="🔍" title=" Notes"  />
-           
-    
-          </div>
-          <MedicineTable
-           visitid={visitid}
-            gssuhid={gssuhid}
-            empid={empid}
-            patientData={patientData}
-             />
         </div>
-        <div>
-          <ButtonGrid
+      ) : patientData ? (
+        <PatientInfoCard
+          name={patientData.patname || "N/A"}
+          age={patientData.Age || "N/A"}
+          gender={patientData.gendername || "N/A"}
+          bedNo={patientData.bedno || "N/A"}
+          doctor={patientData.primconsultant || "N/A"}
+          billingGroup={patientData.billgrpname || "N/A"}
+          phone={patientData.mobileno || "N/A"}
+        />
+      ) : null}
+    </div>
+
+
+    {/* GRID BELOW */}
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="md:col-span-3 space-y-4">
+        <div className="w-full">
+          <VitalsTable
+            title="Vitals"
             visitid={visitid}
             gssuhid={gssuhid}
             empid={empid}
             patientData={patientData}
           />
         </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <AssessmentCard title="Chief Complaints" />
+          <AssessmentCard title="Diagnosis" />
+          <AssessmentCard title="Allergies" />
+          <AssessmentCard icons="🔍" title=" Notes" />
+        </div>
+
+        <MedicineTable
+          visitid={visitid}
+          gssuhid={gssuhid}
+          empid={empid}
+          patientData={patientData}
+        />
+      </div>
+
+      <div>
+        <ButtonGrid
+          visitid={visitid}
+          gssuhid={gssuhid}
+          empid={empid}
+          patientData={patientData}
+        />
       </div>
     </div>
-  );
+  </div>
+);
+
 }
 
 export default function nursingstation() {
