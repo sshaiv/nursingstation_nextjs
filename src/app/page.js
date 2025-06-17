@@ -7,9 +7,7 @@ import AssessmentCard from "./components/AssessmentCard";
 import MedicineTable from "./components/MedicineTable";
 import SidebarButtons from "./components/SidebarButtons";
 import NotesBox from "./components/NotesBox";
-import Header from "./components/Header";
-
-
+ import Header from "./components/Header";
 
 const WarningPopup = ({ visible }) => {
   if (!visible) return null;
@@ -61,28 +59,28 @@ function HomeContent() {
 
   return (
     <div className="p-4 space-y-4 bg-gray-50">
-      {/* Header is always active and outside the block */}
+      {/* Header always visible */}
       <Header />
 
-      {/* Content below is blocked until scanned */}
+      {/* ✅ Patient Card - full width, just below header */}
+      <div className="w-full">
+        <PatientInfoCard
+          name="demo"
+          age="123"
+          gender="Male"
+          bedNo="12B"
+          doctor="Dr. xyz"
+          billingGroup="Premium"
+          phone="123-456-7890"
+        />
+      </div>
+
+      {/* ✅ Block rest until scanned */}
       <BlockUntilScanned scanned={scanned} onBlockedClick={showScanWarning}>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="md:col-span-3 space-y-4">
-            <div className="flex flex-col md:flex-row gap-3">
-              <div className="md:w-5/12 w-full">
-                <PatientInfoCard
-                  name="demo"
-                  age="123"
-                  gender="{gender}"
-                  bedNo="{bed}"
-                  doctor="Dr. xyz"
-                  billingGroup="Premium"
-                  phone="123-456-7890"
-                />
-              </div>
-              <div className="md:w-7/12 w-full">
-                <VitalsTable title="Vitals" />
-              </div>
+            <div className="w-full">
+              <VitalsTable title="Vitals" />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -91,17 +89,19 @@ function HomeContent() {
               <AssessmentCard title="Allergies" />
               <NotesBox />
             </div>
+
             <MedicineTable />
           </div>
+
           <SidebarButtons />
         </div>
       </BlockUntilScanned>
 
-      {/* Small warning popup shown only when needed */}
       <WarningPopup visible={showWarning} />
     </div>
   );
 }
+
 
 export default function Page() {
   return (
