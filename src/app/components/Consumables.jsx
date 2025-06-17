@@ -690,7 +690,7 @@ const newErrors = validateForm();
           </div>
 
           {/* Bundle Name */}
-          <div className="flex flex-col w-full">
+          {/* <div className="flex flex-col w-full">
             <label className="text-xs text-gray-700 font-medium mb-1">
               Bundle Name
             </label>
@@ -701,10 +701,10 @@ const newErrors = validateForm();
               value={bundleName}
               onChange={(e) => setBundleName(e.target.value)}
             />
-          </div>
+          </div> */}
 
           {/* Barcode (Read-only) */}
-          <div className="flex flex-col w-full">
+          {/* <div className="flex flex-col w-full">
             <label className="text-xs text-gray-700 font-medium mb-1">
               Barcode
             </label>
@@ -715,7 +715,7 @@ const newErrors = validateForm();
               value={barcode}
               readOnly
             />
-          </div>
+          </div> */}
 
           {/* Indent Qty */}
           <div className="flex flex-col w-full">

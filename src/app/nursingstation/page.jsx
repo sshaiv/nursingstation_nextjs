@@ -71,7 +71,6 @@ function NursingStationContent() {
     }
   }, [searchParams]);
 
-;
 
 return (
   <div className="p-4 space-y-4 bg-gray-50">

@@ -93,7 +93,7 @@ export default function Investigation({
     }));
 
     setVitals((prev) => [...prev, ...newEntries]);
-    setCanSave(true); // Enable Save button after insert
+    setCanSave(true);
 
     // *** Clear form fields here after insertion ***
     setSelectedDate(new Date());
