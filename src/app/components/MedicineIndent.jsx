@@ -85,12 +85,12 @@ export default function MedicineIndent({
     isinactive: 0,
     entempid: patientData?.empid,
     entdatetime: fullDateTime,
-    entwsname: "GSLAP2",
+    entwsname:  patientData?.wsname,
     modifyempid: patientData?.modifyempid,
     modifydatetime: patientData?.modifydatetime,
-    modifywsname: "GSLAP2",
+     modifywsname: patientData?.wsname,
     locationid: patientData?.locationid,
-    financialyear: "2526",
+    financialyear: patientData?.financialyear,
     priorityid: 0,
     indenttypeid: 0,
     isreturnindent: isReturn ? 1 : 0,
@@ -149,13 +149,13 @@ export default function MedicineIndent({
       isunabletoprocess: 0,
       isinactive: 0,
       entempid: patientData?.empid,
-      entdatetime: " ",
-      entwsname: "GSLAP2",
+      entdatetime: patientData?.entdatetime,
+      entwsname: patientData?.wsname,
       modifyempid: patientData?.modifyempid,
-      modifydatetime: " ",
-      modifywsname: "GSLAP2",
+      modifydatetime: patientData?.modifydatetime,
+      modifywsname: patientData?.wsname,
       locationid: patientData?.locationid,
-      financialyear: "2526",
+      financialyear: patientData?.financialyear,
       isEdit: 1,
       Delete: 0,
     };
@@ -225,7 +225,7 @@ export default function MedicineIndent({
         alert("Data saved successfully!");
         setRefreshData((prev) => !prev);
         setVitals([]);
-        setSaveData({});
+        // setSaveData({});
         setQty(1);
         setIsReturn(false);
         setDoctorData(null);

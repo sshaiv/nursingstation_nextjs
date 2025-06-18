@@ -163,12 +163,28 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
     fetchItemNames(option.value);
   };
 
+  // const handleItemSelect = (item) => {
+  //   setSelectedItem(item);
+  //  // console.log("ygsy", item);
+
+  //   console.log("Selected Item Name: ID", item.label, " ", item.value);
+  // };
+
+
+  // item select from dropdown
   const handleItemSelect = (item) => {
     setSelectedItem(item);
-    console.log("ygsy", item);
-
     console.log("Selected Item Name: ID", item.label, " ", item.value);
-  };
+    
+    // Open the SelectBatchModal with the selected item ID and store ID
+    if (selectedStore) {
+        setSelectBatchModalOpen(true);
+        setSelectedRowData({ itemid: item.value, storeid: selectedStore });
+    } else {
+        console.warn("Store ID is not selected.");
+    }
+};
+
 
   const fetchItemNames = async (storeId) => {
     if (!storeId) {
