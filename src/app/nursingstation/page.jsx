@@ -18,6 +18,7 @@ function NursingStationContent() {
   const [loading, setLoading] = useState(false);
   const [showScanner, setShowScanner] = useState(false);
   const [patientData, setPatientData] = useState(null);
+    const [otherPatientData, setOtherPatientData] = useState(null); 
 
   const fetchPatientBed = async (visitId) => {
     const cleanedVisitId = visitId.trim();
@@ -34,7 +35,7 @@ function NursingStationContent() {
       }
 
       let rawText = await response.text();
-      console.log("📦 Raw API response text:", rawText);
+      // console.log("📦 Raw API response text:", rawText);
 
       let data;
       try {
@@ -43,11 +44,13 @@ function NursingStationContent() {
         throw new Error("Failed to parse JSON: " + jsonError.message);
       }
 
-      console.log("✅ Parsed data:", data);
+      // console.log("✅ Parsed data:", data);
 
       const tableData = Array.isArray(data.Table) ? data.Table : [];
+      const otherPatientData = Array.isArray(data.Table1) ? data.Table1 : [];
 
-      console.log("📏 tableData length:", tableData.length);
+      // console.log("📏 tableData length:", tableData.length);
+      //   console.log("📏 otherPatientData length:", otherPatientData.length);
 
       if (tableData.length > 0) {
         const patient = tableData[0];
@@ -56,10 +59,20 @@ function NursingStationContent() {
         alert("No patient data found.");
         setPatientData(null);
       }
+
+      // If you want to set otherPatientData as well
+    if (otherPatientData.length > 0) {
+      // Assuming you have a state to hold other patient data
+      setOtherPatientData(otherPatientData);
+    } else {
+      console.log("No other patient data found.");
+      setOtherPatientData(null);
+    }
     } catch (error) {
       console.error("❌ Error fetching patient bed info:", error);
       alert("Failed to fetch patient bed info: " + error.message);
       setPatientData(null);
+      setOtherPatientData(null);
     } finally {
       setLoading(false);
       setShowScanner(false);
@@ -130,10 +143,10 @@ function NursingStationContent() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <AssessmentCard title="Chief Complaints" />
-            <AssessmentCard title="Diagnosis" />
-            <AssessmentCard title="Allergies" />
-            <AssessmentCard icons="🔍" title=" Notes" />
+            <AssessmentCard title="Chief Complaints" patientData={patientData} otherPatientData={otherPatientData} />
+            <AssessmentCard title="Diagnosis" patientData={patientData} otherPatientData={otherPatientData}/>
+            <AssessmentCard title="Allergies" patientData={patientData} otherPatientData={otherPatientData} />
+            <AssessmentCard icons="🔍" title=" Notes"patientData={patientData} otherPatientData={otherPatientData} />
           </div>
 
           <MedicineTable

@@ -98,60 +98,65 @@ const SearchPatientModal = ({ isOpen, onClose, patientData }) => {
   //   }
   // };
 
-const handleRowDoubleClick = async (visitId, index) => {
-  console.log("🆔 Visit ID:", visitId);
-  setSelectedRowIndex(index);
+  const handleRowDoubleClick = async (visitId, index) => {
+    console.log("🆔 Visit ID:", visitId);
+    setSelectedRowIndex(index);
 
-  const cleanedVisitId = visitId.trim();
-  console.log("🧼 Cleaned visitId:", `"${cleanedVisitId}"`);
+    const cleanedVisitId = visitId.trim();
+    console.log("🧼 Cleaned visitId:", `"${cleanedVisitId}"`);
 
-  setLoading(true);
+    setLoading(true);
 
-  try {
-    const apiUrl = `${API_ENDPOINTS.getAdvPatientBed}/?visitid=${encodeURIComponent(cleanedVisitId)}`;
-    console.log("🔗 Fetching from:", apiUrl);
-
-    const response = await fetch(apiUrl);
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const rawText = await response.text();
-    console.log("📦 Raw API response text:", rawText);
-
-    let data;
     try {
-      data = JSON.parse(JSON.parse(rawText));
-    } catch (jsonError) {
-      throw new Error("Failed to parse JSON: " + jsonError.message);
+      const apiUrl = `${
+        API_ENDPOINTS.getAdvPatientBed
+      }/?visitid=${encodeURIComponent(cleanedVisitId)}`;
+      console.log("🔗 Fetching from:", apiUrl);
+
+      const response = await fetch(apiUrl);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const rawText = await response.text();
+      console.log("📦 Raw API response text:", rawText);
+
+      let data;
+      try {
+        data = JSON.parse(JSON.parse(rawText));
+      } catch (jsonError) {
+        throw new Error("Failed to parse JSON: " + jsonError.message);
+      }
+
+      console.log("✅ Parsed data:", data);
+
+      const tableData = Array.isArray(data.Table) ? data.Table : [];
+
+      console.log("📏 tableData length:", tableData.length);
+
+      if (tableData.length > 0) {
+        const patient = tableData[0];
+        console.log("✅ Patient found:", patient);
+
+        router.push(
+          `/nursingstation?visitid=${encodeURIComponent(
+            patient.visitid
+          )}&gssuhid=${encodeURIComponent(
+            patient.gssuhid
+          )}&empid=${encodeURIComponent(patient.empid)}`
+        );
+      } else {
+        console.warn("⚠️ No patient data found in table.");
+        alert("No patient data found.");
+      }
+    } catch (error) {
+      console.error("❌ Error fetching patient bed info:", error);
+      alert("Failed to fetch patient bed info: " + error.message);
+    } finally {
+      setLoading(false);
     }
-
-    console.log("✅ Parsed data:", data);
-    
-  const tableData = Array.isArray(data.Table) ? data.Table : [];
-
-    console.log("📏 tableData length:", tableData.length);
-
-    if (tableData.length > 0) {
-      const patient = tableData[0];
-      console.log("✅ Patient found:", patient);
-
-      router.push(
-        `/nursingstation?visitid=${encodeURIComponent(patient.visitid)}&gssuhid=${encodeURIComponent(patient.gssuhid)}&empid=${encodeURIComponent(patient.empid)}`
-      );
-    } else {
-      console.warn("⚠️ No patient data found in table.");
-      alert("No patient data found.");
-    }
-  } catch (error) {
-    console.error("❌ Error fetching patient bed info:", error);
-    alert("Failed to fetch patient bed info: " + error.message);
-  } finally {
-    setLoading(false);
-  }
-};
-
+  };
 
   if (!isOpen) return null;
 
@@ -195,9 +200,15 @@ const handleRowDoubleClick = async (visitId, index) => {
                     <tr
                       key={index}
                       className={`${
-                        selectedRowIndex === index ? "bg-blue-200" : index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                        selectedRowIndex === index
+                          ? "bg-blue-200"
+                          : index % 2 === 0
+                          ? "bg-white"
+                          : "bg-gray-50"
                       }`}
-                      onDoubleClick={() => handleRowDoubleClick(item.visitid, index)}
+                      onDoubleClick={() =>
+                        handleRowDoubleClick(item.visitid, index)
+                      }
                     >
                       <TableReuse>{item.bedno}</TableReuse>
                       <TableReuse>{item.visitid}</TableReuse>
