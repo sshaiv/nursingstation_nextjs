@@ -1,11 +1,9 @@
-
-
- "use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import { MainHeadings } from "../common/text";
 import { ActionButton } from "../common/Buttons";
-import { getCurrentDateTime } from "../utils/dateUtils"; // Assume it returns "dd/mm/yyyy hh:mm:ss"
+import { getCurrentDateTime } from "../utils/dateUtils";
 import ReusableTextareaField from "../common/ReusableTextareaField";
 
 export default function AssessmentCard({
@@ -15,23 +13,26 @@ export default function AssessmentCard({
   otherPatientData,
 }) {
   const [inputValue, setInputValue] = useState("");
+  const [toastMessage, setToastMessage] = useState("");
 
-
-  
   useEffect(() => {
-  const data = Array.isArray(otherPatientData) ? otherPatientData[0] : otherPatientData;
+    const data = Array.isArray(otherPatientData)
+      ? otherPatientData[0]
+      : otherPatientData;
 
-  if (title === "Chief Complaints" && data?.chiefcomplaint) {
-    setInputValue(data.chiefcomplaint);
-  } else if (title === "Diagnosis" && data?.diagnosis) {
-    setInputValue(data.diagnosis);
-  }
-}, [title, otherPatientData]);
-
+    if (title === "Chief Complaints" && data?.chiefcomplaint) {
+      setInputValue(data.chiefcomplaint);
+    } else if (title === "Diagnosis" && data?.diagnosis) {
+      setInputValue(data.diagnosis);
+    }
+  }, [title, otherPatientData]);
 
   const saveData = async () => {
+ 
+
     if (!patientData || !inputValue.trim()) {
-      alert("Missing patient data or empty field");
+      setToastMessage("⚠️ Missing patient data or empty field");
+      setTimeout(() => setToastMessage(""), 2000);
       return;
     }
 
@@ -59,7 +60,7 @@ export default function AssessmentCard({
       apiUrl = "https://doctorapi.medonext.com/API/HMS/SaveDiagnosisData";
       payload = {
         dissummryid: 0,
-        visitid: patientData.visitid, 
+        visitid: patientData.visitid,
         diagnosis: inputValue,
         entempid: patientData.empid,
         entdatetime: currentDateTime,
@@ -74,7 +75,7 @@ export default function AssessmentCard({
       console.warn("No matching API for this title.");
       return;
     }
-    console.log("save btn",payload);
+    console.log("save btn", payload);
     try {
       const response = await fetch(apiUrl, {
         method: "POST",
@@ -86,17 +87,23 @@ export default function AssessmentCard({
 
       const result = await response.json();
       console.log("✅ Data saved successfully:", result);
-      alert("Data saved successfully.");
+      // alert("Data saved successfully.");
+      setToastMessage("✅ Data saved successfully!");
+      setTimeout(() => setToastMessage(""), 2000);
     } catch (error) {
       console.error("❌ Error saving data:", error);
       alert("Error while saving data.");
     }
   };
-  
-  
 
   return (
     <div className="bg-gray-50 border border-gray-300 shadow rounded-lg p-1 flex flex-col gap-2 max-h-25">
+      {toastMessage && (
+        <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white text-sm px-6 py-3 rounded-md shadow-lg z-50 animate-slide-fade">
+          {toastMessage}
+        </div>
+      )}
+
       <div className="flex items-center justify-between">
         <MainHeadings title={title} icons={icons} />
         <ActionButton label="Save" onClick={saveData} />

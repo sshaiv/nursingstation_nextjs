@@ -46,8 +46,9 @@ export default function MedicineIndent({
   const [entries, setEntries] = useState([]);
   const [showMedicineNameModal, setShowMedicineNameModal] = useState(false);
 
-  const [medicineName, setMedicineName] = useState(""); // Changed from performedBy to medicineName
+  const [medicineName, setMedicineName] = useState(""); 
   const [medicineData, setMedicineData] = useState(null);
+    const [toastMessage, setToastMessage] = useState("");
 
   const handleSelectMedicineName = (selected) => {
     console.log("Medicine selected:", selected);
@@ -222,7 +223,9 @@ export default function MedicineIndent({
       console.log("Response:", result);
 
       if (response.ok) {
-        alert("Data saved successfully!");
+          setToastMessage("✅ Data saved successfully!");
+      setTimeout(() => setToastMessage(""), 2000);
+       // alert("Data saved successfully!");
         setRefreshData((prev) => !prev);
         setVitals([]);
         // setSaveData({});
@@ -345,6 +348,11 @@ export default function MedicineIndent({
 
   return (
     <div className="p-2 rounded-xl w-full max-w-8xl mx-auto text-[12px] space-y-6">
+       {toastMessage && (
+        <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white text-sm px-6 py-3 rounded-md shadow-lg z-50 animate-slide-fade">
+          {toastMessage}
+        </div>
+      )}
       {/* Modals */}
       {isDoctorModalOpen && (
         <DoctorModal
