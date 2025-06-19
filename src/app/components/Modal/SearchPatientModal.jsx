@@ -57,46 +57,101 @@ const SearchPatientModal = ({ isOpen, onClose, patientData }) => {
     setFilteredData(results);
   }, [searchTerm, historyData]);
 
-  const handleRowDoubleClick = async (visitId, index) => {
-    console.log("Visit ID:", visitId);
-    setSelectedRowIndex(index);
-    const cleanedVisitId = visitId.trim();
-    console.log("Cleaned visitId:", `"${cleanedVisitId}"`);
+  // const handleRowDoubleClick = async (visitId, index) => {
+  //   console.log("Visit ID:", visitId);
+  //   setSelectedRowIndex(index);
+  //   const cleanedVisitId = visitId.trim();
+  //   console.log("Cleaned visitId:", `"${cleanedVisitId}"`);
 
-    setLoading(true);
-    try {
-      const response = await fetch(
-        `${API_ENDPOINTS.getAdvPatientBed}/?visitid=${cleanedVisitId}`
-      );
+  //   setLoading(true);
+  //   try {
+  //     const response = await fetch(
+  //       `${API_ENDPOINTS.getAdvPatientBed}/?visitid=${cleanedVisitId}`
+  //     );
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+  //     if (!response.ok) {
+  //       throw new Error(`HTTP error! status: ${response.status}`);
+  //     }
 
-      let data = await response.json();
+  //     let data = await response.json();
 
-      if (typeof data === "string") {
-        data = JSON.parse(data);
-      }
+  //     if (typeof data === "string") {
+  //       data = JSON.parse(data);
+  //     }
 
-      console.log("API response data:", data);
+  //     console.log("API response data:", data);
 
-      if (Array.isArray(data) && data.length > 0) {
-        const patient = data[0];
+  //     if (Array.isArray(data) && data.length > 0) {
+  //       const patient = data[0];
 
-        router.push(
-          `/nursingstation?visitid=${encodeURIComponent(patient.visitid)}&gssuhid=${encodeURIComponent(patient.gssuhid)}&empid=${encodeURIComponent(patient.empid)}`
-        );
-      } else {
-        alert("No patient data found.");
-      }
-    } catch (error) {
-      console.error("Error fetching patient bed info:", error);
-      alert("Failed to fetch patient bed info: " + error.message);
-    } finally {
-      setLoading(false);
+  //       router.push(
+  //         `/nursingstation?visitid=${encodeURIComponent(patient.visitid)}&gssuhid=${encodeURIComponent(patient.gssuhid)}&empid=${encodeURIComponent(patient.empid)}`
+  //       );
+  //     } else {
+  //       alert("No patient data found.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching patient bed info:", error);
+  //     alert("Failed to fetch patient bed info: " + error.message);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+const handleRowDoubleClick = async (visitId, index) => {
+  console.log("🆔 Visit ID:", visitId);
+  setSelectedRowIndex(index);
+
+  const cleanedVisitId = visitId.trim();
+  console.log("🧼 Cleaned visitId:", `"${cleanedVisitId}"`);
+
+  setLoading(true);
+
+  try {
+    const apiUrl = `${API_ENDPOINTS.getAdvPatientBed}/?visitid=${encodeURIComponent(cleanedVisitId)}`;
+    console.log("🔗 Fetching from:", apiUrl);
+
+    const response = await fetch(apiUrl);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-  };
+
+    const rawText = await response.text();
+    console.log("📦 Raw API response text:", rawText);
+
+    let data;
+    try {
+      data = JSON.parse(JSON.parse(rawText));
+    } catch (jsonError) {
+      throw new Error("Failed to parse JSON: " + jsonError.message);
+    }
+
+    console.log("✅ Parsed data:", data);
+    
+  const tableData = Array.isArray(data.Table) ? data.Table : [];
+
+    console.log("📏 tableData length:", tableData.length);
+
+    if (tableData.length > 0) {
+      const patient = tableData[0];
+      console.log("✅ Patient found:", patient);
+
+      router.push(
+        `/nursingstation?visitid=${encodeURIComponent(patient.visitid)}&gssuhid=${encodeURIComponent(patient.gssuhid)}&empid=${encodeURIComponent(patient.empid)}`
+      );
+    } else {
+      console.warn("⚠️ No patient data found in table.");
+      alert("No patient data found.");
+    }
+  } catch (error) {
+    console.error("❌ Error fetching patient bed info:", error);
+    alert("Failed to fetch patient bed info: " + error.message);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   if (!isOpen) return null;
 

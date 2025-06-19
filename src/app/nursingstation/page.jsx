@@ -19,36 +19,45 @@ function NursingStationContent() {
   const [showScanner, setShowScanner] = useState(false);
   const [patientData, setPatientData] = useState(null);
 
-  const fetchPatientBed = async (visitid) => {
-    
+  const fetchPatientBed = async (visitId) => {
+    const cleanedVisitId = visitId.trim();
     setLoading(true);
+
     try {
-      const response = await fetch(
-        `${API_ENDPOINTS.getAdvPatientBed}/?visitid=${visitid}`
-      );
+      const apiUrl = `${
+        API_ENDPOINTS.getAdvPatientBed
+      }/?visitid=${encodeURIComponent(cleanedVisitId)}`;
+      const response = await fetch(apiUrl);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
-        
       }
 
-      let data = await response.json();
+      let rawText = await response.text();
+      console.log("📦 Raw API response text:", rawText);
 
-      if (typeof data === "string") {
-        data = JSON.parse(data);
+      let data;
+      try {
+        data = JSON.parse(JSON.parse(rawText));
+      } catch (jsonError) {
+        throw new Error("Failed to parse JSON: " + jsonError.message);
       }
 
-      // console.log("API response data:", data);
+      console.log("✅ Parsed data:", data);
 
-      if (Array.isArray(data) && data.length > 0) {
-        const patient = data[0];
+      const tableData = Array.isArray(data.Table) ? data.Table : [];
+
+      console.log("📏 tableData length:", tableData.length);
+
+      if (tableData.length > 0) {
+        const patient = tableData[0];
         setPatientData(patient);
       } else {
         alert("No patient data found.");
         setPatientData(null);
       }
     } catch (error) {
-      console.error("Error fetching patient bed info:", error);
+      console.error("❌ Error fetching patient bed info:", error);
       alert("Failed to fetch patient bed info: " + error.message);
       setPatientData(null);
     } finally {
@@ -71,50 +80,63 @@ function NursingStationContent() {
     }
   }, [searchParams]);
 
+  return (
+    <div className="p-4 space-y-4 bg-gray-50">
+      <NurHeader />
 
-return (
-  <div className="p-4 space-y-4 bg-gray-50">
-    <NurHeader />
-
-    {/* PATIENT INFO ALWAYS ON TOP */}
-    <div className="w-full">
-      {loading ? (
-        // Skeleton loader
-        <div className="mx-auto w-full max-w-sm rounded-md border border-blue-300 p-4">
-          <div className="flex animate-pulse space-x-4">
-            <div className="h-10 w-10 rounded-full bg-gray-200"></div>
-            <div className="flex-1 space-y-6 py-1">
-              <div className="h-2 rounded bg-gray-200"></div>
-              <div className="space-y-3">
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="col-span-2 h-2 rounded bg-gray-200"></div>
-                  <div className="col-span-1 h-2 rounded bg-gray-200"></div>
-                </div>
+      {/* PATIENT INFO ALWAYS ON TOP */}
+      <div className="w-full">
+        {loading ? (
+          // Skeleton loader
+          <div className="mx-auto w-full max-w-sm rounded-md border border-blue-300 p-4">
+            <div className="flex animate-pulse space-x-4">
+              <div className="h-10 w-10 rounded-full bg-gray-200"></div>
+              <div className="flex-1 space-y-6 py-1">
                 <div className="h-2 rounded bg-gray-200"></div>
+                <div className="space-y-3">
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="col-span-2 h-2 rounded bg-gray-200"></div>
+                    <div className="col-span-1 h-2 rounded bg-gray-200"></div>
+                  </div>
+                  <div className="h-2 rounded bg-gray-200"></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      ) : patientData ? (
-        <PatientInfoCard
-          name={patientData.patname || "N/A"}
-          age={patientData.Age || "N/A"}
-          gender={patientData.gendername || "N/A"}
-          bedNo={patientData.bedno || "N/A"}
-          doctor={patientData.primconsultant || "N/A"}
-          billingGroup={patientData.billgrpname || "N/A"}
-          phone={patientData.mobileno || "N/A"}
-        />
-      ) : null}
-    </div>
+        ) : patientData ? (
+          <PatientInfoCard
+            name={patientData.patname || "N/A"}
+            age={patientData.Age || "N/A"}
+            gender={patientData.gendername || "N/A"}
+            bedNo={patientData.bedno || "N/A"}
+            doctor={patientData.primconsultant || "N/A"}
+            billingGroup={patientData.billgrpname || "N/A"}
+            phone={patientData.mobileno || "N/A"}
+          />
+        ) : null}
+      </div>
 
+      {/* GRID BELOW */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="md:col-span-3 space-y-4">
+          <div className="w-full">
+            <VitalsTable
+              title="Vitals"
+              visitid={visitid}
+              gssuhid={gssuhid}
+              empid={empid}
+              patientData={patientData}
+            />
+          </div>
 
-    {/* GRID BELOW */}
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-      <div className="md:col-span-3 space-y-4">
-        <div className="w-full">
-          <VitalsTable
-            title="Vitals"
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <AssessmentCard title="Chief Complaints" />
+            <AssessmentCard title="Diagnosis" />
+            <AssessmentCard title="Allergies" />
+            <AssessmentCard icons="🔍" title=" Notes" />
+          </div>
+
+          <MedicineTable
             visitid={visitid}
             gssuhid={gssuhid}
             empid={empid}
@@ -122,33 +144,17 @@ return (
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <AssessmentCard title="Chief Complaints" />
-          <AssessmentCard title="Diagnosis" />
-          <AssessmentCard title="Allergies" />
-          <AssessmentCard icons="🔍" title=" Notes" />
+        <div>
+          <ButtonGrid
+            visitid={visitid}
+            gssuhid={gssuhid}
+            empid={empid}
+            patientData={patientData}
+          />
         </div>
-
-        <MedicineTable
-          visitid={visitid}
-          gssuhid={gssuhid}
-          empid={empid}
-          patientData={patientData}
-        />
-      </div>
-
-      <div>
-        <ButtonGrid
-          visitid={visitid}
-          gssuhid={gssuhid}
-          empid={empid}
-          patientData={patientData}
-        />
       </div>
     </div>
-  </div>
-);
-
+  );
 }
 
 export default function nursingstation() {

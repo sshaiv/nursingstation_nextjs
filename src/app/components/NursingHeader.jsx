@@ -25,7 +25,6 @@ export default function NurHeader() {
     setShowToast(true);
   };
 
-  
   return (
     <div className="flex items-center border-2 border-cyan-500 h-14 justify-between bg-gradient-to-r from-cyan-700 via-cyan-800 to-cyan-900 shadow-xl rounded-lg">
       {/* Scan image (no animation or scanner functionality) */}
@@ -59,36 +58,33 @@ export default function NurHeader() {
       />
 
       {/* Toast Popup */}
-{showToast && (
-  <div className="fixed top-20 left-1/2 transform -translate-x-1/2 w-[60%] max-w-sm px-6 py-4 rounded-lg shadow-md z-50 border bg-gray-50 border-black text-black">
-    <span className="block text-base font-semibold text-blue-900 mb-3">{toastMessage}</span>
+      {showToast && (
+        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 w-[60%] max-w-sm px-6 py-4 rounded-lg shadow-md z-50 border bg-gray-50 border-black text-black">
+          <span className="block text-base font-semibold text-blue-900 mb-3">
+            {toastMessage}
+          </span>
 
-    {confirmAction && (
-      <div className="flex justify-center gap-3">
-        <button
-          onClick={() => {
-            setShowToast(false);
-            setConfirmAction(null);
-          }}
-          className="px-4 py-1 bg-gray-700 text-white rounded hover:bg-gray-400 transition"
-        >
-         ✖️ Cancel
-        </button>
-        <button
-          onClick={confirmAction}
-          className="px-4 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition"
-        >
-         👍 Sign-Out
-        </button>
-      </div>
-    )}
-  </div>
-)}
-
-
-
+          {confirmAction && (
+            <div className="flex justify-center gap-3">
+              <button
+                onClick={() => {
+                  setShowToast(false);
+                  setConfirmAction(null);
+                }}
+                className="px-4 py-1 bg-gray-700 text-white rounded hover:bg-gray-400 transition"
+              >
+                ✖️ Cancel
+              </button>
+              <button
+                onClick={confirmAction}
+                className="px-4 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition"
+              >
+                👍 Sign-Out
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
-
-
