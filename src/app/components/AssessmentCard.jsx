@@ -31,8 +31,8 @@ export default function AssessmentCard({
  
 
     if (!patientData || !inputValue.trim()) {
-      setToastMessage("⚠️ Missing patient data or empty field");
-      setTimeout(() => setToastMessage(""), 2000);
+      // setToastMessage("⚠️ Missing patient data or empty field");
+      // setTimeout(() => setToastMessage(""), 2000);
       return;
     }
 

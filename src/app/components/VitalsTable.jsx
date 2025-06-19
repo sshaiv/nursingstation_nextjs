@@ -103,8 +103,8 @@ export default function VitalsTable({
     if (!visitid) {
       // console.warn("No visitid provided, skipping loadVitalData");
       // return;
-      setToastMessage("⚠️ Missing patient data or empty field");
-      setTimeout(() => setToastMessage(""), 2000);
+      // setToastMessage("⚠️ Missing patient data or empty field");
+      // setTimeout(() => setToastMessage(""), 2000);
       return;
     }
     try {
