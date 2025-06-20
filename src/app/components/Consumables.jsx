@@ -280,8 +280,9 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
   const [hsncode, setHsncode] = useState();
   const [itemcatgid, setItemcatgid] = useState();
   const [salerate, setSalerate] = useState();
-
+  
   const handleSelectedData = (data) => {
+  
     setItemcatgid(data.itemcatgid);
     setSalerate(data.salerate);
     setHsncode(data.hsncode);
@@ -311,16 +312,30 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
   const [mrp, setMrp] = useState("");
   const [availQty, setAvailQty] = useState("");
 
+  // const handleIssueQtyChange = (e) => {
+  //   const value = e.target.value;
+  //   setIssueQty(value);
+  //   if (mrp) {
+  //     const finalCharge = parseFloat(mrp) * parseFloat(value);
+  //     setCharge(finalCharge.toFixed(2));
+  //   } else {
+  //     setCharge("");
+  //   }
+  // };
+
   const handleIssueQtyChange = (e) => {
-    const value = e.target.value;
-    setIssueQty(value);
-    if (mrp) {
-      const finalCharge = parseFloat(mrp) * parseFloat(value);
-      setCharge(finalCharge.toFixed(2));
-    } else {
-      setCharge("");
-    }
-  };
+  const value = e.target.value;
+  setIssueQty(value);
+
+  if (mrp && convfact && parseFloat(convfact) !== 0) {
+    const unitPrice = parseFloat(mrp) / parseFloat(convfact);
+    const finalCharge = unitPrice * parseFloat(value);
+    setCharge(finalCharge.toFixed(2));
+  } else {
+    setCharge("");
+  }
+};
+
 
   const handleInsert = () => {
 
@@ -341,17 +356,18 @@ const newErrors = validateForm();
 
     const newEntry = {
       date: currentDateTime,
-      doctorName: doctorData.label || doctorData.CName || "N/A",
-      issueNo: issueNo || "N/A",
-      store: store || "N/A",
-      itemName: selectedItem ? selectedItem.label : "N/A",
-      bundleName: bundleName || "N/A",
-      barcode: barcode || "N/A",
+      doctorName: doctorData.label || doctorData.CName || "  ",
+      issueNo: issueNo || "  ",
+      store: store || "  ",
+      itemName: selectedItem ? selectedItem.label : "  ",
+      bundleName: bundleName || " ",
+      barcode: barcode || " ",
       indentQty: indentQty || 0,
       issueQty: issueQty || 0,
-      remarks: remarks || "N/A",
+      remarks: remarks || " ",
+      mrp:mrp|| " ",
       charge: charge || " ",
-      batch: batch || "N/A",
+      batch: batch || "  ",
       // Add any other fields you need
     };
     console.log("New Entry:", newEntry);
@@ -372,8 +388,8 @@ const newErrors = validateForm();
       itembelongstoid: itembelongtoid,
       ItemName: selectedItem ? selectedItem.label : " ",
       BatchNo: batch || "",
-      qty: indentQty || 0,
-      Qty: indentQty || 0,
+      qty: issueQty || 0,
+      Qty: issueQty || 0,
       unitid: selectedUnitId || 0,
       patientcharge: charge || " ",
       Charge: charge || " ",
@@ -401,7 +417,7 @@ const newErrors = validateForm();
       hsncode: hsncode || "",
       batchserialno: batch || " ",
       expirydate: expirydate || " ",
-      qtycharge: issueQty || " ",
+      qtycharge: charge || " ",
       purchrate: PurchaseRate || " ",
       netrate: netRate || "",
       mrp: mrp || " ",
@@ -428,7 +444,7 @@ const newErrors = validateForm();
       intranscationid: 0,
       itemcategoryid: 0,
       mfgdate: mfgdate || " ",
-      Qtycharge: 0,
+      Qtycharge: charge ||" ",
       freeQty: 0,
       PurchaseRate: 0,
       cgsTAmount: 0,
@@ -509,7 +525,7 @@ const newErrors = validateForm();
     setVitals((prev) => [...prev, newEntry]);
     // Resetting fields after insertion
     setIssueNo("");
-    setStore("");
+    // setStore("");
     setSelectedItem(null);
     setBundleName("");
     setBarcode("");
@@ -520,8 +536,8 @@ const newErrors = validateForm();
     setAvailQty("");
     setMrp("");
     setExpiryDate("");
-    setDoctorName("");
-    setDoctorData(null);
+   // setDoctorName("");
+   // setDoctorData(null);
   };
 
   const savebtn = async () => {
@@ -705,33 +721,6 @@ const newErrors = validateForm();
             )}
           </div>
 
-          {/* Bundle Name */}
-          {/* <div className="flex flex-col w-full">
-            <label className="text-xs text-gray-700 font-medium mb-1">
-              Bundle Name
-            </label>
-            <ReusableInputField
-              className="text-sm px-2 py-1 border border-gray-300 rounded-md"
-              id="bundleName"
-              width="w-full"
-              value={bundleName}
-              onChange={(e) => setBundleName(e.target.value)}
-            />
-          </div> */}
-
-          {/* Barcode (Read-only) */}
-          {/* <div className="flex flex-col w-full">
-            <label className="text-xs text-gray-700 font-medium mb-1">
-              Barcode
-            </label>
-            <ReusableInputField
-              className="text-sm px-2 py-1 border border-gray-300 bg-gray-100 rounded-md"
-              id="barcode"
-              width="w-full"
-              value={barcode}
-              readOnly
-            />
-          </div> */}
 
           {/* Indent Qty */}
           <div className="flex flex-col w-full">
@@ -739,11 +728,12 @@ const newErrors = validateForm();
               Indent Qty
             </label>
             <ReusableInputField
-              className="text-sm px-2 py-1 border border-gray-300 rounded-md"
+              className="text-sm px-2 py-1 border border-gray-300 bg-gray-100 rounded-md"
               id="indentQty"
               width="w-full"
               value={indentQty}
               onChange={(e) => setIndentQty(e.target.value)}
+              readOnly
             />
           </div>
 
@@ -868,7 +858,7 @@ const newErrors = validateForm();
                 <TableReuse type="th">Item Name</TableReuse>
                 <TableReuse type="th">Batch No</TableReuse>
                 <TableReuse type="th">Qty.</TableReuse>
-                <TableReuse type="th">Charge</TableReuse>
+                <TableReuse type="th">MRP</TableReuse>
                 <TableReuse type="th">Total Amount</TableReuse>
                 <TableReuse type="th">Remove</TableReuse>
               </tr>
@@ -879,15 +869,13 @@ const newErrors = validateForm();
                   <TableReuse>{v.doctorName}</TableReuse>
                   <TableReuse>{v.date}</TableReuse>
                   <TableReuse>{v.itemName}</TableReuse>
-                  <TableReuse>{v.batch || "N/A"}</TableReuse>
+                  <TableReuse>{v.batch || "  "}</TableReuse>
                   <TableReuse>{v.issueQty}</TableReuse>
+                  <TableReuse>{v.mrp}</TableReuse>
                   <TableReuse>{v.charge}</TableReuse>
-                  <TableReuse>{(v.indentQty * v.charge).toFixed(2)}</TableReuse>
                   <TableReuse>
                     <div className="flex justify-center space-x-2">
-                      <button className="text-blue-500 hover:underline">
-                        Edit
-                      </button>
+                     
                       <button
                         className="text-red-500 hover:underline"
                         onClick={() =>

@@ -51,7 +51,7 @@ const handleCheckboxChange = (index) => {
       // Use setTimeout to defer the state update
       setTimeout(() => {
         console.log('Selected row data:', itemCharge[index]);
-        onSelect(itemCharge[index]); // Send data to parent
+        onSelect(itemCharge[index]); 
       }, 0);
     }
     return updated;
@@ -96,6 +96,7 @@ const handleCheckboxChange = (index) => {
                     <TableReuse type="th">CGST%</TableReuse>
                     <TableReuse type="th">SGST%</TableReuse>
                     <TableReuse type="th">IGST%</TableReuse>
+                    <TableReuse type="th">convfact</TableReuse>
                   </tr>
                 </thead>
               </table>
@@ -110,6 +111,7 @@ const handleCheckboxChange = (index) => {
                         <TableReuse>{row.batchserialno}</TableReuse>
                         <TableReuse>{row.salerate}</TableReuse>
                         <TableReuse>{row.expirydate}</TableReuse>
+                        {/* <TableReuse>{row.convfact}</TableReuse> */}
                         <TableReuse>
                           <input
                             type="checkbox"
@@ -121,6 +123,7 @@ const handleCheckboxChange = (index) => {
                         <TableReuse>{row.cgstper}</TableReuse>
                         <TableReuse>{row.sgstper}</TableReuse>
                         <TableReuse>{row.igstper}</TableReuse>
+                        <TableReuse>{row.convfact}</TableReuse>
                       </tr>
                     ))}
                   </tbody>
