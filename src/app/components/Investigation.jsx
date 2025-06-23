@@ -127,7 +127,7 @@ export default function Investigation({
         setRefreshData((prev) => !prev);
         // Reset vitals and form data
         setVitals([]);
-        setSaveData({});
+       // setSaveData({});
         setSelectedDate(null);
         setDoctorData(null);
         setDoctorName("");
@@ -313,7 +313,7 @@ export default function Investigation({
       </div>
 
       <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
-        <div className="max-h-[250px] overflow-y-auto scrollbar-hide">
+        <div className="max-h-[150px] overflow-y-auto scrollbar-hide">
           <table className="w-full text-[11px] text-center border-collapse">
             <thead className="bg-blue-50 text-gray-800 font-semibold sticky top-0 z-10">
               <tr>

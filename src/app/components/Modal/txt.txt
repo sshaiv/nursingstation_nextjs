@@ -1,99 +1,35 @@
-
-
-
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import TableReuse from '@/app/common/TableReuse';
-
-export default function SelectBatchModal({ onClose, selectedStore, selectedData, itemId }) {
-  const [itemCharge, setItemCharge] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchItemCharge = async () => {
-      if (!itemId || !selectedStore) return; // Ensure itemId and selectedStore are valid
-
-      try {
-        const response = await axios.get(`https://doctorapi.medonext.com/api/HMS/getItemCharge?itemid=${itemId}&storeid=${selectedStore}`);
-        console.log('API Response:', response.data); // Log the response
-        setItemCharge(response.data.Table || []); // Safely access the Table key
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchItemCharge();
-  }, [itemId, selectedStore]); // Add itemId to the dependency array
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
-  if (!itemCharge.length) {
-    return <div>No data available for the selected store.</div>;
-  }
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-xs bg-black/30">
-      <div className="w-[95vw] max-w-6xl rounded-md border shadow-lg bg-white p-3 text-xs font-sans">
-        {/* Header */}
-        <div className="bg-green-100 text-green-800 text-center font-semibold py-2 rounded-t-md text-[13px]">
-          Batch Series
-        </div>
-
-        {/* Table */}
-        <div className="overflow-x-auto p-4">
-          <table className="min-w-full text-sm border border-gray-300">
-            <thead className="bg-blue-900 text-black text-center">
-              <tr>
-                <TableReuse type="th">S.No </TableReuse>
-                <TableReuse type="th">Batch No </TableReuse>
-                <TableReuse type="th">Sale Rate </TableReuse>
-                <TableReuse type="th">Expiry date </TableReuse>
-                <TableReuse type="th">Select </TableReuse>
-                <TableReuse type="th">Avail. Qty </TableReuse>
-                <TableReuse type="th">CGST% </TableReuse>
-                <TableReuse type="th">SGST% </TableReuse>
-                <TableReuse type="th">IGST% </TableReuse>
-              </tr>
-            </thead>
-            <tbody className="text-center bg-gray-50">
-              {itemCharge.map((row, index) => (
-                <tr key={index}>
-                  <TableReuse>{index + 1} </TableReuse>
-                  <TableReuse>{row.batchserialno} </TableReuse>
-                  <TableReuse>{row.salerate} </TableReuse>
-                  <TableReuse>{row.expirydate} </TableReuse>
-                  <TableReuse>
-                    <input type="checkbox" />
-                  </TableReuse>
-                  <TableReuse>{row.availqty} </TableReuse>
-                  <TableReuse>{row.cgstper} </TableReuse>
-                  <TableReuse>{row.sgstper} </TableReuse>
-                  <TableReuse>{row.igstper} </TableReuse>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Close Button */}
-        <div className="flex justify-center mt-2">
-          <button
-            onClick={onClose}
-            className="bg-blue-700 hover:bg-blue-800 text-white text-xs font-semibold px-6 py-1.5 rounded"
-          >
-            Close
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+{
+    "rowid": 0,
+    "outtransactionid": 0,
+    "transactiondate": "",
+    "invoiceno": "",
+    "uhid": "",
+    "upid": 0,
+    "hospvisitid": "",
+    "doctorid": "",
+    "totamount": 0,
+    "flatdiscamount": 0,
+    "discper": 0,
+    "totaldiscper": 0,
+    "paidamt": 0,
+    "isprint": 0,
+    "remark": "",
+    "totcgstamt": 0,
+    "totigstamt": 0,
+    "totsgstamt": 0,
+    "isremove": 0,
+    "entempid": 1,
+    "entdatetime": "",
+    "entwsname": "",
+    "modifyempid": 1,
+    "modifydatetime": "",
+    "modifywsname": "",
+    "locationid": 1,
+    "financialyear": "2526",
+    "transtypeid": "",
+    "isEdit": 0,
+    "jsonStringitemstockoutmain": "[{\"rowid\":0,\"outtransactionid\":0,\"transactiondate\":\"23/06/2025 10:59 AM\",\"hospvisitid\":\"SNI24250000679\",\"doctorid\":\"1112\",\"storeid\":87,\"invoiceno\":0,\"entempid\":\"988\",\"entdatetime\":\" \",\"entwsname\":\"WIN-4JLMQFRKD1F\",\"modifyempid\":\"510\",\"modifydatetime\":\"2024-06-30 14:01:24\",\"modifywsname\":null,\"locationid\":1,\"financialyear\":\"2425\",\"uhid\":\"SNU24250004561\",\"upid\":0,\"isEdit\":0,\"totcgstamt\":6,\"totsgstamt\":6,\"totigstamt\":12,\"totamount\":\"612.00\",\"remark\":\" \"}]",
+    "jsonStringsubipdconsumablemodels": "[{\"count\":\" \",\"rowid\":0,\"visitid\":\"SNI24250000679\",\"gssuhid\":4561,\"consultantvisitid\":0,\"consultantid\":\"1112\",\"DoctorName\":\"ASHVIN  RAJPUT\",\"consumabledatetime\":\"23/06/2025 10:59 AM\",\"DateTime\":\"23/06/2025 10:59 AM\",\"bedno\":\"MGW-11\",\"itemid\":12185,\"itemtypeid\":\"0\",\"itembelongstoid\":1,\"ItemName\":\"KERAGLO AD LOTION\",\"BatchNo\":\"KDL-2402\",\"qty\":\"2\",\"Qty\":\"2\",\"unitid\":0,\"patientcharge\":\"612.00\",\"Charge\":\"612.00\",\"TotalAmount\":\"612.00\",\"Remove\":\" \",\"isremove\":0,\"removedbyempid\":0,\"RemoveRemark\":\" \",\"removeremark\":\" \",\"isinactive\":0,\"entempid\":\"988\",\"entdatetime\":\" \",\"entwsname\":\"WIN-4JLMQFRKD1F\",\"modifyempid\":\"510\",\"modifydatetime\":\"2024-06-30 14:01:24\",\"modifywsname\":null,\"locationid\":1,\"financialyear\":\"2425\",\"isedit\":0,\"outtransactiondetlid\":0,\"outtransactionid\":0,\"itemcatgid\":32,\"hsncode\":\"3004\",\"batchserialno\":\"KDL-2402\",\"expirydate\":\"01/01/2027\",\"qtycharge\":\"612.00\",\"purchrate\":218.58,\"netrate\":235.02,\"mrp\":306,\"salerate\":306,\"totalqty\":\"2\",\"barcode\":\"00000013190012185000#KDL-2402\",\"storeid\":87,\"surgeryid\":0,\"remark\":\" \",\"cgstper\":6,\"cgstamt\":6,\"sgstper\":6,\"sgstamt\":6,\"igstper\":12,\"igstamt\":12,\"isreuseable\":0,\"applicableqty\":0,\"transactiontypeid\":0,\"gstid\":3,\"convfact\":1,\"ReturnQty\":0,\"TobeRetQty\":0,\"intranactiondetlid\":0,\"intranscationid\":0,\"itemcategoryid\":0,\"mfgdate\":\"05/07/2024\",\"Qtycharge\":\"612.00\",\"freeQty\":0,\"PurchaseRate\":0,\"cgsTAmount\":0,\"sgsTAmount\":0,\"igsTAmount\":0,\"totalamount\":\"612.00\",\"netRate\":235.02,\"itempakgid\":\"56\",\"invoiceno\":0}]",
+    "jsonStringsubitemstockoutdetl": "[{\"count\":\" \",\"rowid\":0,\"visitid\":\"SNI24250000679\",\"gssuhid\":4561,\"consultantvisitid\":0,\"consultantid\":\"1112\",\"DoctorName\":\"ASHVIN  RAJPUT\",\"consumabledatetime\":\"23/06/2025 10:59 AM\",\"DateTime\":\"23/06/2025 10:59 AM\",\"bedno\":\"MGW-11\",\"itemid\":12185,\"itemtypeid\":\"0\",\"itembelongstoid\":1,\"ItemName\":\"KERAGLO AD LOTION\",\"BatchNo\":\"KDL-2402\",\"qty\":\"2\",\"Qty\":\"2\",\"unitid\":0,\"patientcharge\":\"612.00\",\"Charge\":\"612.00\",\"TotalAmount\":\"612.00\",\"Remove\":\" \",\"isremove\":0,\"removedbyempid\":0,\"RemoveRemark\":\" \",\"removeremark\":\" \",\"isinactive\":0,\"entempid\":\"988\",\"entdatetime\":\" \",\"entwsname\":\"WIN-4JLMQFRKD1F\",\"modifyempid\":\"510\",\"modifydatetime\":\"2024-06-30 14:01:24\",\"modifywsname\":null,\"locationid\":1,\"financialyear\":\"2425\",\"isedit\":0,\"outtransactiondetlid\":0,\"outtransactionid\":0,\"itemcatgid\":32,\"hsncode\":\"3004\",\"batchserialno\":\"KDL-2402\",\"expirydate\":\"01/01/2027\",\"qtycharge\":\"612.00\",\"purchrate\":218.58,\"netrate\":235.02,\"mrp\":306,\"salerate\":306,\"totalqty\":\"2\",\"barcode\":\"00000013190012185000#KDL-2402\",\"storeid\":87,\"surgeryid\":0,\"remark\":\" \",\"cgstper\":6,\"cgstamt\":6,\"sgstper\":6,\"sgstamt\":6,\"igstper\":12,\"igstamt\":12,\"isreuseable\":0,\"applicableqty\":0,\"transactiontypeid\":0,\"gstid\":3,\"convfact\":1,\"ReturnQty\":0,\"TobeRetQty\":0,\"intranactiondetlid\":0,\"intranscationid\":0,\"itemcategoryid\":0,\"mfgdate\":\"05/07/2024\",\"Qtycharge\":\"612.00\",\"freeQty\":0,\"PurchaseRate\":0,\"cgsTAmount\":0,\"sgsTAmount\":0,\"igsTAmount\":0,\"totalamount\":\"612.00\",\"netRate\":235.02,\"itempakgid\":\"56\",\"invoiceno\":0}]",
+    "jsonStringsubpatbilinginfomodel": "[{\"visitid\":\"SNI24250000679\",\"gssuhid\":4561,\"reqwardcatgid\":2,\"allotedcatg\":2,\"bedno\":\"MGW-11\",\"admissiontypeid\":3,\"corporateid\":1,\"billinggroupid\":1,\"terriffid\":1}]"
 }

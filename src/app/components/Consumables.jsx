@@ -384,7 +384,10 @@ const newErrors = validateForm();
       DateTime: currentDateTime,
       bedno: patientData.bedno,
       itemid: itemid || " ",
-      itemtypeid: selectedItemDetails ? selectedItemDetails.itemtypeid : "  ",
+     // itemtypeid: selectedItemDetails ? selectedItemDetails.itemtypeid : "  ",
+     itemtypeid: selectedItemDetails
+  ? (selectedItemDetails.itemtypeid != null ? selectedItemDetails.itemtypeid : 0 )
+  : 0,
       itembelongstoid: itembelongtoid,
       ItemName: selectedItem ? selectedItem.label : " ",
       BatchNo: batch || "",
@@ -405,9 +408,12 @@ const newErrors = validateForm();
       entwsname: selectedItemDetails ? selectedItemDetails.entwsname : "  ",
       modifyempid: patientData.modifyempid,
       modifydatetime: patientData.modifydatetime,
-      modifywsname: selectedItemDetails
-        ? selectedItemDetails.modifywsname
-        : "  ",
+      // modifywsname: selectedItemDetails
+      //   ? selectedItemDetails.modifywsname
+      //   : "  ",
+      modifywsname: selectedItemDetails && selectedItemDetails.modifywsname != null
+  ? selectedItemDetails.modifywsname
+  : "",
       locationid: patientData.locationid,
       financialyear: patientData.financialyear,
       isedit: 0,
