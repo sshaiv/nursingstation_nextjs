@@ -198,8 +198,8 @@ export default function MedicineIndent({
 
     // Resetting fields
     setQty(1);
-    setDoctorName("");
-    setDoctorData(null);
+  //  setDoctorName("");
+  //  setDoctorData(null);
     setMedicineName(""); // Reset medicineName
     setMedicineData(null); // Reset medicineData
     setIsReturn(false);
