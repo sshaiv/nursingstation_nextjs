@@ -547,6 +547,15 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
     // setDoctorName("");
     // setDoctorData(null);
 
+
+     // Close all modals
+    setDoctorModalOpen(false);
+    setMedicineIndentModalOpen(false);
+    setGetIndentDetailModalOpen(false);
+    setSelectBatchModalOpen(false);
+    setHistoryModalOpen(false);
+
+    
     // Step 2: Enable the Save button after Insert
     setIsSaveButtonDisabled(false);
   };
@@ -582,8 +591,8 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
       }));
 
         // Reset service entries to clear old entries
-      setServiceEntries([]); // Clear the service entries after saving
-      setVitals([]); // Clear the vitals after saving
+      setServiceEntries([]); 
+      setVitals([]); 
       } else {
         alert("Failed to save data.");
       }
