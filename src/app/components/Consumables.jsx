@@ -555,7 +555,7 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
     setSelectBatchModalOpen(false);
     setHistoryModalOpen(false);
 
-    
+
     // Step 2: Enable the Save button after Insert
     setIsSaveButtonDisabled(false);
   };
@@ -762,7 +762,7 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
               Indent Qty
             </label>
             <ReusableInputField
-              className="text-sm px-2 py-1 border border-gray-300 bg-gray-100 rounded-md"
+              className="text-sm px-2 py-1 border border-gray-300 bg-gray-100 rounded-md "
               id="indentQty"
               width="w-full"
               value={indentQty}
