@@ -110,7 +110,7 @@ export default function ButtonGrid({ visitid, gssuhid, empid ,patientData}) {
                     <div className="bg-purple-50 rounded-xl w-full max-w-4xl h-[80vh] relative shadow-2xl border flex flex-col overflow-hidden">
 
                         <button
-                            className="absolute top-3 right-4 text-gray-500 hover:text-gray-700 text-2xl"
+                            className="absolute top-3 right-4 text-red-500 hover:text-gray-700 text-2xl"
                             onClick={closeModal}
                         >
                             &times;

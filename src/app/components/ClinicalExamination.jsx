@@ -281,7 +281,8 @@ export default function ClinicalExamination({ visitid, gssuhid, empid }) {
 
   return (
     <div className="p-4 bg-purple-50 min-h-screen text-sm text-gray-700">
-      <ModalHeading title="Clinical Examination" />
+      <div className="flex h-[1px]  items-center justify-center"><ModalHeading title="Clinical Examination" /></div>
+      
       <hr className="border-t mt-6 mb-2 border-gray-300" />
 
       {/* Pain Assessment */}

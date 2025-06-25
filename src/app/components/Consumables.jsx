@@ -375,6 +375,7 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
       visitid: patientData.visitid,
       gssuhid: patientData.gssuhid,
       consultantvisitid: 0,
+      issueNo: issueNo || " ",
       consultantid: doctorData.CID || " ",
       DoctorName: doctorData.CName || " ",
       consumabledatetime: currentDateTime,
@@ -611,6 +612,42 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
     setHistoryModalOpen(false);
   };
   const [isHistoryModalOpen, setHistoryModalOpen] = useState(false);
+
+
+const [entries, setEntries] = useState([]);
+
+const handleDeleteEntry = (indexToDelete) => {
+  console.log("🗑️ Deleting Entry at Index:", indexToDelete);
+  console.log("📦 Entry Being Deleted:", serviceEntries[indexToDelete]);
+
+  // Filter out the deleted entry from all arrays
+  const updatedVitals = vitals.filter((_, i) => i !== indexToDelete);
+  const updatedEntries = entries.filter((_, i) => i !== indexToDelete);
+  const updatedServiceEntries = serviceEntries.filter((_, i) => i !== indexToDelete);
+
+  // Update state
+  setVitals(updatedVitals);
+  setEntries(updatedEntries);
+  setServiceEntries(updatedServiceEntries);
+
+  // Also update the JSON strings in saveData
+  setSaveData((prevData) => ({
+    ...prevData,
+    jsonStringsubipdconsumablemodels: JSON.stringify(updatedServiceEntries),
+    jsonStringsubitemstockoutdetl: JSON.stringify(updatedServiceEntries),
+    // keep others as is
+  }));
+
+  // Step 3: Disable Save button if nothing to save
+  if (updatedServiceEntries.length === 0) {
+    setIsSaveButtonDisabled(true);
+  }
+
+  console.log("✅ Updated JSON Strings After Deletion:");
+  console.log(" - Remaining Entries:", updatedServiceEntries);
+};
+
+
 
   return (
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
@@ -897,7 +934,7 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
                 <TableReuse type="th">Remove</TableReuse>
               </tr>
             </thead>
-            <tbody>
+            {/* <tbody>
               {vitals.map((v, idx) => (
                 <tr key={idx} className="hover:bg-gray-100 border-t">
                   <TableReuse>{v.doctorName}</TableReuse>
@@ -908,6 +945,7 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
                   <TableReuse>{v.mrp}</TableReuse>
                   <TableReuse>{v.charge}</TableReuse>
                   <TableReuse>
+                    
                     <div className="flex justify-center space-x-2">
                       <button
                         className="text-red-500 hover:underline"
@@ -921,7 +959,33 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
                   </TableReuse>
                 </tr>
               ))}
-            </tbody>
+            </tbody> */}
+            <tbody>
+  {vitals.map((entry, actualIndex) => (
+    <tr key={actualIndex} className="hover:bg-gray-100 border-t">
+      <TableReuse>{entry.doctorName}</TableReuse>
+      <TableReuse>{entry.date}</TableReuse>
+      <TableReuse>{entry.itemName}</TableReuse>
+      <TableReuse>{entry.batch || "  "}</TableReuse>
+      <TableReuse>{entry.issueQty}</TableReuse>
+      <TableReuse>{entry.mrp}</TableReuse>
+      <TableReuse>{entry.charge}</TableReuse>
+      <TableReuse>
+        <div className="flex justify-center space-x-2">
+          {entry.source !== "api" && (
+            <button
+              className="text-red-500 hover:underline"
+              onClick={() => handleDeleteEntry(actualIndex)} // Call the delete function with the actual index
+            >
+              🗑 Delete
+            </button>
+          )}
+        </div>
+      </TableReuse>
+    </tr>
+  ))}
+</tbody>
+
           </table>
         </div>
       </div>

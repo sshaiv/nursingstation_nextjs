@@ -1,14 +1,12 @@
-
-
-import React, { useState, useRef, useEffect } from 'react';
-import axios from 'axios';
-import SignatureCanvas from 'react-signature-canvas';
-import { H3, Label, ModalHeading } from '../common/text';
-import useFetchPatientHistory from '../hooks/fetchHistoryData';
-import { SaveButton } from '../common/Buttons';
-import API_ENDPOINTS from '../constants/api_url';
-import ReusableTextareaField from '../common/ReusableTextareaField';
-import Select from 'react-select';
+import React, { useState, useRef, useEffect } from "react";
+import axios from "axios";
+import SignatureCanvas from "react-signature-canvas";
+import { H3, Label, ModalHeading } from "../common/text";
+import useFetchPatientHistory from "../hooks/fetchHistoryData";
+import { SaveButton } from "../common/Buttons";
+import API_ENDPOINTS from "../constants/api_url";
+import ReusableTextareaField from "../common/ReusableTextareaField";
+import Select from "react-select";
 
 export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
   const { historyData } = useFetchPatientHistory(visitid, gssuhid, empid);
@@ -42,7 +40,7 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
       setAllergyYes(!!data.isallergies);
       setAllergyQuery(data.allergies || "");
       setHistoryGivenBy(data.historygivenby || "");
-      setRelation(data?.relationid || '');
+      setRelation(data?.relationid || "");
       setPresentingComplaint(data.presentingcomplaint || "");
       setIsDM(!!data.isdm);
       setIsHypertension(!!data.ishypertension);
@@ -94,7 +92,7 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
       personalhistoryother: personalOther,
       pasthistoryother: pastDetails,
       medicalhistory: medicalhistory,
-      surgicalhistory: surgicalhistory
+      surgicalhistory: surgicalhistory,
     };
 
     try {
@@ -106,32 +104,42 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
     }
   };
 
-  const relationOptions = relationData.map(item => ({
+  const relationOptions = relationData.map((item) => ({
     value: item.CID,
     label: item.CNAME,
   }));
 
-
-
-
-
   return (
     <div className="p-4 bg-purple-50 min-h-screen flex justify-center text-[10px] leading-tight">
-      <div className="w-full max-w-3xl mx-auto space-y-4"> {/* space-y increased */}
+      <div className="w-full  max-w-3xl mx-auto space-y-4 ">
+        <div className="flex h-[1px]  items-center justify-center">
+          <ModalHeading
+            title="Initial Assessment"
+            className="text-[11px] mb-3"
+          />
+        </div>
+        <hr className="border-t border-gray-300 mb-5" />
 
-        <ModalHeading title="Initial Assessment" className="text-[11px] mb-3" /> {/* mb-3 for spacing */}
-        <hr className="border-t border-gray-300 mb-5" /> {/* margin below hr */}
-        
         {/* Allergy Section */}
         <div className="space-y-3">
           <div className="flex items-center gap-4 mb-3">
-            <H3 >📋 Allergy</H3>
+            <H3>📋 Allergy</H3>
             <Label className="text-[10px] flex items-center gap-1">
-              <input type="radio" name="allergy" checked={allergyYes} onChange={() => setAllergyYes(true)} />
+              <input
+                type="radio"
+                name="allergy"
+                checked={allergyYes}
+                onChange={() => setAllergyYes(true)}
+              />
               Yes
             </Label>
             <Label className="text-[10px] flex items-center gap-1">
-              <input type="radio" name="allergy" checked={!allergyYes} onChange={() => setAllergyYes(false)} />
+              <input
+                type="radio"
+                name="allergy"
+                checked={!allergyYes}
+                onChange={() => setAllergyYes(false)}
+              />
               No
             </Label>
           </div>
@@ -141,25 +149,24 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
               label="🔍 "
               className="border text-black rounded text-[10px]"
               rows={1}
-              style={{ minHeight: '28px', padding: '6px 8px' }}
+              style={{ minHeight: "28px", padding: "6px 8px" }}
               value={allergyQuery}
               onChange={(e) => setAllergyQuery(e.target.value)}
             />
           </div>
         </div>
 
-
         {/* History of Present Illness */}
         <div className="space-y-4">
-          <H3 >✅ History of Present Illness</H3>
+          <H3>✅ History of Present Illness</H3>
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex flex-col gap-3 w-full md:w-1/2">
               <ReusableTextareaField
-                className='border-2 text-black text-[10px]'
+                className="border-2 text-black text-[10px]"
                 id="historygiven"
                 label="History Given By:"
                 rows={1}
-                style={{ minHeight: '28px', padding: '6px 8px' }}
+                style={{ minHeight: "28px", padding: "6px 8px" }}
                 value={historyGivenBy}
                 onChange={(e) => setHistoryGivenBy(e.target.value)}
               />
@@ -168,29 +175,31 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
                 styles={{
                   menu: (provided) => ({
                     ...provided,
-                    fontSize: '10px',
+                    fontSize: "10px",
                     // remove maxHeight and overflowY here too
                   }),
                   menuList: (provided) => ({
                     ...provided,
-                    maxHeight: '80px',
-                    overflowY: 'auto',
-                    fontSize: '10px',
+                    maxHeight: "80px",
+                    overflowY: "auto",
+                    fontSize: "10px",
                   }),
                   control: (provided) => ({
                     ...provided,
-                    minHeight: '32px',
-                    fontSize: '10px',
-                    padding: '0 6px',
+                    minHeight: "32px",
+                    fontSize: "10px",
+                    padding: "0 6px",
                   }),
                 }}
                 options={relationOptions}
-                value={relationOptions.find(opt => opt.value === relation)}
+                value={relationOptions.find((opt) => opt.value === relation)}
                 onChange={(selectedOption) => setRelation(selectedOption.value)}
                 placeholder="Relation"
                 isSearchable
                 filterOption={(option, inputValue) =>
-                  option.label.toLowerCase().startsWith(inputValue.toLowerCase())
+                  option.label
+                    .toLowerCase()
+                    .startsWith(inputValue.toLowerCase())
                 }
               />
 
@@ -205,12 +214,12 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
 
         {/* Presenting Complaint */}
         <div className="space-y-3">
-          <H3 >📋 Presenting Complaint</H3>
+          <H3>📋 Presenting Complaint</H3>
           <ReusableTextareaField
             className="border text-black w-full  text-[10px]"
             id="presentingcomplaints"
             rows={1}
-            style={{ minHeight: '28px', padding: '6px 8px' }}
+            style={{ minHeight: "28px", padding: "6px 8px" }}
             label=" "
             value={presentingComplaint}
             onChange={(e) => setPresentingComplaint(e.target.value)}
@@ -220,17 +229,29 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
         {/* Family History */}
         <div className="space-y-3">
           <div className="flex items-center gap-4 mb-3 flex-wrap">
-            <H3 >📋 Family History</H3>
+            <H3>📋 Family History</H3>
             <Label className="text-[10px] text-black flex items-center gap-1">
-              <input type="checkbox" checked={isDM} onChange={() => setIsDM(!isDM)} />
+              <input
+                type="checkbox"
+                checked={isDM}
+                onChange={() => setIsDM(!isDM)}
+              />
               DM
             </Label>
             <Label className="text-[10px] text-black flex items-center gap-1">
-              <input type="checkbox" checked={isHypertension} onChange={() => setIsHypertension(!isHypertension)} />
+              <input
+                type="checkbox"
+                checked={isHypertension}
+                onChange={() => setIsHypertension(!isHypertension)}
+              />
               Hypertension
             </Label>
             <Label className="text-[10px] text-black flex items-center gap-1">
-              <input type="checkbox" checked={isCAD} onChange={() => setIsCAD(!isCAD)} />
+              <input
+                type="checkbox"
+                checked={isCAD}
+                onChange={() => setIsCAD(!isCAD)}
+              />
               CAD
             </Label>
           </div>
@@ -238,22 +259,21 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
             className="border text-black w-full  text-[10px]"
             id="familyother"
             rows={1}
-            style={{ minHeight: '28px', padding: '6px 8px' }}
+            style={{ minHeight: "28px", padding: "6px 8px" }}
             label="Family History Other"
             value={familyOther}
             onChange={(e) => setFamilyOther(e.target.value)}
           />
         </div>
 
-
         {/* Past History */}
         <div className="space-y-3">
-          <H3 >📝 Past History</H3>
+          <H3>📝 Past History</H3>
           <ReusableTextareaField
             className="border text-black text-[10px]"
             id="medical"
             rows={1}
-            style={{ minHeight: '28px', padding: '6px 8px' }}
+            style={{ minHeight: "28px", padding: "6px 8px" }}
             label="Medical"
             value={medicalhistory}
             onChange={(e) => setMedicalHistory(e.target.value)}
@@ -262,7 +282,7 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
             className="border text-black text-[10px]"
             id="surgical"
             rows={1}
-            style={{ minHeight: '28px', padding: '6px 8px' }}
+            style={{ minHeight: "28px", padding: "6px 8px" }}
             label="Surgical"
             value={surgicalhistory}
             onChange={(e) => setSurgicalHistory(e.target.value)}
@@ -271,7 +291,7 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
             className="border text-black text-[10px]"
             id="pastother"
             rows={1}
-            style={{ minHeight: '28px', padding: '6px 8px' }}
+            style={{ minHeight: "28px", padding: "6px 8px" }}
             label="Other"
             value={pastDetails}
             onChange={(e) => setPastDetails(e.target.value)}
@@ -283,11 +303,19 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
           <div className="flex items-center gap-4 mb-3 flex-wrap">
             <H3>📋 Personal History</H3>
             <Label className="text-[10px] text-black flex items-center gap-1">
-              <input type="checkbox" checked={isAlcohol} onChange={() => setIsAlcohol(!isAlcohol)} />
+              <input
+                type="checkbox"
+                checked={isAlcohol}
+                onChange={() => setIsAlcohol(!isAlcohol)}
+              />
               Alcohol
             </Label>
             <Label className="text-[10px] text-black flex items-center gap-1">
-              <input type="checkbox" checked={isTobacco} onChange={() => setIsTobacco(!isTobacco)} />
+              <input
+                type="checkbox"
+                checked={isTobacco}
+                onChange={() => setIsTobacco(!isTobacco)}
+              />
               Tobacco
             </Label>
           </div>
@@ -295,20 +323,22 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
             className="border w-full text-black text-[10px]"
             id="personalother"
             rows={1}
-            style={{ minHeight: '28px', padding: '6px 8px' }}
+            style={{ minHeight: "28px", padding: "6px 8px" }}
             label="Other"
             value={personalOther}
             onChange={(e) => setPersonalOther(e.target.value)}
           />
         </div>
 
-
         <hr className="border-t border-gray-300 mb-4" />
         <div className="flex justify-center">
-          <SaveButton label="Save" className="text-[10px] px-4 py-1" onClick={handleSave} />
+          <SaveButton
+            label="Save"
+            className="text-[10px] px-4 py-1"
+            onClick={handleSave}
+          />
         </div>
       </div>
     </div>
   );
-
 }

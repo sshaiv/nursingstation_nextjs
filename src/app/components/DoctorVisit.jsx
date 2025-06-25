@@ -289,7 +289,7 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
 
   return (
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
-      <div className="flex items-center justify-center">
+      <div className="flex h-[1px]  items-center justify-center">
         <ModalHeading title="Doctor Visit" />
       </div>
 
@@ -307,8 +307,8 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
         />
       )}
 
-      <div className="border border-gray-100 rounded-lg space-y-4">
-        <div className="flex flex-wrap items-start gap-x-4 gap-y-3 text-sm">
+      <div className="border border-gray-100 rounded-lg space-y-2">
+        <div className="flex flex-wrap items-start gap-x-2 gap-y-2 text-sm">
           {/* Date & Time */}
           <div className="flex flex-col min-w-[180px]">
             <label className="text-xs text-gray-700 mb-1">Date & Time</label>
@@ -324,7 +324,30 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
               </p>
             )}
           </div>
+          {/* Bed No */}
+          <div className="flex flex-col min-w-[100px]">
+            <label className="text-xs text-gray-700 mb-1">Bed No</label>
+            <input
+              type="text"
+              value={patientData?.bedno}
+              onChange={(e) => setBedNo(e.target.value)}
+              className="border w-[100px] px-2 py-[3px] h-[25px] text-black rounded-md border-gray-300 focus:outline-none"
+              placeholder="Bed No"
+            />
+          </div>
 
+          <div className="flex flex-col min-w-[100px]">
+            <label htmlFor="emergency" className="text-xs text-gray-700 ">
+              Emergency
+            </label>
+            <input
+              type="checkbox"
+              id="emergency"
+              checked={isEmergency}
+              onChange={(e) => setIsEmergency(e.target.checked)}
+              className="w-4 h-4"
+            />
+          </div>
           {/* Doctor */}
           <div className="flex flex-col min-w-[180px]">
             <label className="text-xs text-gray-700 mb-1">Doctor</label>
@@ -356,46 +379,12 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
               placeholder="Remarks"
             />
           </div>
-
-          {/* Bed No */}
-          <div className="flex flex-col min-w-[120px]">
-            <label className="text-xs text-gray-700 mb-1">Bed No</label>
-            <input
-              type="text"
-              value={patientData?.bedno}
-              onChange={(e) => setBedNo(e.target.value)}
-              className="border px-2 py-[6px] h-[25px] text-black rounded-md border-gray-300 focus:outline-none"
-              placeholder="Bed No"
-            />
-          </div>
-
-          <div className="flex items-center gap-2 min-w-[160px]">
-            <label htmlFor="emergency" className="text-xs text-gray-700">
-              Emergency
-            </label>
-            <input
-              type="checkbox"
-              id="emergency"
-              checked={isEmergency}
-              onChange={(e) => setIsEmergency(e.target.checked)}
-              className="w-4 h-4"
-            />
-            <span className="text-sm text-black">Yes</span>
-          </div>
-          {/* Buttons */}
-          <div className="flex flex-col min-w-[160px] items-end self-end">
-            <label className="text-xs text-gray-700 mb-1 invisible">
-              Actions
-            </label>
-            <div className="flex items-center gap-2 h-[25px]">
-              <ActionButton
-                label="Insert"
-                onClick={handleInsert}
-                className="text-xs px-4 py-1"
-              />
-              <ActionButton label="Posted Data" className="text-xs px-4 py-1" />
-            </div>
-          </div>
+          <div className="items-center mt-5">
+          <ActionButton
+            label="Insert"
+            onClick={handleInsert}
+            className="text-xs px-4 py-1"
+          /></div>
         </div>
       </div>
 

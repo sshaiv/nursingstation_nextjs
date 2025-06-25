@@ -365,7 +365,7 @@ export default function NursingServices({
 
   return (
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
-      <div className="flex items-center justify-center">
+      <div className="flex h-[1px] items-center justify-center">
         <ModalHeading title="Nursing Services" />
       </div>
 
@@ -405,10 +405,11 @@ export default function NursingServices({
         />
       )}
 
-      <div className="border border-gray-100 rounded-lg space-y-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-start">
+      <div className="border border-gray-100 rounded-lg space-y-2">
+        <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-2 items-start">
+         
           {/* Date & Time */}
-          <div className="flex flex-col w-full">
+          <div className="flex flex-col  w-full ">
             <label className="text-xs text-gray-700 font-medium mb-1">
               Date & Time
             </label>
@@ -426,7 +427,7 @@ export default function NursingServices({
           </div>
 
           {/* Doctor */}
-          <div className="flex flex-col w-full">
+          <div className="flex flex-col  w-full">
             <label className="text-xs text-gray-700 font-medium mb-1">
               Doctor *
             </label>
@@ -448,7 +449,7 @@ export default function NursingServices({
           </div>
 
           {/* Nursing Service */}
-          <div className="flex flex-col w-full">
+          <div className="flex flex-col  w-full">
             <label className="text-xs text-gray-700 font-medium mb-1">
               Nursing service *
             </label>
@@ -470,7 +471,7 @@ export default function NursingServices({
           </div>
 
           {/* Performed By */}
-          <div className="flex flex-col w-full">
+          <div className="flex flex-col  w-full">
             <label className="text-xs text-gray-700 font-medium mb-1">
               Performed By
             </label>
@@ -493,12 +494,12 @@ export default function NursingServices({
           </div>
 
           {/* Quantity */}
-          <div className="flex flex-col w-full">
+          <div className="flex flex-col  ">
             <label className="text-xs text-gray-700 font-medium mb-1">
               Quantity *
             </label>
             <ReusableInputField
-              className={`text-sm text-black px-2 py-1 border rounded-md focus:outline-none ${
+              className={`text-xs  text-black px-2 py-1 border rounded-md focus:outline-none ${
                 errors.qty ? "border-red-500" : "border-gray-300"
               }`}
               id="qty"
@@ -513,15 +514,13 @@ export default function NursingServices({
               </p>
             )}
           </div>
-        </div>
-
-        <div className="flex justify-end items-center w-full gap-4">
-          <ActionButton
-            label="Insert"
-            onClick={handleInsert}
-            className="text-xs px-4 py-1"
-          />
-          {/* <ActionButton label="Posted Data" className="text-xs px-4 py-1" /> */}
+          <div className="flex items-center w-full mt-5">
+            <ActionButton
+              label="Insert"
+              onClick={handleInsert}
+              className="text-xs px-4 py-1 w-fit "
+            />
+          </div>
         </div>
       </div>
 
