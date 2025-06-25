@@ -170,21 +170,19 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
   //   console.log("Selected Item Name: ID", item.label, " ", item.value);
   // };
 
-
   // item select from dropdown
   const handleItemSelect = (item) => {
     setSelectedItem(item);
     console.log("Selected Item Name: ID", item.label, " ", item.value);
-    
+
     // Open the SelectBatchModal with the selected item ID and store ID
     if (selectedStore) {
-        setSelectBatchModalOpen(true);
-        setSelectedRowData({ itemid: item.value, storeid: selectedStore });
+      setSelectBatchModalOpen(true);
+      setSelectedRowData({ itemid: item.value, storeid: selectedStore });
     } else {
-        console.warn("Store ID is not selected.");
+      console.warn("Store ID is not selected.");
     }
-};
-
+  };
 
   const fetchItemNames = async (storeId) => {
     if (!storeId) {
@@ -280,9 +278,8 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
   const [hsncode, setHsncode] = useState();
   const [itemcatgid, setItemcatgid] = useState();
   const [salerate, setSalerate] = useState();
-  
+
   const handleSelectedData = (data) => {
-  
     setItemcatgid(data.itemcatgid);
     setSalerate(data.salerate);
     setHsncode(data.hsncode);
@@ -324,22 +321,22 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
   // };
 
   const handleIssueQtyChange = (e) => {
-  const value = e.target.value;
-  setIssueQty(value);
+    const value = e.target.value;
+    setIssueQty(value);
 
-  if (mrp && convfact && parseFloat(convfact) !== 0) {
-    const unitPrice = parseFloat(mrp) / parseFloat(convfact);
-    const finalCharge = unitPrice * parseFloat(value);
-    setCharge(finalCharge.toFixed(2));
-  } else {
-    setCharge("");
-  }
-};
+    if (mrp && convfact && parseFloat(convfact) !== 0) {
+      const unitPrice = parseFloat(mrp) / parseFloat(convfact);
+      const finalCharge = unitPrice * parseFloat(value);
+      setCharge(finalCharge.toFixed(2));
+    } else {
+      setCharge("");
+    }
+  };
 
+  const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(true); 
 
   const handleInsert = () => {
-
-const newErrors = validateForm();
+    const newErrors = validateForm();
     setErrors(newErrors);
 
     const currentDateTime = getCurrentDateTime();
@@ -365,7 +362,7 @@ const newErrors = validateForm();
       indentQty: indentQty || 0,
       issueQty: issueQty || 0,
       remarks: remarks || " ",
-      mrp:mrp|| " ",
+      mrp: mrp || " ",
       charge: charge || " ",
       batch: batch || "  ",
       // Add any other fields you need
@@ -384,10 +381,12 @@ const newErrors = validateForm();
       DateTime: currentDateTime,
       bedno: patientData.bedno,
       itemid: itemid || " ",
-     // itemtypeid: selectedItemDetails ? selectedItemDetails.itemtypeid : "  ",
-     itemtypeid: selectedItemDetails
-  ? (selectedItemDetails.itemtypeid != null ? selectedItemDetails.itemtypeid : 0 )
-  : 0,
+      // itemtypeid: selectedItemDetails ? selectedItemDetails.itemtypeid : "  ",
+      itemtypeid: selectedItemDetails
+        ? selectedItemDetails.itemtypeid != null
+          ? selectedItemDetails.itemtypeid
+          : 0
+        : 0,
       itembelongstoid: itembelongtoid,
       ItemName: selectedItem ? selectedItem.label : " ",
       BatchNo: batch || "",
@@ -411,9 +410,10 @@ const newErrors = validateForm();
       // modifywsname: selectedItemDetails
       //   ? selectedItemDetails.modifywsname
       //   : "  ",
-      modifywsname: selectedItemDetails && selectedItemDetails.modifywsname != null
-  ? selectedItemDetails.modifywsname
-  : "",
+      modifywsname:
+        selectedItemDetails && selectedItemDetails.modifywsname != null
+          ? selectedItemDetails.modifywsname
+          : "",
       locationid: patientData.locationid,
       financialyear: patientData.financialyear,
       isedit: 0,
@@ -450,7 +450,7 @@ const newErrors = validateForm();
       intranscationid: 0,
       itemcategoryid: 0,
       mfgdate: mfgdate || " ",
-      Qtycharge: charge ||" ",
+      Qtycharge: charge || " ",
       freeQty: 0,
       PurchaseRate: 0,
       cgsTAmount: 0,
@@ -524,7 +524,9 @@ const newErrors = validateForm();
     console.log("Billing Info:", jsonStringsubpatbilinginfomodel);
     console.log("jsonStringitemstockoutmain:", jsonStringitemstockoutmain);
 
-    // setServiceEntries(updatedEntries);
+    setServiceEntries(updatedEntries);
+   // setServiceEntries((prev) => [...prev, newServiceEntry]);
+
     // setVitals((prev) => [...prev, newEntry]);
 
     // Update the vitals state to include the new entry
@@ -542,8 +544,11 @@ const newErrors = validateForm();
     setAvailQty("");
     setMrp("");
     setExpiryDate("");
-   // setDoctorName("");
-   // setDoctorData(null);
+    // setDoctorName("");
+    // setDoctorData(null);
+
+    // Step 2: Enable the Save button after Insert
+    setIsSaveButtonDisabled(false);
   };
 
   const savebtn = async () => {
@@ -566,6 +571,19 @@ const newErrors = validateForm();
 
       if (response.ok) {
         alert("Data saved successfully!");
+
+         // Reset JSON strings to empty arrays after saving
+      setSaveData((prevData) => ({
+        ...prevData,
+        jsonStringsubipdconsumablemodels: [],
+        jsonStringsubitemstockoutdetl: [],
+        jsonStringsubpatbilinginfomodel: [],
+        jsonStringitemstockoutmain: [],
+      }));
+
+        // Reset service entries to clear old entries
+      setServiceEntries([]); // Clear the service entries after saving
+      setVitals([]); // Clear the vitals after saving
       } else {
         alert("Failed to save data.");
       }
@@ -573,6 +591,8 @@ const newErrors = validateForm();
       console.error("Error saving data:", error);
       alert("An error occurred while saving data.");
     }
+     // Step 3: Disable the Save button after saving
+    setIsSaveButtonDisabled(true);
   };
 
   const handleHistoryOpen = () => {
@@ -582,7 +602,7 @@ const newErrors = validateForm();
     setHistoryModalOpen(false);
   };
   const [isHistoryModalOpen, setHistoryModalOpen] = useState(false);
-  
+
   return (
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
       {isDoctorModalOpen && (
@@ -636,7 +656,7 @@ const newErrors = validateForm();
       <hr className="border-t mt-6 mb-2 border-gray-300" />
       <div className="border border-gray-100 rounded-lg space-y-4">
         {/* Inputs Grid */}
-       
+
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-1 items-start">
           {/* Date & Time */}
           <div className="flex flex-col w-full">
@@ -726,7 +746,6 @@ const newErrors = validateForm();
               </p>
             )}
           </div>
-
 
           {/* Indent Qty */}
           <div className="flex flex-col w-full">
@@ -881,7 +900,6 @@ const newErrors = validateForm();
                   <TableReuse>{v.charge}</TableReuse>
                   <TableReuse>
                     <div className="flex justify-center space-x-2">
-                     
                       <button
                         className="text-red-500 hover:underline"
                         onClick={() =>
@@ -900,9 +918,22 @@ const newErrors = validateForm();
       </div>
       <hr className="border-t mt-6 mb-2 border-gray-300" />
       {/* Save Button */}
-      <div className="flex justify-center ">
+      {/* <div className="flex justify-center ">
         <SaveButton label="Save" onClick={savebtn} />
-      </div>
+      </div> */}
+        <div className="flex justify-center ">
+      <button
+        onClick={savebtn}
+        disabled={isSaveButtonDisabled} // Use the state to control the button
+        className={`w-full px-6 py-2 rounded text-white ${
+          isSaveButtonDisabled
+            ? "bg-gray-400 cursor-not-allowed" // Disabled state
+            : "bg-blue-500 hover:bg-blue-600" // Enabled state
+        }`}
+      >
+        Save
+      </button>
+    </div>
     </div>
   );
 }
