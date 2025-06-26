@@ -11,6 +11,8 @@ const API_ENDPOINTS = {
   getMedicalHistory: `${BASE_URL}/getPatMedicalHistory`,
   getSurgicalHistory: `${BASE_URL}/getPatSurgicalHistory`,
   getClinicalExamination:`${BASE_URL}/getPatClinicalExamination`,
+  getIpdNutritionalAssessmentProfile:`${BASE_URL}/getPatIpdNutritionalAssessmentProfile`,
+  getProgressSheetData:`${BASE_URL}/GetProgressSheetData`,
         //for dropdown Get-
          getAllHeadload :`${BASE_URL}/GetAllHeadload`,
          getAllDoctor : `${BASE_URL}/GetAllDoctor`,
@@ -40,6 +42,9 @@ const API_ENDPOINTS = {
   savePatVitalEntry: `${BASE_URL}/SavePatVitalEntry`, 
   savePatNursingMedicineIndentData: `${BASE_URL}/SavePatNursingMedicineIndentData`, 
   saveIPDConsumable: `${BASE_URL}/SaveIPDConsumable`, 
+  saveProgressSheetData: `${BASE_URL}/SaveProgressSheetData`, 
+  savePatIpdNutritionalAssessmentProfile: `${BASE_URL}/SavePatIpdNutritionalAssessmentProfile`, 
+
 };
 
 export default API_ENDPOINTS;

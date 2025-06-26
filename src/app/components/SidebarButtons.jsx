@@ -14,6 +14,7 @@ import AdvisedSurgery from './AdvisedSurgery';
 import Implants from './Implants';
 import Investigation from './Investigation';
 import NutritionalAssessmentProfile from './NutritionalAssesmentProfile';
+import ProgressSheet from './ProgressSheet';
 
 const buttons = [
     { label: "Nursing Services", color: "#1999A1", shadow: "#14767D", icon: FiActivity },
@@ -28,6 +29,7 @@ const buttons = [
     { label: "Implant", color: "#48BCD1", shadow: "#359EB0", icon: FiPackage },
     { label: "Discharge Summary", color: "#1999A1", shadow: "#14767D", icon: FiCheckCircle },
     { label: "Investigation", color: "#48BCD1", shadow: "#359EB0", icon: GiFizzingFlask },
+    { label: "Progress Sheet", color: "#1999A1", shadow: "#14767D", icon: FiCheckCircle},
 ];
 
 export default function ButtonGrid({ visitid, gssuhid, empid ,patientData}) {
@@ -71,6 +73,10 @@ export default function ButtonGrid({ visitid, gssuhid, empid ,patientData}) {
         }
         else if (label === "Nutritional Assessment") {
             setModalContent(<NutritionalAssessmentProfile visitid={visitid} gssuhid={gssuhid} empid={empid} patientData={patientData} />);
+            setShowModal(true);
+        }
+        else if (label === "Progress Sheet") {
+            setModalContent(<ProgressSheet visitid={visitid} gssuhid={gssuhid} empid={empid} patientData={patientData} />);
             setShowModal(true);
         }
         else if (label === "xyz") {

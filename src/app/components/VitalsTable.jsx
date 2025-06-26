@@ -302,6 +302,7 @@ export default function VitalsTable({
     setRr("");
     setBmi("");
     setPainScore("");
+    setHeadcircumference("");
   };
 
   const savebtn = async () => {

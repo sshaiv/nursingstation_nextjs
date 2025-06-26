@@ -333,7 +333,7 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
     }
   };
 
-  const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(true); 
+  const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(true);
 
   const handleInsert = () => {
     const newErrors = validateForm();
@@ -526,7 +526,7 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
     console.log("jsonStringitemstockoutmain:", jsonStringitemstockoutmain);
 
     setServiceEntries(updatedEntries);
-   // setServiceEntries((prev) => [...prev, newServiceEntry]);
+    // setServiceEntries((prev) => [...prev, newServiceEntry]);
 
     // setVitals((prev) => [...prev, newEntry]);
 
@@ -548,14 +548,12 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
     // setDoctorName("");
     // setDoctorData(null);
 
-
-     // Close all modals
+    // Close all modals
     setDoctorModalOpen(false);
     setMedicineIndentModalOpen(false);
     setGetIndentDetailModalOpen(false);
     setSelectBatchModalOpen(false);
     setHistoryModalOpen(false);
-
 
     // Step 2: Enable the Save button after Insert
     setIsSaveButtonDisabled(false);
@@ -582,18 +580,18 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
       if (response.ok) {
         alert("Data saved successfully!");
 
-         // Reset JSON strings to empty arrays after saving
-      setSaveData((prevData) => ({
-        ...prevData,
-        jsonStringsubipdconsumablemodels: [],
-        jsonStringsubitemstockoutdetl: [],
-        jsonStringsubpatbilinginfomodel: [],
-        jsonStringitemstockoutmain: [],
-      }));
+        // Reset JSON strings to empty arrays after saving
+        setSaveData((prevData) => ({
+          ...prevData,
+          jsonStringsubipdconsumablemodels: [],
+          jsonStringsubitemstockoutdetl: [],
+          jsonStringsubpatbilinginfomodel: [],
+          jsonStringitemstockoutmain: [],
+        }));
 
         // Reset service entries to clear old entries
-      setServiceEntries([]); 
-      setVitals([]); 
+        setServiceEntries([]);
+        setVitals([]);
       } else {
         alert("Failed to save data.");
       }
@@ -601,7 +599,7 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
       console.error("Error saving data:", error);
       alert("An error occurred while saving data.");
     }
-     // Step 3: Disable the Save button after saving
+    // Step 3: Disable the Save button after saving
     setIsSaveButtonDisabled(true);
   };
 
@@ -613,41 +611,40 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
   };
   const [isHistoryModalOpen, setHistoryModalOpen] = useState(false);
 
+  const [entries, setEntries] = useState([]);
 
-const [entries, setEntries] = useState([]);
+  const handleDeleteEntry = (indexToDelete) => {
+    console.log("🗑️ Deleting Entry at Index:", indexToDelete);
+    console.log("📦 Entry Being Deleted:", serviceEntries[indexToDelete]);
 
-const handleDeleteEntry = (indexToDelete) => {
-  console.log("🗑️ Deleting Entry at Index:", indexToDelete);
-  console.log("📦 Entry Being Deleted:", serviceEntries[indexToDelete]);
+    // Filter out the deleted entry from all arrays
+    const updatedVitals = vitals.filter((_, i) => i !== indexToDelete);
+    const updatedEntries = entries.filter((_, i) => i !== indexToDelete);
+    const updatedServiceEntries = serviceEntries.filter(
+      (_, i) => i !== indexToDelete
+    );
 
-  // Filter out the deleted entry from all arrays
-  const updatedVitals = vitals.filter((_, i) => i !== indexToDelete);
-  const updatedEntries = entries.filter((_, i) => i !== indexToDelete);
-  const updatedServiceEntries = serviceEntries.filter((_, i) => i !== indexToDelete);
+    // Update state
+    setVitals(updatedVitals);
+    setEntries(updatedEntries);
+    setServiceEntries(updatedServiceEntries);
 
-  // Update state
-  setVitals(updatedVitals);
-  setEntries(updatedEntries);
-  setServiceEntries(updatedServiceEntries);
+    // Also update the JSON strings in saveData
+    setSaveData((prevData) => ({
+      ...prevData,
+      jsonStringsubipdconsumablemodels: JSON.stringify(updatedServiceEntries),
+      jsonStringsubitemstockoutdetl: JSON.stringify(updatedServiceEntries),
+      // keep others as is
+    }));
 
-  // Also update the JSON strings in saveData
-  setSaveData((prevData) => ({
-    ...prevData,
-    jsonStringsubipdconsumablemodels: JSON.stringify(updatedServiceEntries),
-    jsonStringsubitemstockoutdetl: JSON.stringify(updatedServiceEntries),
-    // keep others as is
-  }));
+    // Step 3: Disable Save button if nothing to save
+    if (updatedServiceEntries.length === 0) {
+      setIsSaveButtonDisabled(true);
+    }
 
-  // Step 3: Disable Save button if nothing to save
-  if (updatedServiceEntries.length === 0) {
-    setIsSaveButtonDisabled(true);
-  }
-
-  console.log("✅ Updated JSON Strings After Deletion:");
-  console.log(" - Remaining Entries:", updatedServiceEntries);
-};
-
-
+    console.log("✅ Updated JSON Strings After Deletion:");
+    console.log(" - Remaining Entries:", updatedServiceEntries);
+  };
 
   return (
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
@@ -879,7 +876,7 @@ const handleDeleteEntry = (indexToDelete) => {
           </div>
 
           {/* Remarks */}
-          <div className="flex flex-col w-full">
+          {/* <div className="flex flex-col w-full">
             <label className="text-xs text-gray-700 font-medium mb-1">
               Remarks
             </label>
@@ -890,10 +887,44 @@ const handleDeleteEntry = (indexToDelete) => {
               value={remarks}
               onChange={(e) => setRemarks(e.target.value)}
             />
+          </div> */}
+          <div className="flex flex-wrap md:flex-nowrap w-full items-end gap-2">
+            {/* Remarks */}
+            <div className="flex flex-col flex-1">
+              <label className="text-xs text-gray-700 font-medium mb-1">
+                Remarks
+              </label>
+              <ReusableInputField
+                className="text-sm px-2 py-1 border border-gray-300 rounded-md"
+                id="remarks"
+                width=" lg:w-[200px] w-full md:w-full"
+                value={remarks}
+                onChange={(e) => setRemarks(e.target.value)}
+              />
+            </div>
+
+            {/* Buttons */}
+            <div className="flex gap-2 mb-4 self-end shrink-0">
+              <ActionButton
+                label="Insert"
+                onClick={handleInsert}
+                className="text-xs px-4 py-1"
+              />
+              <ActionButton
+                label="Indent Detail"
+                onClick={handleIndentDetail}
+                className="text-xs px-4 py-1"
+              />
+              <ActionButton
+                label="History"
+                onClick={handleHistoryOpen}
+                className="text-xs px-4 py-1"
+              />
+            </div>
           </div>
         </div>
 
-        <div className="flex justify-end gap-2">
+        {/* <div className="flex justify-end gap-2">
           <ActionButton
             label="Insert"
             onClick={handleInsert}
@@ -909,7 +940,7 @@ const handleDeleteEntry = (indexToDelete) => {
             onClick={handleHistoryOpen}
             className="text-xs px-4 py-1"
           />
-        </div>
+        </div> */}
       </div>
 
       {/* Table */}
@@ -961,31 +992,30 @@ const handleDeleteEntry = (indexToDelete) => {
               ))}
             </tbody> */}
             <tbody>
-  {vitals.map((entry, actualIndex) => (
-    <tr key={actualIndex} className="hover:bg-gray-100 border-t">
-      <TableReuse>{entry.doctorName}</TableReuse>
-      <TableReuse>{entry.date}</TableReuse>
-      <TableReuse>{entry.itemName}</TableReuse>
-      <TableReuse>{entry.batch || "  "}</TableReuse>
-      <TableReuse>{entry.issueQty}</TableReuse>
-      <TableReuse>{entry.mrp}</TableReuse>
-      <TableReuse>{entry.charge}</TableReuse>
-      <TableReuse>
-        <div className="flex justify-center space-x-2">
-          {entry.source !== "api" && (
-            <button
-              className="text-red-500 hover:underline"
-              onClick={() => handleDeleteEntry(actualIndex)} // Call the delete function with the actual index
-            >
-              🗑 Delete
-            </button>
-          )}
-        </div>
-      </TableReuse>
-    </tr>
-  ))}
-</tbody>
-
+              {vitals.map((entry, actualIndex) => (
+                <tr key={actualIndex} className="hover:bg-gray-100 border-t">
+                  <TableReuse>{entry.doctorName}</TableReuse>
+                  <TableReuse>{entry.date}</TableReuse>
+                  <TableReuse>{entry.itemName}</TableReuse>
+                  <TableReuse>{entry.batch || "  "}</TableReuse>
+                  <TableReuse>{entry.issueQty}</TableReuse>
+                  <TableReuse>{entry.mrp}</TableReuse>
+                  <TableReuse>{entry.charge}</TableReuse>
+                  <TableReuse>
+                    <div className="flex justify-center space-x-2">
+                      {entry.source !== "api" && (
+                        <button
+                          className="text-red-500 hover:underline"
+                          onClick={() => handleDeleteEntry(actualIndex)} // Call the delete function with the actual index
+                        >
+                          🗑 Delete
+                        </button>
+                      )}
+                    </div>
+                  </TableReuse>
+                </tr>
+              ))}
+            </tbody>
           </table>
         </div>
       </div>
@@ -994,19 +1024,19 @@ const handleDeleteEntry = (indexToDelete) => {
       {/* <div className="flex justify-center ">
         <SaveButton label="Save" onClick={savebtn} />
       </div> */}
-        <div className="flex justify-center ">
-      <button
-        onClick={savebtn}
-        disabled={isSaveButtonDisabled} // Use the state to control the button
-        className={`w-full px-6 py-2 rounded text-white ${
-          isSaveButtonDisabled
-            ? "bg-gray-400 cursor-not-allowed" // Disabled state
-            : "bg-blue-500 hover:bg-blue-600" // Enabled state
-        }`}
-      >
-        Save
-      </button>
-    </div>
+      <div className="flex justify-center ">
+        <button
+          onClick={savebtn}
+          disabled={isSaveButtonDisabled} // Use the state to control the button
+          className={`w-full px-6 py-2 rounded text-white ${
+            isSaveButtonDisabled
+              ? "bg-gray-400 cursor-not-allowed" // Disabled state
+              : "bg-blue-500 hover:bg-blue-600" // Enabled state
+          }`}
+        >
+          Save
+        </button>
+      </div>
     </div>
   );
 }

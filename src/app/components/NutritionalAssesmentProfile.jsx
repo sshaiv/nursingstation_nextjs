@@ -13,6 +13,7 @@ import {
   getCurrentDate,
   getCurrentDateISO,
 } from "../utils/dateUtils";
+import useVitalsData from "../hooks/useVitalsData";
 
 export default function NutritionalAssessmentProfile({
   visitid,
@@ -34,12 +35,6 @@ export default function NutritionalAssessmentProfile({
   const [foodHabit, setFoodHabit] = useState("");
   const [cvsResponse, setCvsResponse] = useState(null);
 
-  const [relationData, setRelationData] = useState([]);
-  const [relation, setRelation] = useState("");
-  const [relation1, setRelation1] = useState("");
-  const [relation2, setRelation2] = useState("");
-  const [relation3, setRelation3] = useState("");
-  const [historyGivenBy, setHistoryGivenBy] = useState("");
   const clearSignature = () => sigCanvasRef.current?.clear();
   const sigCanvasRef = useRef(null);
   const [dietPlan, setDietPlan] = useState("");
@@ -94,7 +89,7 @@ export default function NutritionalAssessmentProfile({
     const fetchNutritionalData = async () => {
       try {
         const response = await axios.get(
-          `https://doctorapi.medonext.com/api/HMS/getPatIpdNutritionalAssessmentProfile?visitid=${visitid}&gssuhid=${gssuhid}&empid=${empid}`
+          `${API_ENDPOINTS.getIpdNutritionalAssessmentProfile}?visitid=${visitid}&gssuhid=${gssuhid}&empid=${empid}`
         );
         const data = JSON.parse(response.data);
         if (data?.Table?.length > 0) {
@@ -166,9 +161,7 @@ export default function NutritionalAssessmentProfile({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "https://doctorapi.medonext.com/Api/HMS/GetAllHeadload"
-        );
+        const response = await axios.get(API_ENDPOINTS.getAllHeadload);
         const data = JSON.parse(response.data);
         setWeightChangeOptions(data.Table2);
         setYesNoOptions(data.Table3);
@@ -281,7 +274,7 @@ export default function NutritionalAssessmentProfile({
   const handleSave = async () => {
     try {
       const response = await axios.post(
-        "https://doctorapi.medonext.com/API/HMS/SavePatIpdNutritionalAssessmentProfile",
+        API_ENDPOINTS.savePatIpdNutritionalAssessmentProfile,
         derivedJson
       );
       console.log("save btn", derivedJson);
@@ -295,36 +288,61 @@ export default function NutritionalAssessmentProfile({
     }
   };
 
+  const [height, setHeight] = useState("");
+  const [weight, setWeight] = useState("");
+  const [bmi, setBmi] = useState("");
+
+  const { latestVitals, loading: vitalsLoading } = useVitalsData(visitid);
+
+  useEffect(() => {
+    if (latestVitals) {
+      setHeight(latestVitals.height || "");
+      setWeight(latestVitals.weight || "");
+      setBmi(latestVitals.bmi || "");
+    }
+  }, [latestVitals]);
+
   return (
     <div className="p-4 bg-purple-50 min-h-screen text-sm text-gray-700">
-      <ModalHeading title="Nutritional Assessment Profile" />
+      <div className="flex h-[1px]  items-center justify-center">
+        <ModalHeading
+          title="Nutritional Assessment Profile"
+          className="text-[11px] mb-3"
+        />
+      </div>
       <hr className="border-t mt-6 mb-2 border-gray-300" />
       <div className="space-y-4 text-[10px] text-gray-700">
         {/* Personal Details */}
         <H3 className="text-xs">📋 Personal Details</H3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2">
             <Label className="w-24 text-[10px]">Height</Label>
             <input
               type="number"
               placeholder="cms"
-              className="border p-1 rounded w-full text-[10px]"
+              className="border p-1 rounded w-full text-[10px] cursor-not-allowed"
+              value={height}
+              readOnly
             />
-          </div> */}
-          {/* <div className="flex items-center gap-2">
+          </div>
+          <div className="flex items-center gap-2">
             <Label className="w-24 text-[10px]">Weight</Label>
             <input
               type="number"
               placeholder="kgs"
-              className="border p-1 rounded w-full text-[10px]"
+              className="border p-1 rounded w-full text-[10px]  cursor-not-allowed"
+              value={weight}
+              readOnly
             />
-          </div> */}
+          </div>
           <div className="flex items-center gap-2">
             <Label className="w-40 text-[10px]">Body Mass Index</Label>
             <input
               type="text"
               placeholder="Kg/M2"
-              className="border p-1 rounded w-full text-[10px]"
+              className="border p-1 rounded w-full text-[10px]  cursor-not-allowed"
+              value={bmi}
+              readOnly
             />
           </div>
         </div>
@@ -355,6 +373,8 @@ export default function NutritionalAssessmentProfile({
         </div>
 
         {/* Food Allergy */}
+      
+        {/* Food Allergy */}
         <div className="flex items-center gap-4 flex-wrap">
           <Label className="w-28 text-[10px]">Food Allergy</Label>
           <div className="flex gap-4">
@@ -371,6 +391,9 @@ export default function NutritionalAssessmentProfile({
                   onChange={() => {
                     handleSelect("foodAllergy", option);
                     setFoodAllergyId(option.CID);
+                    if (option.CID === 2) {
+                      setFoodAllergySpecify(""); // Clear field on "No"
+                    }
                   }}
                 />
                 <span className="text-[10px]">{option.CNAME}</span>
