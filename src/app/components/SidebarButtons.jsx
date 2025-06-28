@@ -15,6 +15,7 @@ import Implants from './Implants';
 import Investigation from './Investigation';
 import NutritionalAssessmentProfile from './NutritionalAssesmentProfile';
 import ProgressSheet from './ProgressSheet';
+import DummyInvestigation from './DummyInvestigation';
 
 const buttons = [
     { label: "Nursing Services", color: "#1999A1", shadow: "#14767D", icon: FiActivity },
@@ -28,6 +29,7 @@ const buttons = [
     { label: "Advice Surgery", color: "#1999A1", shadow: "#14767D", icon: GiScissors },
     { label: "Implant", color: "#48BCD1", shadow: "#359EB0", icon: FiPackage },
     { label: "Discharge Summary", color: "#1999A1", shadow: "#14767D", icon: FiCheckCircle },
+    //{ label: "BugInvestigation", color: "#48BCD1", shadow: "#359EB0", icon: GiFizzingFlask },
     { label: "Investigation", color: "#48BCD1", shadow: "#359EB0", icon: GiFizzingFlask },
     { label: "Progress Sheet", color: "#1999A1", shadow: "#14767D", icon: FiCheckCircle},
 ];
@@ -67,8 +69,12 @@ export default function ButtonGrid({ visitid, gssuhid, empid ,patientData}) {
             setModalContent(<Implants visitid={visitid} gssuhid={gssuhid} empid={empid} />);
             setShowModal(true);
         }
+        // else if (label === "InvestigationBug") {
+        //     setModalContent(<Investigation visitid={visitid} gssuhid={gssuhid} empid={empid} patientData={patientData}/>);
+        //     setShowModal(true);
+        // }
         else if (label === "Investigation") {
-            setModalContent(<Investigation visitid={visitid} gssuhid={gssuhid} empid={empid} patientData={patientData}/>);
+            setModalContent(<DummyInvestigation visitid={visitid} gssuhid={gssuhid} empid={empid} patientData={patientData}/>);
             setShowModal(true);
         }
         else if (label === "Nutritional Assessment") {
