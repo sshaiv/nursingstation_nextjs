@@ -95,14 +95,7 @@ export default function ProgressSheet({ visitid, gssuhid, empid }) {
   const current = progressSheetData[currentIndex] || normalizeProgressEntry();
 
 
-  const handleChange = (key, value) => {
-    const updated = [...progressSheetData];
-    updated[currentIndex] = {
-      ...updated[currentIndex],
-      [key]: value,
-    };
-    setProgressSheetData(updated);
-  };
+ 
 
   const handleArrayChange = (key, item, isChecked) => {
     const current = progressSheetData[currentIndex];
@@ -145,14 +138,67 @@ export default function ProgressSheet({ visitid, gssuhid, empid }) {
      console.log("📝 Save Payload:", JSON.stringify(payload, null, 2));
     try {
       await axios.post(API_ENDPOINTS.saveProgressSheetData, payload);
-      alert("Data saved successfully!");
+      setToastMessage("✅ Data saved successfully!");
+        setTimeout(() => setToastMessage(""), 2000);
+     // alert("Data saved successfully!");
     } catch (error) {
       console.error("Error saving progress sheet:", error);
     }
   };
+//  const handleChange = (key, value) => {
+//     const updated = [...progressSheetData];
+//     updated[currentIndex] = {
+//       ...updated[currentIndex],
+//       [key]: value,
+//     };
+//     setProgressSheetData(updated);
+//   };
+  
+
+const [toastMessage, setToastMessage] = useState("");
+const showToast = (message) => {
+  setToastMessage(message);
+  setTimeout(() => {
+    setToastMessage("");
+  }, 3000); // hide after 3 seconds
+};
+const handleChange = (key, value) => {
+  if (key === "painscore") {
+    const num = Number(value);
+    if (value === "" || (num >= 0 && num <= 10)) {
+      const updated = [...progressSheetData];
+      updated[currentIndex] = {
+        ...updated[currentIndex],
+        [key]: value,
+      };
+      setProgressSheetData(updated);
+    } else {
+      showToast("Pain score must be between 0 and 10");
+    }
+  } else {
+    const updated = [...progressSheetData];
+    updated[currentIndex] = {
+      ...updated[currentIndex],
+      [key]: value,
+    };
+    setProgressSheetData(updated);
+  }
+};
+
 
   return (
+    
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-4">
+      {toastMessage && (
+  <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white text-sm px-6 py-3 rounded-md shadow-lg z-50 animate-slide-fade">
+    {toastMessage}
+  </div>
+)}
+   {toastMessage && (
+        <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white text-sm px-6 py-3 rounded-md shadow-lg z-50 animate-slide-fade">
+          {toastMessage}
+        </div>
+      )}
       <div className="flex justify-between">
         <button
           className="bg-gray-200 px-3 py-1 rounded"
@@ -228,14 +274,27 @@ export default function ProgressSheet({ visitid, gssuhid, empid }) {
 
           <div className="text-sm flex justify-center items-center text-gray-600 mt-2 text-center space-x-2">
             <H3>Pain Score</H3>
-           <ReusableInputField
+           {/* <ReusableInputField
   id="painscore"
   value={current.painscore}
   label="pain score"
   className="rounded-lg border-2"
   onChange={(e) => handleChange("painscore", e.target.value)}
   width="w-20"
+/> */}
+
+<ReusableInputField
+  id="painscore"
+  type="number"
+  min={0}
+  max={10}
+  value={current.painscore}
+  label="pain score"
+  className="rounded-lg border-2"
+  onChange={(e) => handleChange("painscore", e.target.value)}
+  width="w-20"
 />
+
 
           </div>
         </div>
@@ -354,3 +413,4 @@ export default function ProgressSheet({ visitid, gssuhid, empid }) {
     </div>
   );
 }
+
