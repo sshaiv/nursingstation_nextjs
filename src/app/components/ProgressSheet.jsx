@@ -2,10 +2,11 @@
 
 import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
-import { Label, ModalHeading } from "../common/text";
+import { H3, Label, ModalHeading } from "../common/text";
 import API_ENDPOINTS from "../constants/api_url";
 import { SaveButton } from "../common/Buttons";
 import { getCurrentDateTime } from "../utils/dateUtils";
+import ReusableInputField from "../common/SmallInputfields";
 
 export default function ProgressSheet({ visitid, gssuhid, empid }) {
   const [progressSheetData, setProgressSheetData] = useState([]);
@@ -197,7 +198,48 @@ export default function ProgressSheet({ visitid, gssuhid, empid }) {
       </div>
 
       <hr className="border-t border-gray-300" />
+  <div className="flex flex-col items-center gap-2 mb-6">
+        <H3>Pain Assessment Scale</H3>
+        <div className="overflow-x-auto w-full">
+          <div className="flex justify-between gap-4 px-2 min-w-[800px]">
+            {[
+              { score: 0, emoji: "😄", Label: "No Pain" },
+              { score: 1, emoji: "😀", Label: "Just Noticeable" },
+              { score: 2, emoji: "🙂", Label: "Mild Pain" },
+              { score: 3, emoji: "😐", Label: "Uncomfortable Pain" },
+              { score: 4, emoji: "😑", Label: "Annoying Pain" },
+              { score: 5, emoji: "😣", Label: "Moderate Pain" },
+              { score: 6, emoji: "😖", Label: "Just Bearable" },
+              { score: 7, emoji: "😫", Label: "Strong Pain" },
+              { score: 8, emoji: "😩", Label: "Severe Pain" },
+              { score: 9, emoji: "😠", Label: "Horrible Pain" },
+              { score: 10, emoji: "😵", Label: "Worst Pain" },
+            ].map((item) => (
+              <div
+                key={item.score}
+                className="flex flex-col items-center w-20 text-center"
+              >
+                <Label>{item.score}</Label>
+                <Label className="text-2xl">{item.emoji}</Label>
+                <Label>{item.Label}</Label>
+              </div>
+            ))}
+          </div>
 
+          <div className="text-sm flex justify-center items-center text-gray-600 mt-2 text-center space-x-2">
+            <H3>Pain Score</H3>
+           <ReusableInputField
+  id="painscore"
+  value={current.painscore}
+  label="pain score"
+  className="rounded-lg border-2"
+  onChange={(e) => handleChange("painscore", e.target.value)}
+  width="w-20"
+/>
+
+          </div>
+        </div>
+      </div>
       {/* FORM START */}
       <div className="flex flex-wrap gap-4 items-center">
         <Label className="text-sm font-semibold">Do you have pain?</Label>
