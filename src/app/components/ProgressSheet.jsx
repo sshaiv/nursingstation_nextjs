@@ -151,7 +151,7 @@ export default function ProgressSheet({ visitid, gssuhid, empid }) {
   };
 
   return (
-    <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
+    <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-4">
       <div className="flex justify-between">
         <button
           className="bg-gray-200 px-3 py-1 rounded"
@@ -287,7 +287,7 @@ export default function ProgressSheet({ visitid, gssuhid, empid }) {
         ))}
       </div>
 
-      <div className="flex flex-col">
+ <div className="flex flex-col">
         <Label className="text-sm font-semibold mb-1">Doctor Notes</Label>
         <textarea
           rows={4}
@@ -297,9 +297,18 @@ export default function ProgressSheet({ visitid, gssuhid, empid }) {
         />
       </div>
 
-      <div className="flex justify-center">
-        <SaveButton label="Save" onClick={handleSave} />
-      </div>
+
+
+
+      <div className="w-full">
+ <SaveButton
+  label="Save"
+  onClick={handleSave}
+  className="lg:w-full md:w-full bg-blue-600"
+/>
+
+</div>
+
     </div>
   );
 }

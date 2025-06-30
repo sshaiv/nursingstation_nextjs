@@ -26,12 +26,12 @@ export function ActionButton({ label, onClick }) {
 
 
 
-export function SaveButton({ label, onClick }) {
+export function SaveButton({ label, onClick, className = "" }) {
   return (
     <button
       onClick={onClick}
-      className="
-        w-full                 
+      className={`
+        w-full                  
         max-w-[800px]          
         md:w-[400px]           
         text-white 
@@ -48,14 +48,12 @@ export function SaveButton({ label, onClick }) {
         flex 
         items-center 
         justify-center
-        mx-auto                 /* Center horizontally */
-      "
+        mx-auto 
+        ${className}             /* External classes get merged here */
+      `}
     >
       <FaSave className="mr-2" /> 
       {label}
     </button>
   );
 }
-
-
-
