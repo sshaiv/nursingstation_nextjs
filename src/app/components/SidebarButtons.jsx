@@ -16,6 +16,7 @@ import Investigation from './Investigation';
 import NutritionalAssessmentProfile from './NutritionalAssesmentProfile';
 import ProgressSheet from './ProgressSheet';
 import DummyInvestigation from './DummyInvestigation';
+import NutritionalInitial from './NutritionalInitial';
 
 const buttons = [
     { label: "Nursing Services", color: "#1999A1", shadow: "#14767D", icon: FiActivity },
@@ -79,6 +80,10 @@ export default function ButtonGrid({ visitid, gssuhid, empid ,patientData}) {
         }
         else if (label === "Nutritional Assessment") {
             setModalContent(<NutritionalAssessmentProfile visitid={visitid} gssuhid={gssuhid} empid={empid} patientData={patientData} />);
+            setShowModal(true);
+        }
+        else if (label === "NurInitial Assessment") {
+            setModalContent(<NutritionalInitial visitid={visitid} gssuhid={gssuhid} empid={empid} patientData={patientData} />);
             setShowModal(true);
         }
         else if (label === "Progress Sheet") {
