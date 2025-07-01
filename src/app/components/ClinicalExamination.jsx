@@ -716,9 +716,13 @@ export default function ClinicalExamination({ visitid, gssuhid, empid }) {
       </div>
 
       <hr className="border-t mt-6 mb-2 border-gray-300" />
-      <div className="flex justify-center mt-6">
-        <SaveButton label="Save" onClick={handleSave} />
-      </div>
+     <div className="flex justify-center">
+               <SaveButton
+                 label="Save"
+                 className="text-[10px] px-4 py-1"
+                 onClick={handleSave}
+               />
+             </div>
     </div>
   );
 }
