@@ -317,9 +317,9 @@ export default function ProgressSheet({ visitid, gssuhid, empid }) {
                   key={item.score}
                   className="flex flex-col items-center text-center w-16"
                 >
-                  <Label className="text-[10px]">{item.score}</Label>
+                  <Label className="text-[10px] text-gray-600">{item.score}</Label>
                   <Label className="text-xl">{item.emoji}</Label>
-                  <Label className="text-[9px]">{item.Label}</Label>
+                  <Label className="text-[9px] text-gray-600">{item.Label}</Label>
                 </div>
               ))}
             </div>
@@ -344,13 +344,13 @@ export default function ProgressSheet({ visitid, gssuhid, empid }) {
         {/* Right Column: Form + Save Button */}
         <div className="w-full sm:w-1/2 flex flex-col gap-1 justify-between">
           <div className="flex flex-wrap gap-4 items-center">
-            <Label className="text-[11px] font-semibold  mb-[2px]">
+            <Label className="text-[11px] font-semibold text-gray-800 mb-[2px]">
               Do you have pain?
             </Label>
             {yesNoOptions.map((option) => (
               <label
                 key={option.CID}
-                className="text-xs flex items-center gap-1"
+                className="text-xs text-gray-800 flex items-center gap-1"
               >
                 <input
                   type="radio"
@@ -364,7 +364,7 @@ export default function ProgressSheet({ visitid, gssuhid, empid }) {
             ))}
             <input
               type="text"
-              className="border w-[500px] p-1 rounded text-xs"
+              className="border  text-gray-800w-[500px] p-1 rounded text-xs"
               value={current.painlocation}
               onChange={(e) => handleChange("painlocation", e.target.value)}
               placeholder="Pain location"
@@ -372,11 +372,11 @@ export default function ProgressSheet({ visitid, gssuhid, empid }) {
           </div>
 
           <div className="flex flex-wrap gap-4 items-center">
-            <Label className="text-[11px] font-semibold  mb-[2px]">
+            <Label className="text-[11px] font-semibold text-gray-800 mb-[2px]">
               Quality:
             </Label>
             {["Constant", "Intermittent"].map((item) => (
-              <label key={item} className="text-xs flex items-center gap-1">
+              <label key={item} className="text-xs text-gray-800 flex items-center gap-1">
                 <input
                   type="checkbox"
                   checked={current.quality.includes(item)}
@@ -390,11 +390,11 @@ export default function ProgressSheet({ visitid, gssuhid, empid }) {
           </div>
 
           <div className="flex flex-wrap gap-4 items-center">
-            <Label className="text-[11px] font-semibold  mb-[2px]">
+            <Label className="text-[11px] font-semibold text-gray-800  mb-[2px]">
               Character:
             </Label>
             {["Lacerating", "Burning", "Radiating"].map((item) => (
-              <label key={item} className="text-xs flex items-center gap-1">
+              <label key={item} className="text-xs flex text-gray-800 items-center gap-1">
                 <input
                   type="checkbox"
                   checked={current.character.includes(item)}
@@ -408,11 +408,11 @@ export default function ProgressSheet({ visitid, gssuhid, empid }) {
           </div>
 
           <div className="flex flex-wrap gap-4 items-center">
-            <Label className="text-[11px] font-semibold  mb-[2px]">
+            <Label className="text-[11px] text-gray-800 font-semibold  mb-[2px]">
               Relieving Factor:
             </Label>
             {["Rest", "Medication"].map((item) => (
-              <label key={item} className="text-xs flex items-center gap-1">
+              <label key={item} className="text-xs text-gray-800 flex items-center gap-1">
                 <input
                   type="checkbox"
                   checked={current.relievingFactors.includes(item)}
@@ -429,7 +429,7 @@ export default function ProgressSheet({ visitid, gssuhid, empid }) {
             ))}
             <input
               type="text"
-              className="border w-[500px] p-1 rounded text-xs"
+              className="border text-gray-800 w-[500px] p-1 rounded text-xs"
               value={current.relievingfactorother}
               onChange={(e) =>
                 handleChange("relievingfactorother", e.target.value)
@@ -439,13 +439,13 @@ export default function ProgressSheet({ visitid, gssuhid, empid }) {
           </div>
 
           <div className="flex flex-wrap gap-4 items-center">
-            <Label className="text-[11px] font-semibold  mb-[2px]">
+            <Label className="text-[11px] text-gray-800 font-semibold  mb-[2px]">
               Does it affect sleep?
             </Label>
             {yesNoOptions.map((option) => (
               <label
                 key={option.CID}
-                className="text-xs flex items-center gap-1"
+                className="text-xs text-gray-800 flex items-center gap-1"
               >
                 <input
                   type="radio"
@@ -460,12 +460,12 @@ export default function ProgressSheet({ visitid, gssuhid, empid }) {
           </div>
 
           <div className="flex flex-col">
-            <Label className="text-[11px] font-semibold  mb-[2px] mb-1">
+            <Label className="text-[11px] font-semibold text-gray-800  mb-[2px] ">
               Doctor Notes
             </Label>
             <textarea
               rows={4}
-              className="border p-2 rounded text-xs"
+              className="border text-gray-800 p-2 rounded text-xs"
               value={current.doctornotes}
               onChange={(e) => handleChange("doctornotes", e.target.value)}
             />
