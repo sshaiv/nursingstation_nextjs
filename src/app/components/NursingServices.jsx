@@ -409,8 +409,8 @@ export default function NursingServices({
         <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-2 items-start">
          
           {/* Date & Time */}
-          <div className="flex flex-col  w-full ">
-            <label className="text-xs text-gray-700 font-medium mb-1">
+          <div className="flex flex-col   w-full ">
+            <label className="text-xs text-gray-700  font-medium mb-1">
               Date & Time
             </label>
             <DateTimeInput
@@ -427,8 +427,8 @@ export default function NursingServices({
           </div>
 
           {/* Doctor */}
-          <div className="flex flex-col  w-full">
-            <label className="text-xs text-gray-700 font-medium mb-1">
+          <div className="flex flex-col   w-full">
+            <label className="text-xs text-gray-700 font-medium ml-6  mb-1">
               Doctor *
             </label>
             <input
@@ -436,7 +436,7 @@ export default function NursingServices({
               readOnly
               value={doctorName}
               onClick={() => setDoctorModalOpen(true)}
-              className={`text-sm text-black px-2 py-1 border rounded-md bg-gray-100 hover:bg-gray-200 focus:outline-none cursor-pointer ${
+              className={`text-sm md:ml-6 sm:ml-2 text-black px-2 py-1 border rounded-md bg-gray-100 hover:bg-gray-200 focus:outline-none cursor-pointer ${
                 errors.doctorName ? "border-red-500" : "border-gray-300"
               }`}
               placeholder="Select doctor"
@@ -523,6 +523,9 @@ export default function NursingServices({
           </div>
         </div>
       </div>
+
+
+
 
       <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
         <div className="max-h-[225px] overflow-y-auto scrollbar-hide">

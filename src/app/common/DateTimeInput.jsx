@@ -70,7 +70,7 @@ export default function DateTimeInput({ selectedDate, onDateChange, time, onTime
                     selected={selectedDate}
                     onChange={onDateChange}
                     dateFormat="dd-MM-yyyy"
-                    className="w-[60px] text-black border-none px-[5px] py-[2px] focus:outline-none"
+                    className="w-[62px] text-black border-none px-[5px] py-[2px] focus:outline-none"
                 />
                 <span className="px-[4px] text-gray-400">|</span>
                 <input

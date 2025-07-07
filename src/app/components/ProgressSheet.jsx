@@ -471,6 +471,7 @@ export default function ProgressSheet({ visitid, gssuhid, empid }) {
             />
           </div>
         </div>
+        
       </div>
 
       <hr className="border-t border-gray-300" />

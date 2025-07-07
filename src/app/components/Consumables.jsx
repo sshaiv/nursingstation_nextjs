@@ -875,19 +875,7 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
             />
           </div>
 
-          {/* Remarks */}
-          {/* <div className="flex flex-col w-full">
-            <label className="text-xs text-gray-700 font-medium mb-1">
-              Remarks
-            </label>
-            <ReusableInputField
-              className="text-sm px-2 py-1 border border-gray-300 rounded-md"
-              id="remarks"
-              width="w-full"
-              value={remarks}
-              onChange={(e) => setRemarks(e.target.value)}
-            />
-          </div> */}
+        
           <div className="flex flex-wrap md:flex-nowrap w-full items-end gap-2">
             {/* Remarks */}
             <div className="flex flex-col flex-1">
@@ -924,23 +912,7 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
           </div>
         </div>
 
-        {/* <div className="flex justify-end gap-2">
-          <ActionButton
-            label="Insert"
-            onClick={handleInsert}
-            className="text-xs px-4 py-1"
-          />
-          <ActionButton
-            label="Indent Detail"
-            onClick={handleIndentDetail}
-            className="text-xs px-4 py-1"
-          />
-          <ActionButton
-            label="History"
-            onClick={handleHistoryOpen}
-            className="text-xs px-4 py-1"
-          />
-        </div> */}
+      
       </div>
 
       {/* Table */}
