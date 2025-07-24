@@ -41,30 +41,27 @@ export default function DummyInvestigation({
   const [canSave, setCanSave] = useState(false);
   const [refreshData, setRefreshData] = useState(false);
 
-    const [toastMessage, setToastMessage] = useState("");
-
+  const [toastMessage, setToastMessage] = useState("");
 
   const [investigations, setInvestigations] = useState([]);
   const [selectedIds, setSelectedIds] = useState([]);
 
+  const handleSelectServices = ({
+    selectedItems,
+    selectedIds,
+    investigations,
+  }) => {
+    console.log("SelectedItems:", selectedItems);
 
-const handleSelectServices = ({
-  selectedItems,
-  selectedIds,
-  investigations,
-}) => {
-  console.log("SelectedItems:", selectedItems);
+    setSelectedServices(selectedItems);
+    setSelectedIds(selectedIds);
+    setInvestigations(investigations);
 
-  setSelectedServices(selectedItems);
-  setSelectedIds(selectedIds);
-  setInvestigations(investigations);
+    // ✅ Pass selectedItems directly
+    handleInsert(selectedItems);
 
-  // ✅ Pass selectedItems directly
-  handleInsert(selectedItems);
-
-  setShowSecondModal(false);
-};
-
+    setShowSecondModal(false);
+  };
 
   const [saveData, setSaveData] = useSaveInvData();
   console.log("Updated INV", saveData);
@@ -87,190 +84,190 @@ const handleSelectServices = ({
     setDoctorModalOpen(false);
   };
 
+  const handleInsert = (services = selectedServices) => {
+    setErrors({});
 
-const handleInsert = (services = selectedServices) => {
-  setErrors({});
+    if (!selectedDate || !doctorData || services.length === 0) {
+      const newErrors = {};
+      if (!selectedDate) newErrors.dateTime = "Date and time are required.";
+      if (!doctorData) newErrors.doctorName = "Please select a doctor.";
+      if (services.length === 0)
+        newErrors.services = "Please select at least one investigation.";
+      setErrors(newErrors);
+      return;
+    }
 
-  if (!selectedDate || !doctorData || services.length === 0) {
-    const newErrors = {};
-    if (!selectedDate) newErrors.dateTime = "Date and time are required.";
-    if (!doctorData) newErrors.doctorName = "Please select a doctor.";
-    if (services.length === 0)
-      newErrors.services = "Please select at least one investigation.";
-    setErrors(newErrors);
-    return;
-  }
+    const now = new Date();
+    const day = String(now.getDate()).padStart(2, "0");
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const year = now.getFullYear();
+    let hours = now.getHours();
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12;
+    const formattedTime = `${hours}:${minutes} ${ampm}`;
+    const currentDateTime = `${day}/${month}/${year} ${formattedTime}`;
 
-  const now = new Date();
-  const day = String(now.getDate()).padStart(2, "0");
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const year = now.getFullYear();
-  let hours = now.getHours();
-  const minutes = String(now.getMinutes()).padStart(2, "0");
-  const ampm = hours >= 12 ? "PM" : "AM";
-  hours = hours % 12 || 12;
-  const formattedTime = `${hours}:${minutes} ${ampm}`;
-  const currentDateTime = `${day}/${month}/${year} ${formattedTime}`;
-
-  // ✅ Investigation Details
-  const jsonStringsubinvreqdetail = services.map((inv, index) => ({
-    rowid: 0,
-    SNo: index + 1,
-    servid: inv.servid || inv.CID || "",
-    InvestigationName: inv.servname || inv.CName || "",
-    consultantid: doctorData?.CID,
-    DoctorName: doctorData?.CName,
-
-    isurgent: 0,
-    Urgent: "",
-    consenttypeid: 0,
-    ConsentType: "",
-    isconsenttaken: 0,
-    ConsentTaken: "",
-    Remove: "",
-    reqid: 0,
-    invdate: "",
-    remarks: remark,
-
-    issampled: 0,
-    isresult: 0,
-    isverified: 0,
-    isunabletoprocess: 0,
-    isemg: 0,
-    preparationstatusid: 0,
-    preparationremarkid: 0,
-    reasonfornotpreparation: " ",
-
-    isconsentreq: 0,
-    isremove: 0,
-    removedatetime: " ",
-    isprofile: 0,
-    profileservid: 0,
-    charge: inv.charge || 0,
-    isinactive: 0,
-    entempid: inv.entempid || "",
-    entdatetime: currentDateTime,
-    entwsname: inv.entwsname || "",
-    modifyempid: inv.modifyempid || "",
-    modifydatetime: currentDateTime,
-    modifywsname: inv.modifywsname || "",
-    locationid: inv.locationid || "",
-    isEdit: 0,
-    financialyear: " ",
-    servcatgid: inv.servcatgid || "",
-    servsubcatgid: inv.servsubcatgid || "",
-    deptid: inv.deptid || "",
-    subdeptid: inv.subdeptid || "",
-    statusid: 0,
-    Consultant: " ",
-    reqwardcatgid: patientData.reqwardcatgid,
-    ispaid: 0,
-    Paid: "",
-    isrepeat: 0,
-    Repeat: "",
-    repeatremark: "",
-    RepeatRemark: "",
-    itemlineid: 1,
-
-    performedbyempid: 0,
-    callbyempid: 0,
-    callbyremark: "",
-    CallByRemark: "",
-    postinfinalbill: 0,
-    otherConsultantId: doctorData?.CID,
-  }));
-
-  // ✅ Billing Info
-  const jsonStringsubpatbilinginfomodel = [
-    {
-      visitid: patientData.visitid,
-      gssuhid: patientData.gssuhid,
-      reqwardcatgid: patientData.reqwardcatgid,
-      allotedcatg: patientData.wardcatgid,
-      bedno: patientData.bedno,
-      admissiontypeid: patientData.admissiontypeid,
-      corporateid: patientData.corporateid,
-      billinggroupid: patientData.billgrpid,
-      terriffid: patientData.terriffid,
-    },
-  ];
-
-  // ✅ Main Request Info
-  const jsonStringsubinvreqmain = [
-    {
+    // ✅ Investigation Details
+    const jsonStringsubinvreqdetail = services.map((inv, index) => ({
       rowid: 0,
+      SNo: index + 1,
+      servid: inv.servid || inv.CID || "",
+      InvestigationName: inv.servname || inv.CName || "",
+      consultantid: doctorData?.CID,
+      DoctorName: doctorData?.CName,
+
+      isurgent: 0,
+      Urgent: "",
+      consenttypeid: 0,
+      ConsentType: "",
+      isconsenttaken: 0,
+      ConsentTaken: "",
+      Remove: "",
       reqid: 0,
-      gssuhid: patientData.gssuhid,
-      visitid: patientData.visitid,
-      visittype: "I",
-      orddate: currentDateTime,
-      isallresultready: 0,
-      bedno: patientData.bedno,
-      consultantvisitid: 0,
+      invdate: "",
+      remarks: remark,
+
+      issampled: 0,
+      isresult: 0,
+      isverified: 0,
+      isunabletoprocess: 0,
+      isemg: 0,
+      preparationstatusid: 0,
+      preparationremarkid: 0,
+      reasonfornotpreparation: " ",
+
+      isconsentreq: 0,
       isremove: 0,
-      visitthrough: "VISIT",
-      removedatetime: 0,
+      removedatetime: " ",
+      isprofile: 0,
+      profileservid: 0,
+      charge: inv.charge || 0,
       isinactive: 0,
-      entempid: services[0]?.entempid || " ",
+      entempid: inv.entempid || "",
       entdatetime: currentDateTime,
-      entwsname: patientData.wsname,
-      modifyempid: services[0]?.modifyempid || " ",
+      entwsname: inv.entwsname || "",
+      modifyempid: inv.modifyempid || "",
       modifydatetime: currentDateTime,
-      modifywsname: patientData.wsname,
-      locationid: services[0]?.locationid || " ",
+      modifywsname: inv.modifywsname || "",
+      locationid: inv.locationid || "",
+      isEdit: 0,
       financialyear: " ",
-      isprint: 0,
-      removeremark: "",
-      secondconsultantid: doctorData?.CID,
-    },
-  ];
+      servcatgid: inv.servcatgid || "",
+      servsubcatgid: inv.servsubcatgid || "",
+      deptid: inv.deptid || "",
+      subdeptid: inv.subdeptid || "",
+      statusid: 0,
+      Consultant: " ",
+      reqwardcatgid: patientData.reqwardcatgid,
+      ispaid: 0,
+      Paid: "",
+      isrepeat: 0,
+      Repeat: "",
+      repeatremark: "",
+      RepeatRemark: "",
+      itemlineid: 1,
 
-  // ✅ Set all to saveData hook
-  setSaveData((prevData) => ({
-    ...prevData,
-    jsonStringsubinvreqdetail: JSON.stringify(jsonStringsubinvreqdetail),
-    jsonStringsubpatbilinginfomodel: JSON.stringify(jsonStringsubpatbilinginfomodel),
-    jsonStringsubinvreqmain: JSON.stringify(jsonStringsubinvreqmain),
-  }));
+      performedbyempid: 0,
+      callbyempid: 0,
+      callbyremark: "",
+      CallByRemark: "",
+      postinfinalbill: 0,
+      otherConsultantId: doctorData?.CID,
+    }));
 
-  console.log("📝 Detail JSON:", jsonStringsubinvreqdetail);
-  console.log("💳 Billing Info:", jsonStringsubpatbilinginfomodel);
-  console.log("📄 Main Info:", jsonStringsubinvreqmain);
+    // ✅ Billing Info
+    const jsonStringsubpatbilinginfomodel = [
+      {
+        visitid: patientData.visitid,
+        gssuhid: patientData.gssuhid,
+        reqwardcatgid: patientData.reqwardcatgid,
+        allotedcatg: patientData.wardcatgid,
+        bedno: patientData.bedno,
+        admissiontypeid: patientData.admissiontypeid,
+        corporateid: patientData.corporateid,
+        billinggroupid: patientData.billgrpid,
+        terriffid: patientData.terriffid,
+      },
+    ];
 
-  // ✅ Update table and clear form
-  const newEntries = services.map((service) => ({
-    date: currentDateTime,
-    doctorName: doctorData.label || doctorData.CName || "N/A",
-    investigation:
-      service.InvestigationName ||
-      service.servname ||
-      service.CName ||
-      "Unknown",
-    remarks: remark || "",
-  }));
+    // ✅ Main Request Info
+    const jsonStringsubinvreqmain = [
+      {
+        rowid: 0,
+        reqid: 0,
+        gssuhid: patientData.gssuhid,
+        visitid: patientData.visitid,
+        visittype: "I",
+        orddate: currentDateTime,
+        isallresultready: 0,
+        bedno: patientData.bedno,
+        consultantvisitid: 0,
+        isremove: 0,
+        visitthrough: "VISIT",
+        removedatetime: 0,
+        isinactive: 0,
+        entempid: services[0]?.entempid || " ",
+        entdatetime: currentDateTime,
+        entwsname: patientData.wsname,
+        modifyempid: services[0]?.modifyempid || " ",
+        modifydatetime: currentDateTime,
+        modifywsname: patientData.wsname,
+        locationid: services[0]?.locationid || " ",
+        financialyear: " ",
+        isprint: 0,
+        removeremark: "",
+        secondconsultantid: doctorData?.CID,
+      },
+    ];
 
-  setVitals((prev) => [...prev, ...newEntries]);
-  setCanSave(true);
-  setSelectedDate(new Date());
-  setDoctorData(null);
-  setDoctorName("");
-  setSelectedServices([]);
-  setRemark("");
-//  setInsertedServices((prev) => [...prev, ...services]);
-setInsertedServices((prev) => [
-  ...prev,
-  ...services.map((s) => ({
-    ...s,
-    consultantid: doctorData?.CID || "",
-    DoctorName: doctorData?.CName || "",
-    remarks: remark || "",
-    otherConsultantId: doctorData?.CID || "",
-  })),
-]);
+    // ✅ Set all to saveData hook
+    setSaveData((prevData) => ({
+      ...prevData,
+      jsonStringsubinvreqdetail: JSON.stringify(jsonStringsubinvreqdetail),
+      jsonStringsubpatbilinginfomodel: JSON.stringify(
+        jsonStringsubpatbilinginfomodel
+      ),
+      jsonStringsubinvreqmain: JSON.stringify(jsonStringsubinvreqmain),
+    }));
 
-};
+    console.log("📝 Detail JSON:", jsonStringsubinvreqdetail);
+    console.log("💳 Billing Info:", jsonStringsubpatbilinginfomodel);
+    console.log("📄 Main Info:", jsonStringsubinvreqmain);
 
-const [insertedServices, setInsertedServices] = useState([]); // 👈 Only manually added
+    // ✅ Update table and clear form
+    const newEntries = services.map((service) => ({
+      date: currentDateTime,
+      doctorName: doctorData.label || doctorData.CName || "N/A",
+      investigation:
+        service.InvestigationName ||
+        service.servname ||
+        service.CName ||
+        "Unknown",
+      remarks: remark || "",
+    }));
+
+    setVitals((prev) => [...prev, ...newEntries]);
+    setCanSave(true);
+    setSelectedDate(new Date());
+    setDoctorData(null);
+    setDoctorName("");
+    setSelectedServices([]);
+    setRemark("");
+    //  setInsertedServices((prev) => [...prev, ...services]);
+    setInsertedServices((prev) => [
+      ...prev,
+      ...services.map((s) => ({
+        ...s,
+        consultantid: doctorData?.CID || "",
+        DoctorName: doctorData?.CName || "",
+        remarks: remark || "",
+        otherConsultantId: doctorData?.CID || "",
+      })),
+    ]);
+  };
+
+  const [insertedServices, setInsertedServices] = useState([]); // 👈 Only manually added
 
   const savebtn = async () => {
     console.log("savebtn ", saveData);
@@ -291,9 +288,9 @@ const [insertedServices, setInsertedServices] = useState([]); // 👈 Only manua
       console.log("Response:", result);
 
       if (response.ok) {
-          setToastMessage("✅ Data saved successfully!");
+        setToastMessage("✅ Data saved successfully!");
         setTimeout(() => setToastMessage(""), 2000);
-       // alert("Data saved successfully!");
+        // alert("Data saved successfully!");
         setIsSaved(true);
         setRefreshData((prev) => !prev);
         // Reset vitals and form data
@@ -370,137 +367,146 @@ const [insertedServices, setInsertedServices] = useState([]); // 👈 Only manua
       });
   }, [visitid, refreshData]);
 
+  const handleDeleteEntry = (indexToDelete) => {
+    console.log("🗑️ Deleting manual entry at index:", indexToDelete);
 
+    // Log the item being deleted from vitals and insertedServices
+    console.log("📦 Entry to delete from vitals:", vitals[indexToDelete]);
+    console.log(
+      "📦 Entry to delete from insertedServices:",
+      insertedServices[indexToDelete]
+    );
 
+    // Filter out the deleted entry
+    const updatedVitals = vitals.filter((_, i) => i !== indexToDelete);
+    const updatedInsertedServices = insertedServices.filter(
+      (_, i) => i !== indexToDelete
+    );
 
-const handleDeleteEntry = (indexToDelete) => {
-  console.log("🗑️ Deleting manual entry at index:", indexToDelete);
+    // Log updated states
+    console.log("✅ Updated vitals (after delete):", updatedVitals);
+    console.log(
+      "✅ Updated inserted services (after delete):",
+      updatedInsertedServices
+    );
 
-  // Log the item being deleted from vitals and insertedServices
-  console.log("📦 Entry to delete from vitals:", vitals[indexToDelete]);
-  console.log("📦 Entry to delete from insertedServices:", insertedServices[indexToDelete]);
+    // Update the state with filtered data
+    setVitals(updatedVitals);
+    setInsertedServices(updatedInsertedServices);
 
-  // Filter out the deleted entry
-  const updatedVitals = vitals.filter((_, i) => i !== indexToDelete);
-  const updatedInsertedServices = insertedServices.filter((_, i) => i !== indexToDelete);
+    // Format current date and time
+    const now = new Date();
+    const formattedTime = now.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    const currentDateTime = `${now.getDate().toString().padStart(2, "0")}/${(
+      now.getMonth() + 1
+    )
+      .toString()
+      .padStart(2, "0")}/${now.getFullYear()} ${formattedTime}`;
 
-  // Log updated states
-  console.log("✅ Updated vitals (after delete):", updatedVitals);
-  console.log("✅ Updated inserted services (after delete):", updatedInsertedServices);
-
-  // Update the state with filtered data
-  setVitals(updatedVitals);
-  setInsertedServices(updatedInsertedServices);
-
-  // Format current date and time
-  const now = new Date();
-  const formattedTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  const currentDateTime = `${now.getDate().toString().padStart(2, '0')}/${(now.getMonth() + 1)
-    .toString()
-    .padStart(2, '0')}/${now.getFullYear()} ${formattedTime}`;
-
-  // Re-map only remaining inserted services for updated JSON
-  const updatedJsonDetail = updatedInsertedServices.map((inv, index) => {
-    const detail = {
-
-        
+    // Re-map only remaining inserted services for updated JSON
+    const updatedJsonDetail = updatedInsertedServices.map((inv, index) => {
+      const detail = {
         rowid: 0,
-    SNo: index + 1,
-    servid: inv.servid || inv.CID || "",
-    InvestigationName: inv.servname || inv.CName || "",
-    consultantid: doctorData?.CID,
-    DoctorName: doctorData?.CName,
-isurgent: 0,
-    Urgent: "",
-    consenttypeid: 0,
-    ConsentType: "",
-    isconsenttaken: 0,
-    ConsentTaken: "",
-    Remove: "",
-    reqid: 0,
-    invdate: "",
-    remarks: remark,
- issampled: 0,
-    isresult: 0,
-    isverified: 0,
-    isunabletoprocess: 0,
-    isemg: 0,
-    preparationstatusid: 0,
-    preparationremarkid: 0,
-     
-      reasonfornotpreparation: " ",
-    
-    isconsentreq: 0,
-    isremove: 0,
-    removedatetime: " ",
-    isprofile: 0,
-    profileservid: 0,
-    charge: inv.charge || 0,
-    isinactive: 0,
- 
-      entempid: inv.entempid || "",
-    entdatetime: currentDateTime,
-    entwsname: inv.entwsname || "",
-    modifyempid: inv.modifyempid || "",
-    modifydatetime: currentDateTime,
-    modifywsname: inv.modifywsname || "",
-    locationid: inv.locationid || "",
-    isEdit: 0,
-      financialyear: " ",
-    servcatgid: inv.servcatgid || "",
-    servsubcatgid: inv.servsubcatgid || "",
-    deptid: inv.deptid || "",
-    subdeptid: inv.subdeptid || "",
-    statusid: 0,
-    Consultant: " ",
-    
- reqwardcatgid: patientData.reqwardcatgid,
-    ispaid: 0,
-    Paid: "",
-    isrepeat: 0,
-    Repeat: "",
-    repeatremark: "",
-    RepeatRemark: "",
-    itemlineid: 1,
- performedbyempid: 0,
-    callbyempid: 0,
-    callbyremark: "",
-    CallByRemark: "",
-    postinfinalbill: 0,
-    otherConsultantId: doctorData?.CID,
-  
-   consultantid: inv.consultantid || doctorData?.CID || "",
-DoctorName: inv.DoctorName || doctorData?.CName || "",
-remarks: inv.remarks || "",
-otherConsultantId: inv.otherConsultantId || doctorData?.CID || "",
+        SNo: index + 1,
+        servid: inv.servid || inv.CID || "",
+        InvestigationName: inv.servname || inv.CName || "",
+        consultantid: doctorData?.CID,
+        DoctorName: doctorData?.CName,
+        isurgent: 0,
+        Urgent: "",
+        consenttypeid: 0,
+        ConsentType: "",
+        isconsenttaken: 0,
+        ConsentTaken: "",
+        Remove: "",
+        reqid: 0,
+        invdate: "",
+        remarks: remark,
+        issampled: 0,
+        isresult: 0,
+        isverified: 0,
+        isunabletoprocess: 0,
+        isemg: 0,
+        preparationstatusid: 0,
+        preparationremarkid: 0,
 
-   
-    };
+        reasonfornotpreparation: " ",
 
-    console.log(`📄 Mapped JSON for item #${index + 1}:`, detail);
-    return detail;
-  });
+        isconsentreq: 0,
+        isremove: 0,
+        removedatetime: " ",
+        isprofile: 0,
+        profileservid: 0,
+        charge: inv.charge || 0,
+        isinactive: 0,
 
-  // Update save data with ONLY new entries
-  setSaveData((prev) => {
-    const newData = {
-      ...prev,
-      jsonStringsubinvreqdetail: JSON.stringify(updatedJsonDetail),
-    };
-    console.log("🧾 Updated JSON string being saved:", newData.jsonStringsubinvreqdetail);
-    return newData;
-  });
+        entempid: inv.entempid || "",
+        entdatetime: currentDateTime,
+        entwsname: inv.entwsname || "",
+        modifyempid: inv.modifyempid || "",
+        modifydatetime: currentDateTime,
+        modifywsname: inv.modifywsname || "",
+        locationid: inv.locationid || "",
+        isEdit: 0,
+        financialyear: " ",
+        servcatgid: inv.servcatgid || "",
+        servsubcatgid: inv.servsubcatgid || "",
+        deptid: inv.deptid || "",
+        subdeptid: inv.subdeptid || "",
+        statusid: 0,
+        Consultant: " ",
 
-  // Disable Save button if no entries left
-  if (updatedInsertedServices.length === 0) {
-    console.log("🚫 No remaining manual entries. Disabling Save.");
-    setCanSave(false);
-  }
-};  
+        reqwardcatgid: patientData.reqwardcatgid,
+        ispaid: 0,
+        Paid: "",
+        isrepeat: 0,
+        Repeat: "",
+        repeatremark: "",
+        RepeatRemark: "",
+        itemlineid: 1,
+        performedbyempid: 0,
+        callbyempid: 0,
+        callbyremark: "",
+        CallByRemark: "",
+        postinfinalbill: 0,
+        otherConsultantId: doctorData?.CID,
+
+        consultantid: inv.consultantid || doctorData?.CID || "",
+        DoctorName: inv.DoctorName || doctorData?.CName || "",
+        remarks: inv.remarks || "",
+        otherConsultantId: inv.otherConsultantId || doctorData?.CID || "",
+      };
+
+      console.log(`📄 Mapped JSON for item #${index + 1}:`, detail);
+      return detail;
+    });
+
+    // Update save data with ONLY new entries
+    setSaveData((prev) => {
+      const newData = {
+        ...prev,
+        jsonStringsubinvreqdetail: JSON.stringify(updatedJsonDetail),
+      };
+      console.log(
+        "🧾 Updated JSON string being saved:",
+        newData.jsonStringsubinvreqdetail
+      );
+      return newData;
+    });
+
+    // Disable Save button if no entries left
+    if (updatedInsertedServices.length === 0) {
+      console.log("🚫 No remaining manual entries. Disabling Save.");
+      setCanSave(false);
+    }
+  };
 
   return (
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
-         {toastMessage && (
+      {toastMessage && (
         <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white text-sm px-6 py-3 rounded-md shadow-lg z-50 animate-slide-fade">
           {toastMessage}
         </div>
@@ -656,31 +662,29 @@ otherConsultantId: inv.otherConsultantId || doctorData?.CID || "",
                 </tr>
               ))} */}
 
-{vitals.map((v, realIdx) => ({ ...v, originalIndex: realIdx }))
-  .reverse()
-  .map((v, idx) => (
-    <tr key={"vital-" + idx}>
-       <TableReuse>{v.date}</TableReuse>
-                  <TableReuse>{v.doctorName}</TableReuse>
-                  <TableReuse>{v.investigation}</TableReuse>
-                  <TableReuse>{v.remarks}</TableReuse>
-      <TableReuse>
-        <div className="flex justify-center space-x-2">
-          {v.source !== "api" && (
-            <button
-              className="text-red-500 hover:underline"
-              onClick={() => handleDeleteEntry(v.originalIndex)}
-              
-            >
-              Delete
-            </button>
-          )}
-        </div>
-      </TableReuse>
-    </tr>
-))}
-
-
+              {vitals
+                .map((v, realIdx) => ({ ...v, originalIndex: realIdx }))
+                .reverse()
+                .map((v, idx) => (
+                  <tr key={"vital-" + idx}>
+                    <TableReuse>{v.date}</TableReuse>
+                    <TableReuse>{v.doctorName}</TableReuse>
+                    <TableReuse>{v.investigation}</TableReuse>
+                    <TableReuse>{v.remarks}</TableReuse>
+                    <TableReuse>
+                      <div className="flex justify-center space-x-2">
+                        {v.source !== "api" && (
+                          <button
+                            className="text-red-500 hover:underline"
+                            onClick={() => handleDeleteEntry(v.originalIndex)}
+                          >
+                            Delete
+                          </button>
+                        )}
+                      </div>
+                    </TableReuse>
+                  </tr>
+                ))}
 
               {/* Conditional rendering for loading */}
               {loading ? (

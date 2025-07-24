@@ -35,6 +35,7 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
   // This is the key state to hold multiple service entries
   const [serviceEntries, setServiceEntries] = useState([]);
   const [entries, setEntries] = useState([]); // Grid data
+const [toastMessage, setToastMessage] = useState("");
 
   const [saveData, setSaveData] = useSaveDVData();
   console.log("Updated DV", saveData);
@@ -190,7 +191,9 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
       console.log("Response:", result);
 
       if (response.ok) {
-        alert("Data saved successfully!");
+          setToastMessage("✅ Data saved successfully!");
+        setTimeout(() => setToastMessage(""), 2000);
+       // alert("Data saved successfully!");
         setRefreshData((prev) => !prev);
         // 🔁 Reset entries and form fields
         setVitals([]);
@@ -282,13 +285,18 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
     }
 
     console.log("✅ Updated Vitals:", updatedVitals);
-    console.log("✅ Updated Entries:", updatedEntries);
+    //console.log("✅ Updated Entries:", updatedEntries);
     console.log("✅ Updated Service Entries:", updatedServiceEntries);
     console.log("🧾 Updated JSON String:", newJSONString);
   };
 
   return (
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
+         {toastMessage && (
+        <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white text-sm px-6 py-3 rounded-md shadow-lg z-50 animate-slide-fade">
+          {toastMessage}
+        </div>
+      )}
       <div className="flex h-[1px]  items-center justify-center">
         <ModalHeading title="Doctor Visit" />
       </div>

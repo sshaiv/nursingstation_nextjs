@@ -136,7 +136,7 @@ export default function NursingServices({
       source: "local",
     };
 
-    console.log("aai", newEntry.date);
+   // console.log("aai", newEntry.date);
 
     const newServiceEntry = {
       rowid: 0,
@@ -484,7 +484,7 @@ export default function NursingServices({
           {/* Performed By */}
           <div className="flex flex-col  w-full">
             <label className="text-xs text-gray-700 font-medium mb-1">
-              Performed By
+              Performed By*
             </label>
             <input
               id="performedBy"
