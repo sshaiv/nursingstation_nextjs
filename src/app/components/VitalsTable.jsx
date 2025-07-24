@@ -58,7 +58,7 @@ export default function VitalsTable({
 
   const [saveData, setSaveData] = useSaveVitalData();
 
-  console.log("update vital", saveData);
+  // console.log("update vital", saveData);
 
   // Array to keep inserted entries only
   const [insertedVitals, setInsertedVitals] = useState([]);
@@ -119,7 +119,7 @@ export default function VitalsTable({
         data = JSON.parse(data);
       }
 
-      console.log("Parsed Vital Data:", data);
+     // console.log("Parsed Vital Data:", data);
 
       if (Array.isArray(data) && data.length > 0) {
         setVitals(
@@ -207,11 +207,10 @@ export default function VitalsTable({
         return `${day}/${month}/${year} ${paddedHours}:${minutes} ${ampm}`;
       };
 
-      // const dateOnly = getCurrentDateTime(false);
-      // console.log("Sirf date:", dateOnly);
+    
 
       const currentDateTime = getCurrentDateTime(true);
-      console.log("Date + Time:", currentDateTime);
+     // console.log("Date + Time:", currentDateTime);
 
       const newEntry = {
         performedBy: performedByData?.label || performedByData?.CName || "",

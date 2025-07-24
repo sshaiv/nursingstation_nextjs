@@ -29,7 +29,7 @@ const buttons = [
     { label: "NurRe Assessment", color: "#48BCD1", shadow: "#359EB0", icon: FaStethoscope },
     { label: "Advice Surgery", color: "#1999A1", shadow: "#14767D", icon: GiScissors },
     { label: "Implant", color: "#48BCD1", shadow: "#359EB0", icon: FiPackage },
-    { label: "Discharge Summary", color: "#1999A1", shadow: "#14767D", icon: FiCheckCircle },
+   // { label: "Discharge Summary", color: "#1999A1", shadow: "#14767D", icon: FiCheckCircle },
     //{ label: "BugInvestigation", color: "#48BCD1", shadow: "#359EB0", icon: GiFizzingFlask },
     { label: "Investigation", color: "#48BCD1", shadow: "#359EB0", icon: GiFizzingFlask },
     { label: "Progress Sheet", color: "#1999A1", shadow: "#14767D", icon: FiCheckCircle},

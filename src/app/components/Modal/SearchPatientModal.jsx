@@ -80,7 +80,7 @@ const SearchPatientModal = ({ isOpen, onClose, patientData }) => {
       }
 
       const rawText = await response.text();
-      console.log("📦 Raw API response text:", rawText);
+      // console.log("📦 Raw API response text:", rawText);
 
       let data;
       try {

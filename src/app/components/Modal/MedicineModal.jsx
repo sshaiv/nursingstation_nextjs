@@ -21,7 +21,7 @@ export default function MedicineModal({
     let url = "";
     url = `${API_ENDPOINTS.getAllItems}`;
 
-    console.log("url", url);
+    // console.log("url", url);
 
     axios
       .get(url)
@@ -30,16 +30,16 @@ export default function MedicineModal({
         try {
           if (typeof res.data === "string") {
             parsedData = JSON.parse(res.data);
-            console.log("1", parsedData);
+           // console.log("1", parsedData);
           } else if (
             typeof res.data === "object" &&
             typeof res.data.data === "string"
           ) {
             parsedData = JSON.parse(res.data.data);
-            console.log("2", parsedData);
+          //  console.log("2", parsedData);
           } else {
             parsedData = res.data;
-            console.log("3", parsedData);
+          //  console.log("3", parsedData);
           }
         } catch (err) {
           console.error("Error parsing investigations JSON:", err);

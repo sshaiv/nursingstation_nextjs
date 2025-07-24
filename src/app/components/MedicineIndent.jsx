@@ -101,7 +101,7 @@ export default function MedicineIndent({
     jsonStringsubnursingpatipdmedicineindentdetailmodel: [],
     jsonStringsubpatbilinginfomodel: [],
   });
-  console.log("update indent", saveData);
+ // console.log("update indent", saveData);
 
   const handleInsert = () => {
     setIsInsertClicked(true);
@@ -126,7 +126,7 @@ export default function MedicineIndent({
       source: "local",
       indentid: selectedIndentType?.value || 0,
     };
-    console.log("new", newEntry);
+   // console.log("new", newEntry);
 
     const newServiceEntry = {
       rowid: 0,
@@ -293,7 +293,7 @@ export default function MedicineIndent({
   }, [visitid, refreshData]);
 
   const handleDeleteEntry = (indexToDelete) => {
-    console.log("🗑️ Deleting Entry at Index:", indexToDelete);
+    // console.log("🗑️ Deleting Entry at Index:", indexToDelete);
     console.log("📦 Entry Being Deleted:", serviceEntries[indexToDelete]);
 
     const updatedVitals = vitals.filter((_, i) => i !== indexToDelete);
@@ -310,17 +310,17 @@ export default function MedicineIndent({
     const newJSONString = JSON.stringify(updatedServiceEntries);
     setSaveData((prevData) => ({
       ...prevData,
-      jsonStringdoctorvisit: newJSONString,
+      jsonStringsubnursingpatipdmedicineindentdetailmodel: newJSONString,
     }));
 
     if (updatedServiceEntries.length === 0) {
       setIsSaveEnabled(false);
     }
 
-    console.log("✅ Updated Vitals:", updatedVitals);
-    console.log("✅ Updated Entries:", updatedEntries);
+    // console.log("✅ Updated Vitals:", updatedVitals);
+    // console.log("✅ Updated Entries:", updatedEntries);
     console.log("✅ Updated Service Entries:", updatedServiceEntries);
-    console.log("🧾 Updated JSON String:", newJSONString);
+    // console.log("🧾 Updated JSON String:", newJSONString);
   };
 
   useEffect(() => {

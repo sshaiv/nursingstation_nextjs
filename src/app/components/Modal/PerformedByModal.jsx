@@ -20,8 +20,7 @@ export default function PerformedByModal({
     setLoading(true);
     let url = "";
     url = `${API_ENDPOINTS.getNursingStaff}`;
-
-    console.log("url", url);
+    // console.log("url", url);
 
     axios
       .get(url)
@@ -30,16 +29,16 @@ export default function PerformedByModal({
         try {
           if (typeof res.data === "string") {
             parsedData = JSON.parse(res.data);
-            console.log("1", parsedData);
+          //  console.log("1", parsedData);
           } else if (
             typeof res.data === "object" &&
             typeof res.data.data === "string"
           ) {
             parsedData = JSON.parse(res.data.data);
-            console.log("2", parsedData);
+          //  console.log("2", parsedData);
           } else {
             parsedData = res.data;
-            console.log("3", parsedData);
+          //  console.log("3", parsedData);
           }
         } catch (err) {
           console.error("Error parsing investigations JSON:", err);
@@ -114,7 +113,7 @@ export default function PerformedByModal({
               type="button"
               className="py-2.5 px-5 me-2 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-flex items-center"
             >
-              <svg
+              {/* <svg
                 aria-hidden="true"
                 role="status"
                 className="inline w-4 h-4 me-3 text-gray-200 animate-spin dark:text-gray-600"
@@ -130,7 +129,7 @@ export default function PerformedByModal({
                   d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539..."
                   fill="#1C64F2"
                 />
-              </svg>
+              </svg> */}
               Loading Performed By ...
             </button>
           ) : (
