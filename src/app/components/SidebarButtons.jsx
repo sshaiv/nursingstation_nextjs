@@ -62,14 +62,14 @@ export default function ButtonGrid({ visitid, gssuhid, empid ,patientData}) {
             setModalContent(<DoctorVisit visitid={visitid} gssuhid={gssuhid} empid={empid}  patientData={patientData}/>);
             setShowModal(true);
         }
-        else if (label === "Advice Surgery") {
-            setModalContent(<AdvisedSurgery visitid={visitid} gssuhid={gssuhid} empid={empid} />);
-            setShowModal(true);
-        }
-        else if (label === "Implant") {
-            setModalContent(<Implants visitid={visitid} gssuhid={gssuhid} empid={empid} />);
-            setShowModal(true);
-        }
+        // else if (label === "Advice Surgery") {
+        //     setModalContent(<AdvisedSurgery visitid={visitid} gssuhid={gssuhid} empid={empid} />);
+        //     setShowModal(true);
+        // }
+        // else if (label === "Implant") {
+        //     setModalContent(<Implants visitid={visitid} gssuhid={gssuhid} empid={empid} />);
+        //     setShowModal(true);
+        // }
         // else if (label === "InvestigationBug") {
         //     setModalContent(<Investigation visitid={visitid} gssuhid={gssuhid} empid={empid} patientData={patientData}/>);
         //     setShowModal(true);

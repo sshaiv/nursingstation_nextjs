@@ -634,7 +634,7 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
       ...prevData,
       jsonStringsubipdconsumablemodels: JSON.stringify(updatedServiceEntries),
       jsonStringsubitemstockoutdetl: JSON.stringify(updatedServiceEntries),
-      // keep others as is
+     
     }));
 
     // Step 3: Disable Save button if nothing to save

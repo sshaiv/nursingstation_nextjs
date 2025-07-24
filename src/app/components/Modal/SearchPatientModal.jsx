@@ -57,47 +57,7 @@ const SearchPatientModal = ({ isOpen, onClose, patientData }) => {
     setFilteredData(results);
   }, [searchTerm, historyData]);
 
-  // const handleRowDoubleClick = async (visitId, index) => {
-  //   console.log("Visit ID:", visitId);
-  //   setSelectedRowIndex(index);
-  //   const cleanedVisitId = visitId.trim();
-  //   console.log("Cleaned visitId:", `"${cleanedVisitId}"`);
-
-  //   setLoading(true);
-  //   try {
-  //     const response = await fetch(
-  //       `${API_ENDPOINTS.getAdvPatientBed}/?visitid=${cleanedVisitId}`
-  //     );
-
-  //     if (!response.ok) {
-  //       throw new Error(`HTTP error! status: ${response.status}`);
-  //     }
-
-  //     let data = await response.json();
-
-  //     if (typeof data === "string") {
-  //       data = JSON.parse(data);
-  //     }
-
-  //     console.log("API response data:", data);
-
-  //     if (Array.isArray(data) && data.length > 0) {
-  //       const patient = data[0];
-
-  //       router.push(
-  //         `/nursingstation?visitid=${encodeURIComponent(patient.visitid)}&gssuhid=${encodeURIComponent(patient.gssuhid)}&empid=${encodeURIComponent(patient.empid)}`
-  //       );
-  //     } else {
-  //       alert("No patient data found.");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching patient bed info:", error);
-  //     alert("Failed to fetch patient bed info: " + error.message);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
+ 
   const handleRowDoubleClick = async (visitId, index) => {
     console.log("🆔 Visit ID:", visitId);
     setSelectedRowIndex(index);
@@ -185,7 +145,7 @@ const SearchPatientModal = ({ isOpen, onClose, patientData }) => {
             <table className="min-w-full border-collapse table-auto text-left text-gray-700">
               <thead className="bg-gray-100 sticky top-0 z-10">
                 <tr>
-                  <TableReuse type="th">Bed No</TableReuse>
+                  <TableReuse type="th" >Bed No</TableReuse>
                   <TableReuse type="th">Visit</TableReuse>
                   <TableReuse type="th">Patient Name</TableReuse>
                   <TableReuse type="th">Doctor Name</TableReuse>
@@ -206,17 +166,17 @@ const SearchPatientModal = ({ isOpen, onClose, patientData }) => {
                           ? "bg-white"
                           : "bg-gray-50"
                       }`}
-                      onDoubleClick={() =>
+                      onClick={() =>
                         handleRowDoubleClick(item.visitid, index)
                       }
                     >
-                      <TableReuse>{item.bedno}</TableReuse>
-                      <TableReuse>{item.visitid}</TableReuse>
-                      <TableReuse>{item.patname}</TableReuse>
-                      <TableReuse>{item.doctorname}</TableReuse>
-                      <TableReuse>{item.roomno}</TableReuse>
-                      <TableReuse>{item.servname}</TableReuse>
-                      <TableReuse>{item.corporatename}</TableReuse>
+                      <TableReuse className="font-semibold text-lg p-2">{item.bedno}</TableReuse>
+                      <TableReuse className="font-semibold text-lg p-2">{item.visitid}</TableReuse>
+                      <TableReuse className="font-semibold text-lg p-2">{item.patname}</TableReuse>
+                      <TableReuse className="font-semibold text-lg p-2">{item.doctorname}</TableReuse>
+                      <TableReuse className="font-semibold text-lg p-2">{item.roomno}</TableReuse>
+                      <TableReuse className="font-semibold text-lg p-2">{item.servname}</TableReuse>
+                      <TableReuse className="font-semibold text-lg p-2">{item.corporatename}</TableReuse>
                     </tr>
                   ))
                 ) : (

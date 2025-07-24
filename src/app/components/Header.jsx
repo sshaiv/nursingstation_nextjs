@@ -13,49 +13,7 @@ export default function Header() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  // const fetchPatientBed = async (visitId) => {
-  //   const cleanedVisitId = visitId.trim();
-  //   console.log("Cleaned visitId:", `"${cleanedVisitId}"`);
-
-  //   setLoading(true);
-  //   try {
-  //     const response = await fetch(
-  //       `${API_ENDPOINTS.getAdvPatientBed}/?visitid=${encodeURIComponent(cleanedVisitId)}`
-  //     );
-
-  //     if (!response.ok) {
-  //       throw new Error(`HTTP error! status: ${response.status}`);
-  //     }
-
-  //     let data = await response.json();
-
-  //     if (typeof data === "string") {
-  //       data = JSON.parse(data);
-  //     }
-
-  //     console.log("API response data:", data);
-
-  //     if (Array.isArray(data) && data.length > 0) {
-  //       const patient = data[0];
-  //       // Navigate to nursingstation page with query params
-        
-  //       router.push(
-  //         `/nursingstation?visitid=${encodeURIComponent(patient.visitid)}&gssuhid=${encodeURIComponent(patient.gssuhid)}&empid=${encodeURIComponent(patient.empid)}`
-  //       );
-
-
-  //     } else {  
-  //       alert("No patient data found.");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching patient bed info:", error);
-  //     alert("Failed to fetch patient bed info: " + error.message);
-  //   } finally {
-  //     setLoading(false);
-  //     setShowScanner(false);
-  //   }
-  // };
-
+ 
 
 const fetchPatientBed = async (visitId) => {
   const cleanedVisitId = visitId.trim();
@@ -65,7 +23,7 @@ const fetchPatientBed = async (visitId) => {
 
   try {
     const apiUrl = `${API_ENDPOINTS.getAdvPatientBed}/?visitid=${encodeURIComponent(cleanedVisitId)}`;
-    console.log("🔗 Fetching Patient Bed Info from:", apiUrl);
+    // console.log("🔗 Fetching Patient Bed Info from:", apiUrl);
 
     const response = await fetch(apiUrl);
 
@@ -75,7 +33,7 @@ const fetchPatientBed = async (visitId) => {
 
     // Get raw response for debugging in case structure is unexpected
     const rawText = await response.text();
-    console.log("📦 Raw API response text:", rawText);
+    // console.log("📦 Raw API response text:", rawText);
 
     let data;
     try {
@@ -84,9 +42,9 @@ const fetchPatientBed = async (visitId) => {
       throw new Error("Failed to parse JSON: " + jsonError.message);
     }
 
-    console.log("✅ Parsed API response:", data);
-    console.log("📦 data.Table:", data?.Table);
-    console.log("📏 Length of data.Table:", Array.isArray(data?.Table) ? data.Table.length : "Not an array");
+    // console.log("✅ Parsed API response:", data);
+    // console.log("📦 data.Table:", data?.Table);
+    // console.log("📏 Length of data.Table:", Array.isArray(data?.Table) ? data.Table.length : "Not an array");
 
     if (Array.isArray(data?.Table) && data.Table.length > 0) {
       const patient = data.Table[0];

@@ -56,6 +56,10 @@ export default function NursingServices({
   const [loading, setLoading] = useState(false);
   const [table, setTable] = useState([]);
   const [saveData, setSaveData] = useSaveNSData();
+
+   
+  const [toastMessage, setToastMessage] = useState("");
+
   console.log("Updated Nur service", saveData);
 
   const handleSelectServices = (selectedIds) => {
@@ -245,7 +249,9 @@ export default function NursingServices({
       console.log("Response:", result);
 
       if (response.ok) {
-        alert("Data saved successfully!");
+        // alert("Data saved successfully!");
+            setToastMessage("✅ Data saved successfully!");
+        setTimeout(() => setToastMessage(""), 2000);
         // Clear local new entries (already saved)
         // Clear the new entries so UI updates and doesn't show them anymore
         setEntries([]);
@@ -365,6 +371,11 @@ export default function NursingServices({
 
   return (
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
+       {toastMessage && (
+        <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white text-sm px-6 py-3 rounded-md shadow-lg z-50 animate-slide-fade">
+          {toastMessage}
+        </div>
+      )}
       <div className="flex h-[1px] items-center justify-center">
         <ModalHeading title="Nursing Services" />
       </div>

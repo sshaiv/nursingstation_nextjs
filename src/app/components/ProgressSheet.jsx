@@ -199,49 +199,7 @@ export default function ProgressSheet({ visitid, gssuhid, empid }) {
           {toastMessage}
         </div>
       )}
-      {/* <div className="flex justify-between">
-        <button
-          className="bg-gray-200 px-3 py-1 rounded"
-          disabled={currentIndex <= 0}
-          onClick={() => {
-            const newIndex = currentIndex - 1;
-            if (progressSheetData[newIndex]) {
-              setCurrentIndex(newIndex);
-              loadFormFromData(progressSheetData[newIndex]);
-            }
-          }}
-        >
-          ⬅️ Previous
-        </button>
-
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
-          <ModalHeading title="Progress Sheet" />
-          {progressDate && (
-            <div className="text-[11px] px-2 py-[2px] bg-yellow-100 text-yellow-800 rounded font-medium inline-block shadow-sm border border-yellow-300">
-              📅 Date: {progressDate}
-            </div>
-          )}
-          {currentIndex === progressSheetData.length - 1 && (
-            <div className="text-[11px] px-2 py-[2px] bg-green-100 text-green-800 rounded font-medium inline-block shadow-sm border border-green-300">
-              🆕 New Entry
-            </div>
-          )}
-        </div>
-
-        <button
-          className="bg-gray-200 px-3 py-1 rounded"
-          disabled={currentIndex >= progressSheetData.length - 1}
-          onClick={() => {
-            const newIndex = currentIndex + 1;
-            if (progressSheetData[newIndex]) {
-              setCurrentIndex(newIndex);
-              loadFormFromData(progressSheetData[newIndex]);
-            }
-          }}
-        >
-          Next ➡️
-        </button>
-      </div> */}
+     
 
    <div className="flex justify-between items-center">
   {/* 📋 Left Side: Title + Status */}

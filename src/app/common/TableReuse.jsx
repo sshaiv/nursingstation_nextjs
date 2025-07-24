@@ -1,7 +1,7 @@
 
 
 const TableReuse = ({ type = 'td', children, className = '' }) => {
-  const isTextSizeOverridden = className.includes('text-['); // crude but works
+  const isTextSizeOverridden = className.includes('text-['); 
 
   const tdTextSize = isTextSizeOverridden ? '' : 'text-[9px]';
   const thTextSize = isTextSizeOverridden ? '' : 'text-[9px]';

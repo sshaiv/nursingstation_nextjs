@@ -90,7 +90,7 @@ export default function VitalsTable({
 
       if (!isNaN(h) && !isNaN(w) && h > 0) {
         const bmiValue = w / ((h / 100) * (h / 100));
-        setBmi(bmiValue.toFixed(2)); // Round to 2 decimal places
+        setBmi(bmiValue.toFixed(2)); 
       } else {
         setBmi("");
       }
@@ -110,8 +110,9 @@ export default function VitalsTable({
     try {
       setLoading(true);
       const response = await fetch(
-        `https://doctorapi.medonext.com/API/HMS/GetPatVitalData?visitid=${visitid}`
+      `${API_ENDPOINTS.getPatVitalData}/?visitid=${visitid}`
       );
+      
       let data = await response.json();
 
       if (typeof data === "string") {

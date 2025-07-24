@@ -13,6 +13,9 @@ const API_ENDPOINTS = {
   getClinicalExamination:`${BASE_URL}/getPatClinicalExamination`,
   getIpdNutritionalAssessmentProfile:`${BASE_URL}/getPatIpdNutritionalAssessmentProfile`,
   getProgressSheetData:`${BASE_URL}/GetProgressSheetData`,
+  getPatVitalData:`${BASE_URL}/GetPatVitalData`,
+
+
         //for dropdown Get-
          getAllHeadload :`${BASE_URL}/GetAllHeadload`,
          getAllDoctor : `${BASE_URL}/GetAllDoctor`,

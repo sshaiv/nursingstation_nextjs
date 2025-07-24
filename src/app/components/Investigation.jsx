@@ -39,7 +39,10 @@ export default function Investigation({
   const [table, setTable] = useState([]);
   const [canSave, setCanSave] = useState(false);
   const [refreshData, setRefreshData] = useState(false);
+  
+  const [toastMessage, setToastMessage] = useState("");
 
+  
   const handleSelectServices = (selectedIds) => {
     console.log("inv in inv", selectedIds);
 
@@ -122,7 +125,9 @@ export default function Investigation({
       console.log("Response:", result);
 
       if (response.ok) {
-        alert("Data saved successfully!");
+        // alert("Data saved successfully!");
+        setToastMessage("✅ Data saved successfully!");
+        setTimeout(() => setToastMessage(""), 2000);
         setIsSaved(true);
         setRefreshData((prev) => !prev);
         // Reset vitals and form data
@@ -201,6 +206,11 @@ export default function Investigation({
 
   return (
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
+       {toastMessage && (
+        <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white text-sm px-6 py-3 rounded-md shadow-lg z-50 animate-slide-fade">
+          {toastMessage}
+        </div>
+      )}
       <div className="flex items-center justify-center">
         <ModalHeading title="Investigation" />
       </div>
