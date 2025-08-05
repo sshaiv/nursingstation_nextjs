@@ -18,9 +18,9 @@ export default function VitalsTable({
   patientData,
 }) {
   const [vitals, setVitals] = useState([]);
+
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  // Initialize selectedTime to current time in HH:mm format
   const getCurrentTimeHHMM = () => {
     const now = new Date();
     const hours = now.getHours().toString().padStart(2, "0");
@@ -90,7 +90,7 @@ export default function VitalsTable({
 
       if (!isNaN(h) && !isNaN(w) && h > 0) {
         const bmiValue = w / ((h / 100) * (h / 100));
-        setBmi(bmiValue.toFixed(2)); 
+        setBmi(bmiValue.toFixed(2));
       } else {
         setBmi("");
       }
@@ -110,16 +110,16 @@ export default function VitalsTable({
     try {
       setLoading(true);
       const response = await fetch(
-      `${API_ENDPOINTS.getPatVitalData}/?visitid=${visitid}`
+        `${API_ENDPOINTS.getPatVitalData}/?visitid=${visitid}`
       );
-      
+
       let data = await response.json();
 
       if (typeof data === "string") {
         data = JSON.parse(data);
       }
 
-     // console.log("Parsed Vital Data:", data);
+      // console.log("Parsed Vital Data:", data);
 
       if (Array.isArray(data) && data.length > 0) {
         setVitals(
@@ -207,15 +207,17 @@ export default function VitalsTable({
         return `${day}/${month}/${year} ${paddedHours}:${minutes} ${ampm}`;
       };
 
-    
-
       const currentDateTime = getCurrentDateTime(true);
-     // console.log("Date + Time:", currentDateTime);
+      // console.log("Date + Time:", currentDateTime);
 
-      const newEntry = {
-        performedBy: performedByData?.label || performedByData?.CName || "",
-        performedByID: performedByData?.label || performedByData?.CID || "",
-      };
+      // const [hours, minutes] = selectedTime.split(":").map(Number);
+      // const combinedDateTime = new Date(selectedDate);
+      // combinedDateTime.setHours(hours);
+      // combinedDateTime.setMinutes(minutes);
+      // combinedDateTime.setSeconds(0);
+      // combinedDateTime.setMilliseconds(0);
+
+      // const formattedDateTime = format(combinedDateTime, "dd/MM/yyyy HH:mm");
 
       const newVitalEntry = {
         Sno: 0,
@@ -291,8 +293,6 @@ export default function VitalsTable({
   };
 
   const clearInputs = () => {
-    setSelectedDate(new Date());
-    setSelectedTime(getCurrentTimeHHMM());
     setBp("");
     setPulse("");
     setTemp("");
@@ -303,6 +303,7 @@ export default function VitalsTable({
     setBmi("");
     setPainScore("");
     setHeadcircumference("");
+    // No resetting date/time here!
   };
 
   const savebtn = async () => {
@@ -369,15 +370,23 @@ export default function VitalsTable({
     });
   };
 
+  useEffect(() => {
+    if (selectedDate || selectedTime) {
+      console.log("Selected Date:", selectedDate);
+      console.log("Selected Time:", selectedTime);
+    }
+  }, [selectedDate, selectedTime]);
+
   return (
     <div className="bg-gray-50 border border-gray-300 shadow rounded-2xl p-2">
-       {toastMessage && (
+      {toastMessage && (
         <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white text-sm px-6 py-3 rounded-md shadow-lg z-50 animate-slide-fade">
           {toastMessage}
         </div>
       )}
       <div className="flex justify-between items-center mb-1">
         <MainHeadings title={title} icon="🩺" />
+
         <div className="justify-end gap-2 flex">
           <ActionButton label="Insert" onClick={handleInsert} />
           <button
@@ -406,17 +415,18 @@ export default function VitalsTable({
       {/* Inputs */}
       <div className="flex flex-wrap gap-2 mb-2">
         {/* Date & Time Input */}
+
         <DateTimeInput
           selectedDate={selectedDate}
           onDateChange={setSelectedDate}
           time={selectedTime}
-          onTimeChange={(e) => setSelectedTime(e.target.value)}
+          onTimeChange={setSelectedTime}
           label="Date & Time"
         />
 
         {/* Performed By Input */}
         <div className="flex flex-col w-40">
-          <label className="text-gray-600 text-[10px] mb-[1px]">
+          <label className="text-gray-500 font-semibold text-[12px] mb-[1px]">
             Performed by *
           </label>
           <input
@@ -469,14 +479,14 @@ export default function VitalsTable({
           },
         ].map((input, index) => (
           <div className="flex flex-col items-start" key={index}>
-            <label className="text-gray-600 text-[9px] mb-[1px]">
+            <label className="text-gray-500 font-semibold text-[10px] mb-[1px]">
               {input.placeholder}
             </label>
             <input
               type="text"
               value={input.value}
               onChange={(e) => input.setValue(e.target.value || "")}
-              className={`border text-black rounded w-[60px] text-[9px] h-[25px] px-[2px] py-[1px] focus:outline-none focus:border-blue-500 ${
+              className={`border text-black rounded w-[75px] text-[9px] h-[25px] px-[2px] py-[1px] focus:outline-none focus:border-blue-500 ${
                 input.value ? "border-blue-500" : "border-gray-300"
               }`}
             />
@@ -485,101 +495,142 @@ export default function VitalsTable({
       </div>
 
       {/* Table */}
-      <div className="max-h-[80px] overflow-y-auto hide-scrollbar mt-1">
-        <table className="w-full table-auto text-[5px] text-start border border-collapse">
+      <div className="max-h-[115px] overflow-y-auto hide-scrollbar mt-1">
+        <table className="w-full table-auto text-start border border-collapse text-2xl">
           <thead>
             <tr className="bg-white sticky top-0 z-10 text-gray-800">
-              <TableReuse type="th" className="min-w-[90px]">
+              <th className="min-w-[90px] font-semibold text-xs border p-1 bg-gray-200">
                 Date/Time
-              </TableReuse>
-              <TableReuse type="th" className="min-w-[100px]">
+              </th>
+              <th className="min-w-[100px] font-semibold text-xs border p-1 bg-gray-200">
                 Nur.Services
-              </TableReuse>
-              <TableReuse type="th">BP</TableReuse>
-              <TableReuse type="th">Pulse</TableReuse>
-              <TableReuse type="th">Temp</TableReuse>
-              <TableReuse type="th">SPO2</TableReuse>
-              <TableReuse type="th">Weight</TableReuse>
-              <TableReuse type="th">Height</TableReuse>
-              <TableReuse type="th">BMI</TableReuse>
-              <TableReuse type="th">R.R</TableReuse>
-              <TableReuse type="th">Pain</TableReuse>
-              <TableReuse type="th">Head Circum.</TableReuse>
-              <TableReuse type="th">BSL (R)</TableReuse>
-              <TableReuse type="th">CVS</TableReuse>
-              <TableReuse type="th">CNS</TableReuse>
-              <TableReuse type="th">RS</TableReuse>
-              <TableReuse type="th">P/A</TableReuse>
-              <TableReuse type="th">L/E</TableReuse>
-              <TableReuse type="th">Action</TableReuse>
+              </th>
+              <th className="font-semibold text-xs border p-1 bg-gray-200">
+                BP
+              </th>
+              <th className="font-semibold text-xs border p-1 bg-gray-200">
+                Pulse
+              </th>
+              <th className="font-semibold text-xs border p-1 bg-gray-200">
+                Temp
+              </th>
+              <th className="font-semibold text-xs border p-1 bg-gray-200">
+                SPO2
+              </th>
+              <th className="font-semibold text-xs border p-1 bg-gray-200">
+                Weight
+              </th>
+              <th className="font-semibold text-xs border p-1 bg-gray-200">
+                Height
+              </th>
+              <th className="font-semibold text-xs border p-1 bg-gray-200">
+                BMI
+              </th>
+              <th className="font-semibold text-xs border p-1 bg-gray-200">
+                R.R
+              </th>
+              <th className="font-semibold text-xs border p-1 bg-gray-200">
+                Pain
+              </th>
+              <th className="font-semibold text-xs border p-1 bg-gray-200">
+                Head Circum.
+              </th>
+              <th className="font-semibold text-xs border p-1 bg-gray-200">
+                BSL (R)
+              </th>
+              <th className="font-semibold text-xs border p-1 bg-gray-200">
+                CVS
+              </th>
+              <th className="font-semibold text-xs border p-1 bg-gray-200">
+                CNS
+              </th>
+              <th className="font-semibold text-xs border p-1 bg-gray-200">
+                RS
+              </th>
+              <th className="font-semibold text-xs border p-1 bg-gray-200">
+                P/A
+              </th>
+              <th className="font-semibold text-xs border p-1 bg-gray-200">
+                L/E
+              </th>
+              <th className="font-semibold text-xs border p-1 bg-gray-200">
+                Action
+              </th>
             </tr>
           </thead>
+
           <tbody>
             {[...insertedVitals].reverse().map((entry, idx) => {
               const actualIndex = insertedVitals.length - 1 - idx;
               return (
-                <tr key={"inserted-" + idx} className="hover:bg-gray-50 ">
-                  <TableReuse className="text-[8px] font-semibold">
+                <tr
+                  key={"inserted-" + idx}
+                  className="hover:bg-gray-50 text-xs text-black"
+                >
+                  <td className="p-1 border border-gray-600 ">
                     {entry.vitaldatetime}
-                  </TableReuse>
-                  <TableReuse className="text-[8px] font-semibold">
-                    {performedBy}
-                  </TableReuse>
-                  <TableReuse>{entry.bp}</TableReuse>
-                  <TableReuse>{entry.pulse}</TableReuse>
-                  <TableReuse>{entry.temp}</TableReuse>
-                  <TableReuse>{entry.spo2}</TableReuse>
-                  <TableReuse>{entry.weight}</TableReuse>
-                  <TableReuse>{entry.height}</TableReuse>
-                  <TableReuse>{entry.bmi}</TableReuse>
-                  <TableReuse>{entry.rr}</TableReuse>
-                  <TableReuse>{entry.painScore}</TableReuse>
-                  <TableReuse>{entry.Headcircumference}</TableReuse>
-                  <TableReuse>{entry.bsl}</TableReuse>
-                  <TableReuse>{entry.cvs}</TableReuse>
-                  <TableReuse>{entry.cns}</TableReuse>
-                  <TableReuse>{entry.rs}</TableReuse>
-                  <TableReuse>{entry.pa}</TableReuse>
-                  <TableReuse>{entry.logicalExam}</TableReuse>
-                  <TableReuse>
+                  </td>
+                  <td className="p-1 border border-gray-600">{performedBy}</td>
+                  <td className="p-1 border border-gray-600">{entry.bp}</td>
+                  <td className="p-1 border border-gray-600">{entry.pulse}</td>
+                  <td className="p-1 border border-gray-600">{entry.temp}</td>
+                  <td className="p-1 border border-gray-600">{entry.spo2}</td>
+                  <td className="p-1 border border-gray-600">{entry.weight}</td>
+                  <td className="p-1 border border-gray-600">{entry.height}</td>
+                  <td className="p-1 border border-gray-600">{entry.bmi}</td>
+                  <td className="p-1 border border-gray-600">{entry.rr}</td>
+                  <td className="p-1 border border-gray-600">
+                    {entry.painScore}
+                  </td>
+                  <td className="p-1 border border-gray-600">
+                    {entry.Headcircumference}
+                  </td>
+                  <td className="p-1 border border-gray-600">{entry.bsl}</td>
+                  <td className="p-1 border border-gray-600">{entry.cvs}</td>
+                  <td className="p-1 border border-gray-600">{entry.cns}</td>
+                  <td className="p-1 border border-gray-600">{entry.rs}</td>
+                  <td className="p-1 border border-gray-600">{entry.pa}</td>
+                  <td className="p-1 border border-gray-600">
+                    {entry.logicalExam}
+                  </td>
+                  <td className="p-1 border border-gray-600">
                     <button
                       className="text-red-500 hover:underline"
                       onClick={() => handleDeleteEntry(actualIndex)}
                     >
                       🗑 Delete
                     </button>
-                  </TableReuse>
+                  </td>
                 </tr>
               );
             })}
 
             {[...vitals].reverse().map((v, idx) => (
-              <tr key={"api-" + idx} className="hover:bg-gray-50 ">
-                <TableReuse className="text-[8px] font-semibold">
-                  {v.date}
-                </TableReuse>
-                <TableReuse className="text-[8px] font-semibold">
-                  {v.takenby}
-                </TableReuse>
-                <TableReuse>{v.bp}</TableReuse>
-                <TableReuse>{v.pulse}</TableReuse>
-                <TableReuse>{v.temp}</TableReuse>
-                <TableReuse>{v.spo2}</TableReuse>
-                <TableReuse>{v.weight}</TableReuse>
-                <TableReuse>{v.height}</TableReuse>
-                <TableReuse>{v.bmi}</TableReuse>
-                <TableReuse>{v.rr}</TableReuse>
-                <TableReuse>{v.painScore}</TableReuse>
-                <TableReuse>{v.Headcircumference}</TableReuse>
-                <TableReuse>{v.bsl}</TableReuse>
-                <TableReuse>{v.cvs}</TableReuse>
-                <TableReuse>{v.cns}</TableReuse>
-                <TableReuse>{v.rs}</TableReuse>
-                <TableReuse>{v.pa}</TableReuse>
-                <TableReuse>{v.logicalExam}</TableReuse>
-                <TableReuse>
-                  <button></button>
-                </TableReuse>
+              <tr
+                key={"api-" + idx}
+                className="hover:bg-gray-100 text-black text-xs border"
+              >
+                <td className="p-1  border ">{v.date}</td>
+                <td className="p-1 border">{v.takenby}</td>
+                <td className="p-1 border">{v.bp}</td>
+                <td className="p-1 border">{v.pulse}</td>
+                <td className="p-1 border">{v.temp}</td>
+                <td className="p-1 border">{v.spo2}</td>
+                <td className="p-1 border">{v.weight}</td>
+                <td className="p-1 border">{v.height}</td>
+                <td className="p-1 border">{v.bmi}</td>
+                <td className="p-1 border">{v.rr}</td>
+                <td className="p-1 border">{v.painScore}</td>
+                <td className="p-1 border">{v.Headcircumference}</td>
+                <td className="p-1 border">{v.bsl}</td>
+                <td className="p-1 border">{v.cvs}</td>
+                <td className="p-1 border">{v.cns}</td>
+                <td className="p-1 border">{v.rs}</td>
+                <td className="p-1 border">{v.pa}</td>
+                <td className="p-1 border">{v.logicalExam}</td>
+                <td className="p-1 border">
+                  <button>{/* Action */}</button>
+                </td>
               </tr>
             ))}
           </tbody>

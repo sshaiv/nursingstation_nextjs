@@ -41,9 +41,10 @@ export function ModalHeading({ title, icon = '📋' }) {
 // common/text.jsx
 export function MainHeadings({ title, icons = '📋' }) {
   return (
-    <h4 className="font-semibold text-base md:text-xs text-purple-900 font-mono flex items-center gap-2">
+    <h4 className="font-semibold text-LG text-purple-900 font-mono flex items-center gap-2">
       {typeof icons === 'string' ? <span>{icons}</span> : icons}
       {title}
     </h4>
   );
 }
+

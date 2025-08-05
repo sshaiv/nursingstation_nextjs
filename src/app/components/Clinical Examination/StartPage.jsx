@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { H3, Label, ModalHeading } from "../common/text";
-import ReusableInputField from "../common/SmallInputfields";
-import ReusableTextareaField from "../common/ReusableTextareaField";
-import { SaveButton } from "../common/Buttons";
-import useFetchPatientHistory from "../hooks/fetchHistoryData";
-import API_ENDPOINTS from "../constants/api_url";
+import { H3, Label, ModalHeading } from "../../common/text";
+import ReusableInputField from "../../common/SmallInputfields";
+import ReusableTextareaField from "../../common/ReusableTextareaField";
+import { SaveButton } from "../../common/Buttons";
+import useFetchPatientHistory from "../../hooks/fetchHistoryData";
+import API_ENDPOINTS from "../../constants/api_url";
 import axios from "axios";
 
-export default function ClinicalExamination({ visitid, gssuhid, empid }) {
+export default function StartPage({ visitid, gssuhid, empid }) {
   const { historyData } = useFetchPatientHistory(visitid, gssuhid, empid);
 
   const [rowId, setRowId] = useState(" ");
@@ -40,13 +40,13 @@ export default function ClinicalExamination({ visitid, gssuhid, empid }) {
   const [iscvss2, setIscvss2] = useState(false);
   const [iscvsaddedsound, setIscvsaddedsound] = useState(false);
   const [iscvsmurmur, setIscvsmurmur] = useState(false);
-  const [cvsResponse, setCvsResponse] = useState(null); 
+  const [cvsResponse, setCvsResponse] = useState(null);
 
   // RS
   const [isrsnormalbreath, setIsrsnormalbreath] = useState(false);
   const [isrscrepts, setIsrscrepts] = useState(false);
   const [isrsronchi, setIsrsronchi] = useState(false);
-  const [rsResponse, setRsResponse] = useState(null); 
+  const [rsResponse, setRsResponse] = useState(null);
 
   // Abdomen
   const [issoft_tense, setIssoft_tense] = useState(false);
@@ -58,8 +58,8 @@ export default function ClinicalExamination({ visitid, gssuhid, empid }) {
   const [organomegaly, setOrganomegaly] = useState("");
 
   // CNS unified state for conscious status
-  const [cnsState, setCnsState] = useState(null); 
-  const [motorDeficit, setMotorDeficit] = useState(null); 
+  const [cnsState, setCnsState] = useState(null);
+  const [motorDeficit, setMotorDeficit] = useState(null);
   const [cnsanyother, setCnsanyother] = useState("");
 
   // Others
@@ -67,8 +67,8 @@ export default function ClinicalExamination({ visitid, gssuhid, empid }) {
   const [others, setOthers] = useState("");
   const [provisionaldiagnosis, setProvisionaldiagnosis] = useState("");
 
-  // Nutritional  
-  const [nutState, setNutState] = useState(null); 
+  // Nutritional
+  const [nutState, setNutState] = useState(null);
   const [nutritionalstatusother, setNutritionalstatusother] = useState("");
 
   // Plans
@@ -280,16 +280,13 @@ export default function ClinicalExamination({ visitid, gssuhid, empid }) {
   };
 
   return (
-    <div className="p-4 bg-purple-50 min-h-screen text-sm text-gray-700">
-      <div className="flex h-[1px]  items-center justify-center"><ModalHeading title="Clinical Examination" /></div>
-      
-      <hr className="border-t mt-6 mb-2 border-gray-300" />
+    <div className="p-0 bg-purple-50 min-h-screen text-sm text-gray-700">
 
       {/* Pain Assessment */}
       <div className="flex flex-col items-center gap-2 mb-6">
         <H3>Pain Assessment Scale</H3>
         <div className="overflow-x-auto w-full">
-          <div className="flex justify-between gap-4 px-2 min-w-[800px]">
+          <div className="flex justify-between gap-4 px-2 min-w-[700px]">
             {[
               { score: 0, emoji: "😄", Label: "No Pain" },
               { score: 1, emoji: "😀", Label: "Just Noticeable" },
@@ -716,13 +713,17 @@ export default function ClinicalExamination({ visitid, gssuhid, empid }) {
       </div>
 
       <hr className="border-t mt-6 mb-2 border-gray-300" />
-     <div className="flex justify-center">
-               <SaveButton
-                 label="Save"
-                 className="text-[10px] px-4 py-1"
-                 onClick={handleSave}
-               />
-             </div>
+     
+       <div className="flex justify-center">
+        <button
+          onClick={handleSave}       
+          className={"w-full  px-6 py-2 rounded text-white  bg-blue-500 hover:bg-blue-600"}
+        >
+          Save
+        </button>
+      </div>
     </div>
   );
 }
+
+

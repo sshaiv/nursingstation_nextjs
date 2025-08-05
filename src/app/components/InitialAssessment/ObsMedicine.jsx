@@ -1,14 +1,16 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import SignatureCanvas from "react-signature-canvas";
-import { H3, Label, ModalHeading } from "../common/text";
-import useFetchPatientHistory from "../hooks/fetchHistoryData";
-import { SaveButton } from "../common/Buttons";
-import API_ENDPOINTS from "../constants/api_url";
-import ReusableTextareaField from "../common/ReusableTextareaField";
-import Select from "react-select";
 
-export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
+
+import Select from "react-select";
+import { SaveButton } from "@/app/common/Buttons";
+import ReusableTextareaField from "@/app/common/ReusableTextareaField";
+import { H3, Label, ModalHeading } from "@/app/common/text";
+import useFetchPatientHistory from "@/app/hooks/fetchHistoryData";
+import API_ENDPOINTS from "@/app/constants/api_url";
+
+export default function ObsMedicine({ visitid, gssuhid, empid }) {
   const { historyData } = useFetchPatientHistory(visitid, gssuhid, empid);
 
   const [allergyYes, setAllergyYes] = useState(false);
@@ -28,11 +30,11 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
   const [personalOther, setPersonalOther] = useState("");
   const sigCanvasRef = useRef(null);
   const [rowId, setRowId] = useState(" ");
-  const [bedNo, setBedNo] = useState(" ");
+  const [bedNo, setBedNo] = useState(" ");  
   const [uhId, setUhId] = useState(" ");
   const [relationData, setRelationData] = useState([]);
 
-  const clearSignature = () => sigCanvasRef.current?.clear();
+                                                                                                                                                                          
 
   useEffect(() => {
     const data = historyData.presentIllness?.Table?.[0];
@@ -110,21 +112,14 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
   }));
 
   return (
-    <div className="p-4 bg-purple-50 min-h-screen flex justify-center text-[10px] leading-tight">
-      <div className="w-full  max-w-3xl mx-auto space-y-4 ">
-        <div className="flex h-[1px]  items-center justify-center">
-          <ModalHeading
-            title="Initial Assessment"
-            className="text-[11px] mb-3"
-          />
-        </div>
-        <hr className="border-t border-gray-300 mb-5" />
+    <div className=" bg-purple-50 min-h-screen flex justify-center text-[10px] leading-tight">
+   <div className="w-full max-w-3xl mx-auto space-y-4 overflow-auto scrollbar-hide max-h-[400px] px-2">
 
         {/* Allergy Section */}
         <div className="space-y-3">
           <div className="flex items-center gap-4 mb-3">
             <H3>📋 Allergy</H3>
-            <Label className="text-[10px] flex items-center gap-1">
+            <Label className="text-[10px] text-black flex items-center gap-1">
               <input
                 type="radio"
                 name="allergy"
@@ -133,7 +128,7 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
               />
               Yes
             </Label>
-            <Label className="text-[10px] flex items-center gap-1">
+            <Label className="text-[10px] text-black flex items-center gap-1">
               <input
                 type="radio"
                 name="allergy"
@@ -176,6 +171,7 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
                   menu: (provided) => ({
                     ...provided,
                     fontSize: "10px",
+                    color: "#000",
                     // remove maxHeight and overflowY here too
                   }),
                   menuList: (provided) => ({
@@ -189,6 +185,8 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
                     minHeight: "32px",
                     fontSize: "10px",
                     padding: "0 6px",
+                    backgroundColor: "transparent", 
+                    border: "#6B7280  solid 2px", 
                   }),
                 }}
                 options={relationOptions}
@@ -207,6 +205,7 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
                 <button onClick={clearSignature} className="bg-purple-100 text-purple-800 px-2 py-1 rounded text-[10px]">Clear</button>
                 <button className="bg-purple-100 text-purple-800 px-2 py-1 rounded text-[10px]">Show</button>
               </div> */}
+
             </div>
             {/* <div className="border border-gray-800 w-full md:w-1/2 h-[70px]" /> */}
           </div>
@@ -226,7 +225,22 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
           />
         </div>
 
-        {/* Family History */}
+     {/* ml */}
+        <div className="space-y-3">
+          <H3>📋 ML - </H3>
+          <ReusableTextareaField
+            className="border text-black w-full  text-[10px]"
+            id="presentingcomplaints"
+            rows={1}
+            style={{ minHeight: "28px", padding: "6px 8px" }}
+            label=" "
+            // value={presentingComplaint}
+            value={" "}
+            onChange={(e) => setPresentingComplaint(e.target.value)}
+          />
+        </div>
+
+  {/* Family History */}
         <div className="space-y-3">
           <div className="flex items-center gap-4 mb-3 flex-wrap">
             <H3>📋 Family History</H3>
@@ -330,14 +344,18 @@ export default function InitialAssessmentForm({ visitid, gssuhid, empid }) {
           />
         </div>
 
-        <hr className="border-t border-gray-300 mb-4" />
-        <div className="flex justify-center">
-          <SaveButton
-            label="Save"
-            className="text-[10px] px-4 py-1"
-            onClick={handleSave}
-          />
-        </div>
+     
+{/* //.................// */}
+        <hr className="border-t border-gray-300 mb-2" />
+        
+         <div className="flex justify-center">
+        <button
+          onClick={handleSave}       
+          className={"w-full  px-6 py-2 rounded text-white  bg-blue-500 hover:bg-blue-600"}
+        >
+          Save
+        </button>
+      </div>
       </div>
     </div>
   );

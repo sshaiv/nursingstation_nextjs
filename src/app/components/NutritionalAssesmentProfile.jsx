@@ -810,13 +810,14 @@ export default function NutritionalAssessmentProfile({
       </div>
 
       <hr className="border-t mt-6 mb-2 border-gray-300" />
-      <div className="flex justify-center">
-                <SaveButton
-                  label="Save"
-                  className="text-[10px] px-4 py-1"
-                  onClick={handleSave}
-                />
-              </div>
+  <div className="flex justify-center">
+        <button
+          onClick={handleSave}       
+          className={"w-full  px-6 py-2 rounded text-white  bg-blue-500 hover:bg-blue-600"}
+        >
+          Save
+        </button>
+      </div>
     </div>
   );
 }

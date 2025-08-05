@@ -1,146 +1,283 @@
-
-
 "use client";
-import React, { useState } from 'react';
-import { FiActivity, FiBox, FiCalendar, FiClipboard, FiFileText, FiHeart, FiHome, FiPackage, FiCheckCircle } from 'react-icons/fi';
-import { GiScissors, GiFizzingFlask } from 'react-icons/gi';
-import { FaStethoscope } from 'react-icons/fa';
-import InitialAssessmentForm from './InitialAssessment';
-import ClinicalExamination from './ClinicalExamination';
-import NursingServices from './NursingServices';
-import Consumables from './Consumables';
-import DoctorVisit from './DoctorVisit';
-import AdvisedSurgery from './AdvisedSurgery';
-import Implants from './Implants';
-import Investigation from './Investigation';
-import NutritionalAssessmentProfile from './NutritionalAssesmentProfile';
-import ProgressSheet from './ProgressSheet';
-import DummyInvestigation from './DummyInvestigation';
-import NutritionalInitial from './NutritionalInitial';
+import React, { useState } from "react";
+import {
+  FiActivity,
+  FiBox,
+  FiCalendar,
+  FiClipboard,
+  FiFileText,
+  FiHeart,
+  FiHome,
+  FiPackage,
+  FiCheckCircle,
+} from "react-icons/fi";
+import { GiScissors, GiFizzingFlask } from "react-icons/gi";
+import { FaStethoscope } from "react-icons/fa";
+import InitialAssessmentForm from "./InitialAssessment/InitialAssessment";
+import ClinicalExamination from "./Clinical Examination/ClinicalExamination";
+import NursingServices from "./NursingServices";
+import Consumables from "./Consumables";
+import DoctorVisit from "./DoctorVisit";
+import AdvisedSurgery from "./AdvisedSurgery";
+import Implants from "./Implants";
+import Investigation from "./Investigation";
+import NutritionalAssessmentProfile from "./NutritionalAssesmentProfile";
+import ProgressSheet from "./ProgressSheet";
+import DummyInvestigation from "./DummyInvestigation";
+import NutritionalInitial from "./NutritionalInitial";
 
 const buttons = [
-    { label: "Nursing Services", color: "#1999A1", shadow: "#14767D", icon: FiActivity },
-    { label: "Consumables", color: "#48BCD1", shadow: "#359EB0", icon: FiBox },
-    { label: "Doctor Visit", color: "#1999A1", shadow: "#14767D", icon: FiCalendar },
-    { label: "Clinical Examination", color: "#48BCD1", shadow: "#359EB0", icon: FiClipboard },
-    { label: "Initial Assessment", color: "#1999A1", shadow: "#14767D", icon: FiFileText },
-    { label: "Nutritional Assessment", color: "#48BCD1", shadow: "#359EB0", icon: FiHeart },
-    { label: "NurInitial Assessment", color: "#1999A1", shadow: "#14767D", icon: FiHome },
-    { label: "NurRe Assessment", color: "#48BCD1", shadow: "#359EB0", icon: FaStethoscope },
-    { label: "Advice Surgery", color: "#1999A1", shadow: "#14767D", icon: GiScissors },
-    { label: "Implant", color: "#48BCD1", shadow: "#359EB0", icon: FiPackage },
-   // { label: "Discharge Summary", color: "#1999A1", shadow: "#14767D", icon: FiCheckCircle },
-    //{ label: "BugInvestigation", color: "#48BCD1", shadow: "#359EB0", icon: GiFizzingFlask },
-    { label: "Investigation", color: "#48BCD1", shadow: "#359EB0", icon: GiFizzingFlask },
-    { label: "Progress Sheet", color: "#1999A1", shadow: "#14767D", icon: FiCheckCircle},
+  {
+    label: "INITIAL ASSESSMENT",
+    color: "#1999A1",
+    shadow: "#14767D",
+    icon: FiFileText,
+  },
+   {
+    label: "CLINICAL EXAMINATION",
+    color: "#1999A1",
+    shadow: "#14767D",
+    icon: FiClipboard,
+  },
+    {
+    label: "NUTRITIONAL ASSESSMENT",
+    color: "#1999A1",
+    shadow: "#14767D",
+    icon: FiHeart,
+  },
+  {
+    label: "INVESTIGATION SUMMARY",
+    color: "#1999A1",
+    shadow: "#14767D",
+    icon: FiFileText,
+  },
+  {
+    label: "NURSING INITIAL ASSESSMENT",
+    color: "#1999A1",
+    shadow: "#14767D",
+    icon: FiClipboard,
+  },
+   
+   {
+    label: "PROGRESS SHEET",
+    color: "#1999A1",
+    shadow: "#14767D",
+    icon: FiCheckCircle,
+  },
+  {
+    label: "DAILY  MEDICATION SHEET",
+    color: "#1999A1",
+    shadow: "#14767D",
+    icon: FiCheckCircle,
+  },
+  {
+    label: "CLINICAL CHART",
+    color: "#1999A1",
+    shadow: "#14767D",
+    icon: FiCheckCircle,
+  },
+  {
+    label: "INTAKE OUTPUT CHART",
+    color: "#1999A1",
+    shadow: "#14767D",
+    icon: FiCheckCircle,
+  },
+  {
+    label: "Nursing Services",
+    color: "#1999A1",
+    shadow: "#14767D",
+    icon: FiActivity,
+  },
+  { label: "Consumables", color: "#1999A1", shadow: "#14767D", icon: FiBox },
+  {
+    label: "Doctor Visit",
+    color: "#1999A1",
+    shadow: "#14767D",
+    icon: FiCalendar,
+  },
+
+
+  {
+    label: "NurRe Assessment",
+    color: "#1999A1",
+    shadow: "#14767D",
+    icon: FaStethoscope,
+  },
+  {
+    label: "Advice Surgery",
+    color: "#1999A1",
+    shadow: "#14767D",
+    icon: GiScissors,
+  },
+  { label: "Implant", color: "#1999A1", shadow: "#14767D", icon: FiPackage },
+  // { label: "Discharge Summary", color: "#1999A1", shadow: "#14767D", icon: FiCheckCircle },
+  //{ label: "BugInvestigation", color: "#1999A1", shadow: "#14767D", icon: GiFizzingFlask },
+  {
+    label: "Investigation",
+    color: "#1999A1",
+    shadow: "#14767D",
+    icon: GiFizzingFlask,
+  },
+ 
 ];
 
-export default function ButtonGrid({ visitid, gssuhid, empid ,patientData}) {
-    // console.log("btn m",patientData.Age);
-    
-    const [showModal, setShowModal] = useState(false);
-    const [modalContent, setModalContent] = useState(null);
+export default function ButtonGrid({ visitid, gssuhid, empid, patientData }) {
+  // console.log("btn m",patientData.Age);
 
-    const handleButtonClick = (label) => {
-        if (label === "Initial Assessment") {
-            setModalContent(<InitialAssessmentForm visitid={visitid} gssuhid={gssuhid} empid={empid} />);
-            setShowModal(true);
-        } 
-        else if (label === "Clinical Examination") {
-            setModalContent(<ClinicalExamination visitid={visitid} gssuhid={gssuhid} empid={empid} />);
-            setShowModal(true);
-        } 
-        else if (label === "Nursing Services") {
-            setModalContent(<NursingServices visitid={visitid} gssuhid={gssuhid} empid={empid} patientData={patientData}/>);
-            setShowModal(true);
-        }
-        else if (label === "Consumables") {
-            setModalContent(<Consumables visitid={visitid} gssuhid={gssuhid} empid={empid} patientData={patientData}/>);
-            setShowModal(true);
-        }
-        else if (label === "Doctor Visit") {
-            setModalContent(<DoctorVisit visitid={visitid} gssuhid={gssuhid} empid={empid}  patientData={patientData}/>);
-            setShowModal(true);
-        }
-        // else if (label === "Advice Surgery") {
-        //     setModalContent(<AdvisedSurgery visitid={visitid} gssuhid={gssuhid} empid={empid} />);
-        //     setShowModal(true);
-        // }
-        // else if (label === "Implant") {
-        //     setModalContent(<Implants visitid={visitid} gssuhid={gssuhid} empid={empid} />);
-        //     setShowModal(true);
-        // }
-        // else if (label === "InvestigationBug") {
-        //     setModalContent(<Investigation visitid={visitid} gssuhid={gssuhid} empid={empid} patientData={patientData}/>);
-        //     setShowModal(true);
-        // }
-        else if (label === "Investigation") {
-            setModalContent(<DummyInvestigation visitid={visitid} gssuhid={gssuhid} empid={empid} patientData={patientData}/>);
-            setShowModal(true);
-        }
-        else if (label === "Nutritional Assessment") {
-            setModalContent(<NutritionalAssessmentProfile visitid={visitid} gssuhid={gssuhid} empid={empid} patientData={patientData} />);
-            setShowModal(true);
-        }
-        else if (label === "NurInitial Assessment") {
-            setModalContent(<NutritionalInitial visitid={visitid} gssuhid={gssuhid} empid={empid} patientData={patientData} />);
-            setShowModal(true);
-        }
-        else if (label === "Progress Sheet") {
-            setModalContent(<ProgressSheet visitid={visitid} gssuhid={gssuhid} empid={empid} patientData={patientData} />);
-            setShowModal(true);
-        }
-        else if (label === "xyz") {
-            setModalContent(<div>Placeholder for Doctor Visit</div>);
-            setShowModal(true);
-        }
-         else {
-            // handle other buttons if needed
-        }
-    };
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState(null);
+  const [activeLabel, setActiveLabel] = useState(null);
 
-    const closeModal = () => setShowModal(false);
+  const handleButtonClick = (label) => {
+      setActiveLabel(label);
+    if (label === "INITIAL ASSESSMENT") {
+     
+      setModalContent(
+        <InitialAssessmentForm
+          visitid={visitid}
+          gssuhid={gssuhid}
+          empid={empid}
+        />
+      );
+      setShowModal(true);
+    } else if (label === "CLINICAL EXAMINATION") {
+      setModalContent(
+        <ClinicalExamination
+          visitid={visitid}
+          gssuhid={gssuhid}
+          empid={empid}
+        />
+      );
+      setShowModal(true);
+    } else if (label === "Nursing Services") {
+      setModalContent(
+        <NursingServices
+          visitid={visitid}
+          gssuhid={gssuhid}
+          empid={empid}
+          patientData={patientData}
+        />
+      );
+      setShowModal(true);
+    } else if (label === "Consumables") {
+      setModalContent(
+        <Consumables
+          visitid={visitid}
+          gssuhid={gssuhid}
+          empid={empid}
+          patientData={patientData}
+        />
+      );
+      setShowModal(true);
+    } else if (label === "Doctor Visit") {
+      setModalContent(
+        <DoctorVisit
+          visitid={visitid}
+          gssuhid={gssuhid}
+          empid={empid}
+          patientData={patientData}
+        />
+      );
+      setShowModal(true);
+    }
+    // else if (label === "Advice Surgery") {
+    //     setModalContent(<AdvisedSurgery visitid={visitid} gssuhid={gssuhid} empid={empid} />);
+    //     setShowModal(true);
+    // }
+    // else if (label === "Implant") {
+    //     setModalContent(<Implants visitid={visitid} gssuhid={gssuhid} empid={empid} />);
+    //     setShowModal(true);
+    // }
+    // else if (label === "InvestigationBug") {
+    //     setModalContent(<Investigation visitid={visitid} gssuhid={gssuhid} empid={empid} patientData={patientData}/>);
+    //     setShowModal(true);
+    // }
+    else if (label === "Investigation") {
+      setModalContent(
+        <DummyInvestigation
+          visitid={visitid}
+          gssuhid={gssuhid}
+          empid={empid}
+          patientData={patientData}
+        />
+      );
+      setShowModal(true);
+    } else if (label === "NUTRITIONAL ASSESSMENT") {
+      setModalContent(
+        <NutritionalAssessmentProfile
+          visitid={visitid}
+          gssuhid={gssuhid}
+          empid={empid}
+          patientData={patientData}
+        />
+      );
+      setShowModal(true);
+    } else if (label === "NURSING INITIAL ASSESSMENT") {
+      setModalContent(
+        <NutritionalInitial
+          visitid={visitid}
+          gssuhid={gssuhid}
+          empid={empid}
+          patientData={patientData}
+        />
+      );
+      setShowModal(true);
+    } else if (label === "PROGRESS SHEET") {
+      setModalContent(
+        <ProgressSheet
+          visitid={visitid}
+          gssuhid={gssuhid}
+          empid={empid}
+          patientData={patientData}
+        />
+      );
+      setShowModal(true);
+    } else if (label === "xyz") {
+      setModalContent(<div>Placeholder for Doctor Visit</div>);
+      setShowModal(true);
+    } else {
+      // handle other buttons if needed
+    }
+  };
 
-    return (
-        <div>
-           
-          <div className="w-full max-w-xl mx-auto grid grid-cols-2 md:grid-cols-2 lg:grid-cols-1 gap-3 px-2">
+  const closeModal = () => setShowModal(false);
 
-                {buttons.map((button, index) => (
-                    <div
-                        key={index}
-                        className="rounded-md p-1 flex items-center gap-1 text-white shadow-md cursor-pointer transition-transform hover:scale-105 max-w-xs"
-                        style={{
-                            backgroundColor: button.color,
-                            boxShadow: `0 4px 6px ${button.shadow}`,
-                        }}
-                        onClick={() => handleButtonClick(button.label)}
-                    >
-                        <button.icon className="text-lg" />
-                        <span className="text-sm">{button.label}</span>
-                    </div>
-                ))}
+  return (
+    <div>
+      <div className="w-full flex flex-wrap justify-center gap-3 px-2">
+        {buttons.map((button, index) => (
+          <div
+            key={index}
+            className="rounded-md p-1 flex items-center gap-1 text-white shadow-md cursor-pointer transition-transform hover:scale-105"
+            style={{
+              backgroundColor: button.color,
+              boxShadow: `0 4px 6px ${button.shadow}`,
+            }}
+            onClick={() => handleButtonClick(button.label)}
+          >
+            <button.icon className="text-lg" />
+            <span className="text-sm">{button.label}</span>
+          </div>
+        ))}
+      </div>
+
+      {showModal  && (
+        <div className="fixed inset-0 backdrop- flex items-center justify-center z-50">
+          <div className="bg-purple-50 rounded-xl w-full max-w-4xl h-[90vh] relative shadow-2xl border flex flex-col overflow-hidden">
+            <button
+              className="absolute top-3 right-4 text-red-500 hover:text-gray-700 text-2xl"
+              onClick={closeModal}
+            >
+              &times;
+            </button>
+
+            {/* Scrollable Content Area with hidden scrollbar */}
+            <div className={`mt-8 ${activeLabel !== "INITIAL ASSESSMENT" ? "overflow-y-auto": ""} pr-2 flex-grow scrollbar-hide`} >
+              {modalContent}
             </div>
-
-            {showModal && (
-                <div className="fixed inset-0 backdrop-blur- flex items-center justify-center z-50">
-                    <div className="bg-purple-50 rounded-xl w-full max-w-4xl h-[80vh] relative shadow-2xl border flex flex-col overflow-hidden">
-
-                        <button
-                            className="absolute top-3 right-4 text-red-500 hover:text-gray-700 text-2xl"
-                            onClick={closeModal}
-                        >
-                            &times;
-                        </button>
-
-                        {/* Scrollable Content Area */}
-                        <div className="mt-8 overflow-y-auto pr-2 flex-grow">
-                            {modalContent}
-                        </div>
-
-                    </div>
-                </div>
-            )}
+          </div>
         </div>
-    );
+      )}
+    </div>
+  );
 }

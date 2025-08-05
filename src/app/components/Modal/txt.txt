@@ -1,245 +1,53 @@
-  <div className="border border-gray-100 rounded-lg space-y-4">
-        {/* Inputs Grid */}
+  useEffect(() => {
+    setLoading(true);
+    axios
+      .get(`${API_ENDPOINTS.getInvDetail}/?visitid=${visitid}`)
+      .then((res) => {
+        //console.log("🚀 Full API response (res.data):", res.data);
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-1 items-start">
-          {/* Date & Time */}
-          <div className="flex flex-col w-full">
-            <label className="text-xs text-gray-700 font-medium mb-1">
-              Date & Time
-            </label>
-            <DateTimeInput
-              selectedDate={selectedDate}
-              onDateChange={setSelectedDate}
-              time={time}
-              onTimeChange={(e) => setTime(e.target.value)}
-            />
-            {errors.dateTime && (
-              <p className="text-red-500 text-[10px] mt-[2px] ml-[2px]">
-                {errors.dateTime}
-              </p>
-            )}
-          </div>
+        let parsedData = [];
+        try {
+          if (typeof res.data === "string") {
+            parsedData = JSON.parse(res.data);
+          } else if (
+            typeof res.data === "object" &&
+            typeof res.data.data === "string"
+          ) {
+            parsedData = JSON.parse(res.data.data);
+          } else {
+            parsedData = res.data;
+          }
+        } catch (err) {
+          console.error("Error parsing investigations JSON:", err);
+          parsedData = [];
+        }
 
-          {/* Issue No */}
-          <div className="flex flex-col w-full">
-            <label className="text-xs text-gray-700 font-medium mb-1">
-              Issue No
-            </label>
-            <ReusableInputField
-              className="text-sm px-2 py-1 border border-gray-300 rounded-md"
-              id="issueNo"
-              width="w-full"
-              value={issueNo}
-              onChange={(e) => setIssueNo(e.target.value)}
-            />
-          </div>
+        // console.log("✅ Parsed Data:", parsedData);
 
-          {/* Doctor */}
-          <div className="flex flex-col w-full">
-            <label className="text-xs text-gray-700 font-medium mb-1">
-              Doctor *
-            </label>
-            <input
-              type="text"
-              readOnly
-              value={doctorName}
-              onClick={() => setDoctorModalOpen(true)}
-              className={`text-sm px-2 py-1 border text-black rounded-md bg-gray-100 hover:bg-gray-200 cursor-pointer focus:outline-none ${
-                errors.doctorName ? "border-red-500" : "border-gray-300"
-              }`}
-              placeholder="Select doctor"
-            />
-            {errors.doctorName && (
-              <p className="text-red-500 text-[10px] mt-[2px] ml-[2px]">
-                {errors.doctorName}
-              </p>
-            )}
-          </div>
-
-          {/* Store Dropdown */}
-          <div className="flex flex-col w-full">
-            <label className="text-xs text-gray-700 font-medium mb-1">
-              Store *
-            </label>
-            <DropdownSelect
-              label="Select Store"
-              options={storeOptions}
-              selectedValue={store}
-              onSelect={handleStoreSelect}
-              error={errors.store}
-              className="bg-gray-100 text-sm px-2 py-1 border border-gray-300 rounded-md focus:outline-none cursor-pointer"
-            />
-          </div>
-
-          {/* Item Name Dropdown */}
-          <div className="flex flex-col w-full">
-            <label className="text-xs text-gray-700 font-medium mb-1">
-              Item Name *
-            </label>
-            <DropdownSelect
-              label=" Select Item "
-              options={itemOptions}
-              selectedValue={selectedItem ? selectedItem.label : ""}
-              onSelect={handleItemSelect}
-              error={errors.item}
-              className="bg-gray-100  text-sm px-2 py-1 border border-gray-300 rounded-md focus:outline-none cursor-pointer"
-            />
-            {errors.selectedItemDetails && (
-              <p className="text-red-500 text-[10px] mt-[2px] ml-[2px]">
-                {errors.selectedItemDetails}
-              </p>
-            )}
-          </div>
-
-          {/* Indent Qty */}
-          <div className="flex flex-col w-full">
-            <label className="text-xs text-gray-700 font-medium mb-1">
-              Indent Qty
-            </label>
-            <ReusableInputField
-              className="text-sm px-2 py-1 border border-gray-300 bg-gray-100 rounded-md "
-              id="indentQty"
-              width="w-full"
-              value={indentQty}
-              onChange={(e) => setIndentQty(e.target.value)}
-              readOnly
-            />
-          </div>
-
-          {/* Expiry Date (Read-only) */}
-          <div className="flex flex-col w-full">
-            <label className="text-xs text-gray-700 font-medium mb-1">
-              Expiry Date
-            </label>
-            <ReusableInputField
-              className="text-sm px-2 py-1 border border-gray-300 bg-gray-100 rounded-md"
-              id="expiryDate"
-              width="w-full"
-              value={expiryDate}
-              readOnly
-            />
-          </div>
-
-          {/* Available Qty (Read-only) */}
-          <div className="flex flex-col w-full">
-            <label className="text-xs text-gray-700 font-medium mb-1">
-              Available Qty
-            </label>
-            <ReusableInputField
-              className="text-sm px-2 py-1 border border-gray-300 bg-gray-100 rounded-md"
-              id="availQty"
-              width="w-full"
-              value={availQty}
-              readOnly
-            />
-          </div>
-
-          {/* MRP (Read-only) */}
-          <div className="flex flex-col w-full">
-            <label className="text-xs text-gray-700 font-medium mb-1">
-              MRP
-            </label>
-            <ReusableInputField
-              className="text-sm px-2 py-1 border border-gray-300 bg-gray-100 rounded-md"
-              id="mrp"
-              width="w-full"
-              value={mrp}
-              readOnly
-            />
-          </div>
-
-          {/* Issue Qty */}
-          <div className="flex flex-col w-full">
-            <label className="text-xs text-gray-700 font-medium mb-1">
-              Issue Qty
-            </label>
-            <ReusableInputField
-              className="text-sm px-2 py-1 border border-gray-300 rounded-md"
-              id="issueQty"
-              width="w-full"
-              value={issueQty}
-              onChange={handleIssueQtyChange}
-            />
-          </div>
-
-          {/* Final Charge */}
-          <div className="flex flex-col w-full">
-            <label className="text-xs text-gray-700 font-medium mb-1">
-              Final Charge
-            </label>
-            <ReusableInputField
-              className="text-sm px-2 py-1 border border-gray-300 rounded-md"
-              id="charge"
-              width="w-full"
-              value={charge}
-              readOnly
-            />
-          </div>
-
-          {/* Remarks */}
-          {/* <div className="flex flex-col w-full">
-            <label className="text-xs text-gray-700 font-medium mb-1">
-              Remarks
-            </label>
-            <ReusableInputField
-              className="text-sm px-2 py-1 border border-gray-300 rounded-md"
-              id="remarks"
-              width="w-full"
-              value={remarks}
-              onChange={(e) => setRemarks(e.target.value)}
-            />
-          </div> */}
-          <div className="flex flex-wrap md:flex-nowrap w-full items-end gap-2">
-            {/* Remarks */}
-            <div className="flex flex-col flex-1">
-              <label className="text-xs text-gray-700 font-medium mb-1">
-                Remarks
-              </label>
-              <ReusableInputField
-                className="text-sm px-2 py-1 border border-gray-300 rounded-md"
-                id="remarks"
-                width=" lg:w-[200px] w-full md:w-full"
-                value={remarks}
-                onChange={(e) => setRemarks(e.target.value)}
-              />
-            </div>
-
-            {/* Buttons */}
-            <div className="flex gap-2 mb-4 self-end shrink-0">
-              <ActionButton
-                label="Insert"
-                onClick={handleInsert}
-                className="text-xs px-4 py-1"
-              />
-              <ActionButton
-                label="Indent Detail"
-                onClick={handleIndentDetail}
-                className="text-xs px-4 py-1"
-              />
-              <ActionButton
-                label="History"
-                onClick={handleHistoryOpen}
-                className="text-xs px-4 py-1"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* <div className="flex justify-end gap-2">
-          <ActionButton
-            label="Insert"
-            onClick={handleInsert}
-            className="text-xs px-4 py-1"
-          />
-          <ActionButton
-            label="Indent Detail"
-            onClick={handleIndentDetail}
-            className="text-xs px-4 py-1"
-          />
-          <ActionButton
-            label="History"
-            onClick={handleHistoryOpen}
-            className="text-xs px-4 py-1"
-          />
-        </div> */}
-      </div>
+        if (parsedData && Array.isArray(parsedData.Table)) {
+          parsedData.Table.forEach((item, index) => {
+            // console.log(
+            //   `Item ${index} => servname: ${
+            //     item.servname || "N/A"
+            //   },
+            //   consultantname: ${item.consultantname || "N/A"},
+            //   datetime: ${item.orddate || "N/A"},
+            //    remarks: ${
+            //     item.remarks || "N/A"
+            //   }`
+            // );
+          });
+          setTable(parsedData.Table);
+        } else {
+          console.warn("Parsed data me Table array nahi mila:", parsedData);
+          setTable([]);
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching investigations:", err);
+        setTable([]);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [visitid, refreshData]);

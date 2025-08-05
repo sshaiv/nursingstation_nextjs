@@ -41,7 +41,8 @@ export default function AssessmentCard({
 
     const currentDateTime = getCurrentDateTime(); // call the function, not just reference it
 
-    if (title === "Chief Complaints") {
+    if (title === "Chief Complaints")
+       {
       apiUrl = "https://doctorapi.medonext.com/API/HMS/SaveClinicalData";
       payload = {
         dissummryid: 0,
@@ -56,7 +57,8 @@ export default function AssessmentCard({
         locationid: patientData.locationid,
         financialyear: patientData.financialyear,
       };
-    } else if (title === "Diagnosis") {
+    } 
+    else if (title === "Diagnosis") {
       apiUrl = "https://doctorapi.medonext.com/API/HMS/SaveDiagnosisData";
       payload = {
         dissummryid: 0,

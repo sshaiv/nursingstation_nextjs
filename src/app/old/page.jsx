@@ -10,7 +10,7 @@ import ButtonGrid from "../components/SidebarButtons";
 import NurHeader from "../components/NursingHeader";
 import API_ENDPOINTS from "../constants/api_url";
 
-function NursingStationContent() {
+function oldstationContent() {
   const searchParams = useSearchParams();
   const [visitid, setVisitid] = useState(null);
   const [gssuhid, setGssuhid] = useState(null);
@@ -18,7 +18,7 @@ function NursingStationContent() {
   const [loading, setLoading] = useState(false);
   const [showScanner, setShowScanner] = useState(false);
   const [patientData, setPatientData] = useState(null);
-  const [otherPatientData, setOtherPatientData] = useState(null);
+    const [otherPatientData, setOtherPatientData] = useState(null); 
 
   const fetchPatientBed = async (visitId) => {
     const cleanedVisitId = visitId.trim();
@@ -61,13 +61,13 @@ function NursingStationContent() {
       }
 
       // If you want to set otherPatientData as well
-      if (otherPatientData.length > 0) {
-        // Assuming you have a state to hold other patient data
-        setOtherPatientData(otherPatientData);
-      } else {
-        console.log("No other patient data found.");
-        setOtherPatientData(null);
-      }
+    if (otherPatientData.length > 0) {
+      // Assuming you have a state to hold other patient data
+      setOtherPatientData(otherPatientData);
+    } else {
+      console.log("No other patient data found.");
+      setOtherPatientData(null);
+    }
     } catch (error) {
       console.error("❌ Error fetching patient bed info:", error);
       alert("Failed to fetch patient bed info: " + error.message);
@@ -94,36 +94,25 @@ function NursingStationContent() {
   }, [searchParams]);
 
   return (
-   <div className="flex flex-col min-h-screen p-4 space-y-4 bg-gray-50">
+    <div className="p-4 space-y-4 bg-gray-50">
       <NurHeader />
 
       {/* PATIENT INFO ALWAYS ON TOP */}
       <div className="w-full">
         {loading ? (
           // Skeleton loader
-          <div className="w-full border border-gray-200 bg-white rounded-md shadow-sm p-2 md:p-3 animate-pulse space-y-2">
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px]">
-              {/* Avatar */}
-              <div className="w-6 h-6 rounded-full bg-gray-200"></div>
-
-              {/* Name & Age */}
-              <div className="flex items-center gap-1">
-                <div className="h-3 w-20 rounded bg-gray-200"></div>
-                <div className="h-3 w-24 rounded bg-gray-100"></div>
-              </div>
-
-              {/* Line Items */}
-              <div className="flex items-center gap-1">
-                <div className="h-3 w-16 rounded bg-gray-100"></div>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="h-3 w-24 rounded bg-gray-100"></div>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="h-3 w-28 rounded bg-gray-100"></div>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="h-3 w-20 rounded bg-gray-100"></div>
+          <div className="mx-auto w-full max-w-sm rounded-md border border-blue-300 p-4">
+            <div className="flex animate-pulse space-x-4">
+              <div className="h-10 w-10 rounded-full bg-gray-200"></div>
+              <div className="flex-1 space-y-6 py-1">
+                <div className="h-2 rounded bg-gray-200"></div>
+                <div className="space-y-3">
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="col-span-2 h-2 rounded bg-gray-200"></div>
+                    <div className="col-span-1 h-2 rounded bg-gray-200"></div>
+                  </div>
+                  <div className="h-2 rounded bg-gray-200"></div>
+                </div>
               </div>
             </div>
           </div>
@@ -141,33 +130,50 @@ function NursingStationContent() {
       </div>
 
       {/* GRID BELOW */}
-      <div className="flex flex-col gap-4">
-        <VitalsTable
-          title="Vitals"
-          visitid={visitid}
-          gssuhid={gssuhid}
-          empid={empid}
-          patientData={patientData}
-        />
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="md:col-span-3 space-y-4">
+          <div className="w-full">
+            <VitalsTable
+              title="Vitals"
+              visitid={visitid}
+              gssuhid={gssuhid}
+              empid={empid}
+              patientData={patientData}
+            />
+          </div>
 
-        <ButtonGrid
-          visitid={visitid}
-          gssuhid={gssuhid}
-          empid={empid}
-          patientData={patientData}
-        />
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <AssessmentCard title="Chief Complaints" patientData={patientData} otherPatientData={otherPatientData} />
+            <AssessmentCard title="Diagnosis" patientData={patientData} otherPatientData={otherPatientData}/>
+            <AssessmentCard title="Allergies" patientData={patientData} otherPatientData={otherPatientData} />
+            <AssessmentCard icons="🔍" title=" Notes"patientData={patientData} otherPatientData={otherPatientData} />
+          </div>
+
+          <MedicineTable
+            visitid={visitid}
+            gssuhid={gssuhid}
+            empid={empid}
+            patientData={patientData}
+          />
+        </div>
+
+        <div>
+          <ButtonGrid
+            visitid={visitid}
+            gssuhid={gssuhid}
+            empid={empid}
+            patientData={patientData}
+          />
+        </div>
       </div>
     </div>
-
- 
-
   );
 }
 
-export default function nursingstation() {
+export default function oldstation() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <NursingStationContent />
+      <oldstationContent />
     </Suspense>
   );
 }

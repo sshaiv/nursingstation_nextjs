@@ -27,7 +27,6 @@ export default function DummyInvestigation({
   const [showSecondModal, setShowSecondModal] = useState(false);
   const [doctorData, setDoctorData] = useState(null);
   const [selectedDoctorId, setSelectedDoctorId] = useState(null);
-
   const [vitals, setVitals] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [time, setTime] = useState("");
@@ -116,7 +115,6 @@ export default function DummyInvestigation({
       InvestigationName: inv.servname || inv.CName || "",
       consultantid: doctorData?.CID,
       DoctorName: doctorData?.CName,
-
       isurgent: 0,
       Urgent: "",
       consenttypeid: 0,
@@ -127,7 +125,6 @@ export default function DummyInvestigation({
       reqid: 0,
       invdate: "",
       remarks: remark,
-
       issampled: 0,
       isresult: 0,
       isverified: 0,
@@ -136,7 +133,6 @@ export default function DummyInvestigation({
       preparationstatusid: 0,
       preparationremarkid: 0,
       reasonfornotpreparation: " ",
-
       isconsentreq: 0,
       isremove: 0,
       removedatetime: " ",
@@ -167,7 +163,6 @@ export default function DummyInvestigation({
       repeatremark: "",
       RepeatRemark: "",
       itemlineid: 1,
-
       performedbyempid: 0,
       callbyempid: 0,
       callbyremark: "",
@@ -267,7 +262,7 @@ export default function DummyInvestigation({
     ]);
   };
 
-  const [insertedServices, setInsertedServices] = useState([]); // 👈 Only manually added
+  const [insertedServices, setInsertedServices] = useState([]); 
 
   const savebtn = async () => {
     console.log("savebtn ", saveData);
@@ -432,9 +427,7 @@ export default function DummyInvestigation({
         isemg: 0,
         preparationstatusid: 0,
         preparationremarkid: 0,
-
         reasonfornotpreparation: " ",
-
         isconsentreq: 0,
         isremove: 0,
         removedatetime: " ",
@@ -442,7 +435,6 @@ export default function DummyInvestigation({
         profileservid: 0,
         charge: inv.charge || 0,
         isinactive: 0,
-
         entempid: inv.entempid || "",
         entdatetime: currentDateTime,
         entwsname: inv.entwsname || "",
@@ -458,7 +450,6 @@ export default function DummyInvestigation({
         subdeptid: inv.subdeptid || "",
         statusid: 0,
         Consultant: " ",
-
         reqwardcatgid: patientData.reqwardcatgid,
         ispaid: 0,
         Paid: "",
@@ -638,29 +629,7 @@ export default function DummyInvestigation({
               </tr>
             </thead>
             <tbody>
-              {/* Render newly inserted vitals at the top */}
-              {/* {[...vitals].reverse().map((v, idx) => (
-                <tr key={"vital-" + idx} className="hover:bg-gray-100 border-t">
-                  <TableReuse>{v.date}</TableReuse>
-                  <TableReuse>{v.doctorName}</TableReuse>
-                  <TableReuse>{v.investigation}</TableReuse>
-                  <TableReuse>{v.remarks}</TableReuse>
-                  <TableReuse>
-                    <div className="flex justify-center space-x-2">
-                      {v.source !== "api" && (
-                        <button
-                          className="text-red-500 hover:underline"
-                          onClick={() =>
-                            setVitals(vitals.filter((_, i) => i !== idx))
-                          }
-                        >
-                          Delete
-                        </button>
-                      )}
-                    </div>
-                  </TableReuse>
-                </tr>
-              ))} */}
+             
 
               {vitals
                 .map((v, realIdx) => ({ ...v, originalIndex: realIdx }))
