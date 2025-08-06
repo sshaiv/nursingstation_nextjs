@@ -150,7 +150,10 @@ export default function NutritionalAssessmentProfile({
       }
     };
     fetchNutritionalData();
-  }, [visitid, gssuhid, empid]);
+  }, [
+    visitid, 
+    gssuhid, 
+    empid]);
 
   const [weightChangeOptions, setWeightChangeOptions] = useState([]);
   const [yesNoOptions, setYesNoOptions] = useState([]);
@@ -222,8 +225,8 @@ export default function NutritionalAssessmentProfile({
 
   const derivedJson = {
     rowid: 0,
-    gssuhid: patientData.gssuhid,
-    visitid: patientData.visitid,
+    gssuhid: gssuhid,
+    visitid: visitid,
     // date: getCurrentDateTime(),
     date: getCurrentDateISO(),
     foodhabitsid: foodHabitId,

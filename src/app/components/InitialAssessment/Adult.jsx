@@ -113,7 +113,7 @@ export default function Adult({ visitid, gssuhid, empid }) {
 
   return (
     <div className=" bg-purple-50 min-h-screen flex justify-center text-[10px] leading-tight">
-   <div className="w-full max-w-3xl mx-auto space-y-4 overflow-auto scrollbar-hide max-h-[400px] px-2">
+   <div className="w-full max-w-5xl mx-auto space-y-4 overflow-auto scrollbar-hide max-h-[400px] px-2">
 
         {/* Allergy Section */}
         <div className="space-y-3">

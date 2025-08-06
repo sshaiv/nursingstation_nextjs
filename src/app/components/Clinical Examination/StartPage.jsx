@@ -280,8 +280,9 @@ export default function StartPage({ visitid, gssuhid, empid }) {
   };
 
   return (
-    <div className="p-0 bg-purple-50 min-h-screen text-sm text-gray-700">
-
+    <div className=" bg-purple-50 min-h-screen flex justify-center text-[10px] leading-tight">
+      <div className="w-full max-w-5xl mx-auto space-y-4 overflow-auto scrollbar-hide max-h-[400px] px-2">
+      
       {/* Pain Assessment */}
       <div className="flex flex-col items-center gap-2 mb-6">
         <H3>Pain Assessment Scale</H3>
@@ -723,7 +724,9 @@ export default function StartPage({ visitid, gssuhid, empid }) {
         </button>
       </div>
     </div>
-  );
+  </div>
+);
+
 }
 
 

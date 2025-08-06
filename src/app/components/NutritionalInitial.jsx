@@ -264,9 +264,10 @@ export default function NutritionalInitial({
 
   return (
     <div className="p-2 bg-purple-50 text-xs text-gray-700 max-w-[1200px] mx-auto">
-     
-       <div className="flex h-[1px]  items-center justify-center"><ModalHeading title=" Nursing Initial Assessment " /></div>
-            
+      <div className="flex h-[1px]  items-center justify-center">
+        <ModalHeading title=" Nursing Initial Assessment " />
+      </div>
+
       <hr className="border-t mb-3 mt-3 border-gray-300" />
 
       {/* VITAL INPUTS */}
@@ -295,51 +296,57 @@ export default function NutritionalInitial({
       </div>
 
       {/* RADIO BUTTONS */}
-<div className="flex justify-start mb-4">
-  <div className="grid grid-cols-2 gap-6">
-    {/* Allergy Section */}
-    <div className="flex items-center">
-      <label className="text-[11px] font-semibold min-w-[80px]">Allergy</label>
-      <div className="flex gap-x-2">
-        {allergyOptions.map((opt) => (
-          <label key={opt.value} className="flex items-center gap-1 text-[11px]">
-            <input
-              type="radio"
-              name="allergy"
-              value={opt.value}
-              checked={allergy === opt.value}
-              onChange={() => setAllergy(opt.value)}
-            />
-            {opt.label}
-          </label>
-        ))}
+      <div className="flex justify-start mb-4">
+        <div className="grid grid-cols-2 gap-6">
+          {/* Allergy Section */}
+          <div className="flex items-center">
+            <label className="text-[11px] font-semibold min-w-[80px]">
+              Allergy
+            </label>
+            <div className="flex gap-x-2">
+              {allergyOptions.map((opt) => (
+                <label
+                  key={opt.value}
+                  className="flex items-center gap-1 text-[11px]"
+                >
+                  <input
+                    type="radio"
+                    name="allergy"
+                    value={opt.value}
+                    checked={allergy === opt.value}
+                    onChange={() => setAllergy(opt.value)}
+                  />
+                  {opt.label}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Primary Language Section */}
+          <div className="flex items-center gap-2">
+            <label className="text-[11px] font-semibold min-w-[100px]">
+              Primary Language
+            </label>
+            <div className="flex gap-x-2">
+              {languageOptions.map((lang) => (
+                <label
+                  key={lang.value}
+                  className="flex items-center gap-1 text-[11px]"
+                >
+                  <input
+                    type="radio"
+                    name="language"
+                    value={lang.value}
+                    checked={primaryLanguage === lang.value}
+                    onChange={() => setPrimaryLanguage(lang.value)}
+                  />
+                  {lang.label}
+                </label>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-
-    {/* Primary Language Section */}
-    <div className="flex items-center gap-2">
-      <label className="text-[11px] font-semibold min-w-[100px]">
-        Primary Language
-      </label>
-      <div className="flex gap-x-2">
-        {languageOptions.map((lang) => (
-          <label key={lang.value} className="flex items-center gap-1 text-[11px]">
-            <input
-              type="radio"
-              name="language"
-              value={lang.value}
-              checked={primaryLanguage === lang.value}
-              onChange={() => setPrimaryLanguage(lang.value)}
-            />
-            {lang.label}
-          </label>
-        ))}
-      </div>
-    </div>
-  </div>
-</div>
-
-
 
       <hr className="border-t mb-3 border-gray-300" />
       <div className="flex flex-col items-center gap-2 mb-6">
@@ -444,12 +451,13 @@ export default function NutritionalInitial({
         ))}
       </div>
 
-      <div className="flex justify-center">
-        <SaveButton
-          label="Save"
-          className="text-[10px] px-4 py-1"
-          onClick={handleSave}
-        />
+   <div className="flex justify-center">
+        <button
+          onClick={handleSave}       
+          className={"w-full  px-6 py-2 rounded text-white  bg-blue-500 hover:bg-blue-600"}
+        >
+          Save
+        </button>
       </div>
     </div>
   );

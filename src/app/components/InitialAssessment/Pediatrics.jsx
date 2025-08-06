@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import SignatureCanvas from "react-signature-canvas";
 
-
 import Select from "react-select";
 import { SaveButton } from "@/app/common/Buttons";
 import ReusableTextareaField from "@/app/common/ReusableTextareaField";
@@ -30,11 +29,9 @@ export default function Pediatrics({ visitid, gssuhid, empid }) {
   const [personalOther, setPersonalOther] = useState("");
   const sigCanvasRef = useRef(null);
   const [rowId, setRowId] = useState(" ");
-  const [bedNo, setBedNo] = useState(" ");  
+  const [bedNo, setBedNo] = useState(" ");
   const [uhId, setUhId] = useState(" ");
   const [relationData, setRelationData] = useState([]);
-
-                                                                                                                                                                          
 
   useEffect(() => {
     const data = historyData.presentIllness?.Table?.[0];
@@ -113,8 +110,8 @@ export default function Pediatrics({ visitid, gssuhid, empid }) {
 
   return (
     <div className=" bg-purple-50 min-h-screen flex justify-center text-[10px] leading-tight">
-   <div className="w-full max-w-3xl mx-auto space-y-4 overflow-auto scrollbar-hide max-h-[400px] px-2">
-
+      <div className="w-full max-w-5xl mx-auto space-y-4 overflow-auto scrollbar-hide max-h-[400px] px-2">
+        
         {/* Allergy Section */}
         <div className="space-y-3">
           <div className="flex items-center gap-4 mb-3">
@@ -185,8 +182,8 @@ export default function Pediatrics({ visitid, gssuhid, empid }) {
                     minHeight: "32px",
                     fontSize: "10px",
                     padding: "0 6px",
-                    backgroundColor: "transparent", 
-                    border: "#6B7280  solid 2px", 
+                    backgroundColor: "transparent",
+                    border: "#6B7280  solid 2px",
                   }),
                 }}
                 options={relationOptions}
@@ -205,7 +202,6 @@ export default function Pediatrics({ visitid, gssuhid, empid }) {
                 <button onClick={clearSignature} className="bg-purple-100 text-purple-800 px-2 py-1 rounded text-[10px]">Clear</button>
                 <button className="bg-purple-100 text-purple-800 px-2 py-1 rounded text-[10px]">Show</button>
               </div> */}
-
             </div>
             {/* <div className="border border-gray-800 w-full md:w-1/2 h-[70px]" /> */}
           </div>
@@ -225,8 +221,7 @@ export default function Pediatrics({ visitid, gssuhid, empid }) {
           />
         </div>
 
-
-{/* Past History */}
+        {/* Past History */}
         <div className="space-y-3">
           <H3>📋 Past History </H3>
           <ReusableTextareaField
@@ -241,9 +236,7 @@ export default function Pediatrics({ visitid, gssuhid, empid }) {
           />
         </div>
 
-
-
-      {/* Antenatal History */}
+        {/* Antenatal History */}
         <div className="space-y-3">
           <H3>📋 Antenatal History / Post Natal History (In Neonate)</H3>
           <ReusableTextareaField
@@ -257,11 +250,10 @@ export default function Pediatrics({ visitid, gssuhid, empid }) {
             onChange={(e) => setPresentingComplaint(e.target.value)}
           />
         </div>
-      
 
         {/* Family History */}
         <div className="space-y-3">
-          <H3>📋  Family History </H3>
+          <H3>📋 Family History </H3>
           <ReusableTextareaField
             className="border text-black w-full  text-[10px]"
             id="presentingcomplaints"
@@ -274,41 +266,40 @@ export default function Pediatrics({ visitid, gssuhid, empid }) {
           />
         </div>
 
-{/* Allergies & Blood Group in Row */}
-<div className="flex gap-4">
-  {/* Allergies */}
-  <div className="flex-1 space-y-1">
-    <H3>📋 Allergies</H3>
-    <ReusableTextareaField
-      className="border text-black w-full text-[10px]"
-      id="allergies"
-      rows={1}
-      style={{ minHeight: "28px", padding: "6px 8px" }}
-      label=" "
-      value={" "}
-      onChange={(e) => setPresentingComplaint(e.target.value)}
-    />
-  </div>
+        {/* Allergies & Blood Group in Row */}
+        <div className="flex gap-4">
+          {/* Allergies */}
+          <div className="flex-1 space-y-1">
+            <H3>📋 Allergies</H3>
+            <ReusableTextareaField
+              className="border text-black w-full text-[10px]"
+              id="allergies"
+              rows={1}
+              style={{ minHeight: "28px", padding: "6px 8px" }}
+              label=" "
+              value={" "}
+              onChange={(e) => setPresentingComplaint(e.target.value)}
+            />
+          </div>
 
-  {/* Blood Group */}
-  <div className="flex-1 space-y-1">
-    <H3>📋 Blood Group</H3>
-    <ReusableTextareaField
-      className="border text-black w-full text-[10px]"
-      id="bloodgroup"
-      rows={1}
-      style={{ minHeight: "28px", padding: "6px 8px" }}
-      label=" "
-      value={" "}
-      onChange={(e) => setPresentingComplaint(e.target.value)}
-    />
-  </div>
-</div>
+          {/* Blood Group */}
+          <div className="flex-1 space-y-1">
+            <H3>📋 Blood Group</H3>
+            <ReusableTextareaField
+              className="border text-black w-full text-[10px]"
+              id="bloodgroup"
+              rows={1}
+              style={{ minHeight: "28px", padding: "6px 8px" }}
+              label=" "
+              value={" "}
+              onChange={(e) => setPresentingComplaint(e.target.value)}
+            />
+          </div>
+        </div>
 
-
-           {/* Previous Treatment*/}
+        {/* Previous Treatment*/}
         <div className="space-y-3">
-          <H3>📋  Previous Treatment (Before Hospitalization) : </H3>
+          <H3>📋 Previous Treatment (Before Hospitalization) : </H3>
           <ReusableTextareaField
             className="border text-black w-full  text-[10px]"
             id="presentingcomplaints"
@@ -320,17 +311,19 @@ export default function Pediatrics({ visitid, gssuhid, empid }) {
             onChange={(e) => setPresentingComplaint(e.target.value)}
           />
         </div>
-{/* //.................// */}
+        {/* //.................// */}
         <hr className="border-t border-gray-300 mb-2" />
-        
-         <div className="flex justify-center">
-        <button
-          onClick={handleSave}       
-          className={"w-full  px-6 py-2 rounded text-white  bg-blue-500 hover:bg-blue-600"}
-        >
-          Save
-        </button>
-      </div>
+
+        <div className="flex justify-center">
+          <button
+            onClick={handleSave}
+            className={
+              "w-full  px-6 py-2 rounded text-white  bg-blue-500 hover:bg-blue-600"
+            }
+          >
+            Save
+          </button>
+        </div>
       </div>
     </div>
   );

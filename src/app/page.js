@@ -8,6 +8,7 @@ import MedicineTable from "./components/MedicineTable";
 import SidebarButtons from "./components/SidebarButtons";
 import NotesBox from "./components/NotesBox";
  import Header from "./components/Header";
+import ButtonGrid from "./components/SidebarButtons";
 
 const WarningPopup = ({ visible }) => {
   if (!visible) return null;
@@ -77,24 +78,22 @@ function HomeContent() {
 
       {/* ✅ Block rest until scanned */}
       <BlockUntilScanned scanned={scanned} onBlockedClick={showScanWarning}>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="md:col-span-3 space-y-4">
-            <div className="w-full">
-              <VitalsTable title="Vitals" />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <AssessmentCard title="Chief Complaints" />
-              <AssessmentCard title="Diagnosis" />
-              <AssessmentCard title="Allergies" />
-              <NotesBox />
-            </div>
-
-            <MedicineTable />
-          </div>
-
-          <SidebarButtons />
-        </div>
+        <div className="flex flex-col gap-4">
+               <VitalsTable
+                 title="Vitals"
+                //  visitid={visitid}
+                //  gssuhid={gssuhid}
+                //  empid={empid}
+                //  patientData={patientData}
+               />
+       
+               <ButtonGrid
+                //  visitid={visitid}
+                //  gssuhid={gssuhid}
+                //  empid={empid}
+                //  patientData={patientData}
+               />
+             </div>
       </BlockUntilScanned>
 
       <WarningPopup visible={showWarning} />
