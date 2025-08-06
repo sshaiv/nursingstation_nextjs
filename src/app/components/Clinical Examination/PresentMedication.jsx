@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MedicineModal from "../Modal/MedicineModal";
 import { ActionButton } from "@/app/common/Buttons";
 import TableReuse from "@/app/common/TableReuse";
@@ -22,9 +22,8 @@ const PresentMedication = ({
   const [showMedicineNameModal, setShowMedicineNameModal] = useState(false);
   const [selectedDoctorId, setSelectedDoctorId] = useState(null);
   const [medicineData, setMedicineData] = useState(null);
-    const [showSignatureModal, setShowSignatureModal] = useState(false);
+  const [showSignatureModal, setShowSignatureModal] = useState(false);
   const [signatureDataUrl, setSignatureDataUrl] = useState(null);
-
 
   const handleMedicineSelect = (selected) => {
     console.log("Medicine selected:", selected);
@@ -63,6 +62,13 @@ const PresentMedication = ({
     //   jsonStringsubnursingpatipdmedicineindentdetailmodel: [],
     //   jsonStringsubpatbilinginfomodel: [],
   });
+
+  useEffect(() => {
+    const storedSignature = localStorage.getItem("signatureImage");
+    if (storedSignature) {
+      setSignatureDataUrl(storedSignature);
+    }
+  }, []);
 
   return (
     <div className=" bg-purple-50 min-h-screen flex justify-center text-[10px] leading-tight overflow-hidden">
@@ -205,42 +211,76 @@ const PresentMedication = ({
 
         {/* Signature Section */}
         <div className="mt-4 space-y-1">
-      <label className="text-xs font-semibold text-gray-700">
-        Digital Signature
-      </label>
+          <label className="text-xs font-semibold text-gray-700">
+            Digital Signature
+          </label>
 
-      <div
-        className="w-[125px] max-w-sm h-[75px] border border-dashed rounded-md flex items-center justify-center cursor-pointer bg-white hover:bg-gray-50"
-        onClick={() => setShowSignatureModal(true)}
-      >
-        {signatureDataUrl ? (
-          <img src={signatureDataUrl} alt="Signature Preview" className="max-h-[90px]" />
-        ) : (
-          <span className="text-xs text-gray-500">Click to sign</span>
-        )}
-      </div>
+          <div
+            className="w-[150px] max-w-sm h-[75px] border border-dashed rounded-md flex items-center justify-center cursor-pointer bg-white hover:bg-gray-50 relative"
+            onClick={() => !signatureDataUrl && setShowSignatureModal(true)} // Prevent re-opening modal if already signed
+          >
+            {signatureDataUrl ? (
+              <>
+                <img
+                  src={signatureDataUrl}
+                  alt="Signature Preview"
+                  className="max-h-[90px]"
+                />
+              </>
+            ) : (
+              <span className="text-xs text-gray-500">Click to sign</span>
+            )}
+          </div>
 
-      {/* Modal */}
-      {showSignatureModal && (
-        <div className="fixed inset-0 z-50 bg-transparent bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white rounded-lg shadow-lg w-[600px] max-w-full">
-            <div className="flex justify-end items-end  ">
-           
-              <button
-                onClick={() => setShowSignatureModal(false)}
-                className="text-red-500  hover:text-gray-700 text-sm"
-              >
-                ✖ Close
-              </button>
-            </div>
-            <SignaturePadComponent
-              onSave={(dataUrl) => setSignatureDataUrl(dataUrl)}
-              onClose={() => setShowSignatureModal(false)}
+          <div className="flex gap-2 mb-2">
+            <ActionButton
+              label="Clear"
+              onClick={(e) => {
+                e.stopPropagation();
+                setSignatureDataUrl(null); // Clear from state
+                localStorage.removeItem("signatureImage"); // Clear from localStorage
+                console.log("Signature cleared");
+              }}
+              className="text-xs px-4 py-1"
+            />
+            <ActionButton
+              label="Save"
+              // onClick={handleInsert}
+
+              // }}
+              onClick={() => {
+                if (!signatureDataUrl) return;
+                localStorage.setItem("signatureImage", signatureDataUrl); // Save to localStorage
+                console.log("Signature saved:", signatureDataUrl); // Log dataURL (base64 image)
+                setShowSignatureModal(false); // Close modal
+              }}
+              className="text-xs px-4 py-1"
             />
           </div>
+
+          {/* Modal */}
+          {showSignatureModal && (
+            <div className="fixed inset-0 z-50 bg-transparent bg-opacity-30 flex items-center justify-center">
+              <div className="bg-white rounded-lg shadow-lg w-[600px] max-w-full p-4">
+                <div className="flex justify-end">
+                  <button
+                    onClick={() => setShowSignatureModal(false)}
+                    className="text-red-500 hover:text-gray-700 text-sm"
+                  >
+                    ✖ Close
+                  </button>
+                </div>
+                <SignaturePadComponent
+                  onSave={(dataUrl) => {
+                    setSignatureDataUrl(dataUrl);
+                    setShowSignatureModal(false);
+                  }}
+                  onClose={() => setShowSignatureModal(false)}
+                />
+              </div>
+            </div>
+          )}
         </div>
-      )}
-    </div>
 
         <hr className="border-t border-gray-300 mb-0" />
       </div>
