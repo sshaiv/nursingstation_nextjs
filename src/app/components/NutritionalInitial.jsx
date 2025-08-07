@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { H3, Label, ModalHeading } from "../common/text";
 import { SaveButton } from "../common/Buttons";
+import PainScoreEmogy from "../common/PainScoreEmogy";
 
 export default function NutritionalInitial({
   visitid,
@@ -263,7 +264,7 @@ export default function NutritionalInitial({
   };
 
   return (
-    <div className="p-2 bg-purple-50 text-xs text-gray-700 max-w-[1200px] mx-auto">
+    <div className="p-2 bg-gray-50 text-xs text-gray-700 max-w-[1200px] mx-auto">
       <div className="flex h-[1px]  items-center justify-center">
         <ModalHeading title=" Nursing Initial Assessment " />
       </div>
@@ -349,35 +350,9 @@ export default function NutritionalInitial({
       </div>
 
       <hr className="border-t mb-3 border-gray-300" />
-      <div className="flex flex-col items-center gap-2 mb-6">
-        <H3>Pain Assessment Scale</H3>
-        <div className="overflow-x-auto w-full">
-          <div className="flex justify-between gap-4 px-2 min-w-[800px]">
-            {[
-              { score: 0, emoji: "😄", Label: "No Pain" },
-              { score: 1, emoji: "😀", Label: "Just Noticeable" },
-              { score: 2, emoji: "🙂", Label: "Mild Pain" },
-              { score: 3, emoji: "😐", Label: "Uncomfortable Pain" },
-              { score: 4, emoji: "😑", Label: "Annoying Pain" },
-              { score: 5, emoji: "😣", Label: "Moderate Pain" },
-              { score: 6, emoji: "😖", Label: "Just Bearable" },
-              { score: 7, emoji: "😫", Label: "Strong Pain" },
-              { score: 8, emoji: "😩", Label: "Severe Pain" },
-              { score: 9, emoji: "😠", Label: "Horrible Pain" },
-              { score: 10, emoji: "😵", Label: "Worst Pain" },
-            ].map((item) => (
-              <div
-                key={item.score}
-                className="flex flex-col items-center w-20 text-center"
-              >
-                <Label>{item.score}</Label>
-                <Label className="text-2xl">{item.emoji}</Label>
-                <Label>{item.Label}</Label>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+
+     <PainScoreEmogy/>
+
       {/* DROPDOWNS */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-4">
         {loading ? (

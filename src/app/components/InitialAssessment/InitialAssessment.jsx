@@ -17,7 +17,7 @@ const InitialAssessmentForm = ({ visitid, gssuhid, empid, patientData }) => {
   ];
 
   return (
-    <div className="p-2 bg-purple-50 min-h-screen flex justify-center text-[10px] leading-tight overflow-hidden">
+    <div className="p-2 bg-gray-50 min-h-screen flex justify-center text-[10px] leading-tight overflow-hidden">
       <div className="w-full  max-w-5xl mx-auto space-y-4 ">
         <div className="flex h-[1px]  items-center justify-center">
           <ModalHeading

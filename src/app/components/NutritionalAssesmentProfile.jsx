@@ -306,7 +306,7 @@ export default function NutritionalAssessmentProfile({
   }, [latestVitals]);
 
   return (
-    <div className="p-4 bg-purple-50 min-h-screen text-sm text-gray-700">
+    <div className="p-4 bg-gray-50 min-h-screen text-sm text-gray-700">
       <div className="flex h-[1px]  items-center justify-center">
         <ModalHeading
           title="Nutritional Assessment Profile"

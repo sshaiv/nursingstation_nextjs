@@ -6,6 +6,7 @@ import { SaveButton } from "../../common/Buttons";
 import useFetchPatientHistory from "../../hooks/fetchHistoryData";
 import API_ENDPOINTS from "../../constants/api_url";
 import axios from "axios";
+import PainScoreEmogy from "@/app/common/PainScoreEmogy";
 
 export default function StartPage({ visitid, gssuhid, empid }) {
   const { historyData } = useFetchPatientHistory(visitid, gssuhid, empid);
@@ -280,51 +281,11 @@ export default function StartPage({ visitid, gssuhid, empid }) {
   };
 
   return (
-    <div className=" bg-purple-50 min-h-screen flex justify-center text-[10px] leading-tight">
+    <div className=" bg-gray-50 min-h-screen flex justify-center text-[10px] leading-tight">
       <div className="w-full max-w-5xl mx-auto space-y-4 overflow-auto scrollbar-hide max-h-[400px] px-2">
       
       {/* Pain Assessment */}
-      <div className="flex flex-col items-center gap-2 mb-6">
-        <H3>Pain Assessment Scale</H3>
-        <div className="overflow-x-auto w-full">
-          <div className="flex justify-between gap-4 px-2 min-w-[700px]">
-            {[
-              { score: 0, emoji: "😄", Label: "No Pain" },
-              { score: 1, emoji: "😀", Label: "Just Noticeable" },
-              { score: 2, emoji: "🙂", Label: "Mild Pain" },
-              { score: 3, emoji: "😐", Label: "Uncomfortable Pain" },
-              { score: 4, emoji: "😑", Label: "Annoying Pain" },
-              { score: 5, emoji: "😣", Label: "Moderate Pain" },
-              { score: 6, emoji: "😖", Label: "Just Bearable" },
-              { score: 7, emoji: "😫", Label: "Strong Pain" },
-              { score: 8, emoji: "😩", Label: "Severe Pain" },
-              { score: 9, emoji: "😠", Label: "Horrible Pain" },
-              { score: 10, emoji: "😵", Label: "Worst Pain" },
-            ].map((item) => (
-              <div
-                key={item.score}
-                className="flex flex-col items-center w-20 text-center"
-              >
-                <Label>{item.score}</Label>
-                <Label className="text-2xl">{item.emoji}</Label>
-                <Label>{item.Label}</Label>
-              </div>
-            ))}
-          </div>
-
-          <div className="text-sm flex justify-center items-center text-gray-600 mt-2 text-center space-x-2">
-            <H3>Pain Score</H3>
-            <ReusableInputField
-              id="painscore"
-              value={painscore}
-              label="pain score"
-              className="rounded-lg border-2  "
-              onChange={(e) => setPainscore(e.target.value)}
-              width="w-20"
-            />
-          </div>
-        </div>
-      </div>
+      <PainScoreEmogy/>
 
       {/* Vitals Section */}
       <div className="grid grid-cols-2 md:grid-cols-8 gap-2 mt-4 ">
