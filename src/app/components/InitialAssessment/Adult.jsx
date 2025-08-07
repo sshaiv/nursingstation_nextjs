@@ -2,13 +2,13 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import SignatureCanvas from "react-signature-canvas";
 
-
 import Select from "react-select";
 import { SaveButton } from "@/app/common/Buttons";
 import ReusableTextareaField from "@/app/common/ReusableTextareaField";
 import { H3, Label, ModalHeading } from "@/app/common/text";
 import useFetchPatientHistory from "@/app/hooks/fetchHistoryData";
 import API_ENDPOINTS from "@/app/constants/api_url";
+import DigitalSignatureSection from "@/app/common/DigitalSignatureSection";
 
 export default function Adult({ visitid, gssuhid, empid }) {
   const { historyData } = useFetchPatientHistory(visitid, gssuhid, empid);
@@ -30,11 +30,9 @@ export default function Adult({ visitid, gssuhid, empid }) {
   const [personalOther, setPersonalOther] = useState("");
   const sigCanvasRef = useRef(null);
   const [rowId, setRowId] = useState(" ");
-  const [bedNo, setBedNo] = useState(" ");  
+  const [bedNo, setBedNo] = useState(" ");
   const [uhId, setUhId] = useState(" ");
   const [relationData, setRelationData] = useState([]);
-
-                                                                                                                                                                          
 
   useEffect(() => {
     const data = historyData.presentIllness?.Table?.[0];
@@ -111,10 +109,13 @@ export default function Adult({ visitid, gssuhid, empid }) {
     label: item.CNAME,
   }));
 
+  const handleSignatureSave = (signatureImage) => {
+    console.log("parent saved:", signatureImage);
+  };
+
   return (
     <div className=" bg-purple-50 min-h-screen flex justify-center text-[10px] leading-tight">
-   <div className="w-full max-w-5xl mx-auto space-y-4 overflow-auto scrollbar-hide max-h-[400px] px-2">
-
+      <div className="w-full max-w-5xl mx-auto space-y-4 overflow-auto scrollbar-hide max-h-[400px] px-2">
         {/* Allergy Section */}
         <div className="space-y-3">
           <div className="flex items-center gap-4 mb-3">
@@ -152,62 +153,57 @@ export default function Adult({ visitid, gssuhid, empid }) {
         </div>
 
         {/* History of Present Illness */}
-        <div className="space-y-4">
-          <H3>✅ History of Present Illness</H3>
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex flex-col gap-3 w-full md:w-1/2">
-              <ReusableTextareaField
-                className="border-2 text-black text-[10px]"
-                id="historygiven"
-                label="History Given By:"
-                rows={1}
-                style={{ minHeight: "28px", padding: "6px 8px" }}
-                value={historyGivenBy}
-                onChange={(e) => setHistoryGivenBy(e.target.value)}
-              />
-              <Select
-                className="w-full text-[8px]"
-                styles={{
-                  menu: (provided) => ({
-                    ...provided,
-                    fontSize: "10px",
-                    color: "#000",
-                    // remove maxHeight and overflowY here too
-                  }),
-                  menuList: (provided) => ({
-                    ...provided,
-                    maxHeight: "80px",
-                    overflowY: "auto",
-                    fontSize: "10px",
-                  }),
-                  control: (provided) => ({
-                    ...provided,
-                    minHeight: "32px",
-                    fontSize: "10px",
-                    padding: "0 6px",
-                    backgroundColor: "transparent", 
-                    border: "#6B7280  solid 2px", 
-                  }),
-                }}
-                options={relationOptions}
-                value={relationOptions.find((opt) => opt.value === relation)}
-                onChange={(selectedOption) => setRelation(selectedOption.value)}
-                placeholder="Relation"
-                isSearchable
-                filterOption={(option, inputValue) =>
-                  option.label
-                    .toLowerCase()
-                    .startsWith(inputValue.toLowerCase())
-                }
-              />
+        <div className="flex flex-col md:flex-row gap-10 items-start ">
 
-              {/* <div className="flex gap-2">
-                <button onClick={clearSignature} className="bg-purple-100 text-purple-800 px-2 py-1 rounded text-[10px]">Clear</button>
-                <button className="bg-purple-100 text-purple-800 px-2 py-1 rounded text-[10px]">Show</button>
-              </div> */}
+          {/* Left: History of Present Illness */}
+          <div className="w-full md:w-1/2 space-y-2">
+            <H3>✅ History of Present Illness</H3>
+            <ReusableTextareaField
+              className="border-2 text-black text-[10px]"
+              id="historygiven"
+              label="History Given By:"
+              rows={1}
+              style={{ minHeight: "28px", padding: "6px 8px" }}
+              value={historyGivenBy}
+              onChange={(e) => setHistoryGivenBy(e.target.value)}
+            />
+            <Select
+              className="w-full text-[8px]"
+              styles={{
+                menu: (provided) => ({
+                  ...provided,
+                  fontSize: "10px",
+                  color: "#000",
+                }),
+                menuList: (provided) => ({
+                  ...provided,
+                  maxHeight: "80px",
+                  overflowY: "auto",
+                  fontSize: "10px",
+                }),
+                control: (provided) => ({
+                  ...provided,
+                  minHeight: "32px",
+                  fontSize: "10px",
+                  padding: "0 6px",
+                  backgroundColor: "transparent",
+                  border: "#6B7280  solid 2px",
+                }),
+              }}
+              options={relationOptions}
+              value={relationOptions.find((opt) => opt.value === relation)}
+              onChange={(selectedOption) => setRelation(selectedOption.value)}
+              placeholder="Relation"
+              isSearchable
+              filterOption={(option, inputValue) =>
+                option.label.toLowerCase().startsWith(inputValue.toLowerCase())
+              }
+            />
+          </div>
 
-            </div>
-            {/* <div className="border border-gray-800 w-full md:w-1/2 h-[70px]" /> */}
+          {/* Right: Digital Signature */}
+          <div className="w-full md:w-1/2  ">
+            <DigitalSignatureSection onSignatureSave={handleSignatureSave} title="Signature" />
           </div>
         </div>
 
@@ -330,15 +326,17 @@ export default function Adult({ visitid, gssuhid, empid }) {
         </div>
 
         <hr className="border-t border-gray-300 mb-2" />
-        
-         <div className="flex justify-center">
-        <button
-          onClick={handleSave}       
-          className={"w-full  px-6 py-2 rounded text-white  bg-blue-500 hover:bg-blue-600"}
-        >
-          Save
-        </button>
-      </div>
+
+        <div className="flex justify-center">
+          <button
+            onClick={handleSave}
+            className={
+              "w-full  px-6 py-2 rounded text-white  bg-blue-500 hover:bg-blue-600"
+            }
+          >
+            Save
+          </button>
+        </div>
       </div>
     </div>
   );

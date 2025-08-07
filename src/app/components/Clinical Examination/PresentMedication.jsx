@@ -6,6 +6,8 @@ import TableReuse from "@/app/common/TableReuse";
 import { H3 } from "@/app/common/text";
 import ReusableTextareaField from "@/app/common/ReusableTextareaField";
 import SignaturePadComponent from "@/app/common/SignaturePadComponent";
+import DigitalSignatureSection from "@/app/common/DigitalSignatureSection";
+import ClinicalConsent from "./ClinicalConsent";
 
 const PresentMedication = ({
   onSelectDoctor,
@@ -24,6 +26,10 @@ const PresentMedication = ({
   const [medicineData, setMedicineData] = useState(null);
   const [showSignatureModal, setShowSignatureModal] = useState(false);
   const [signatureDataUrl, setSignatureDataUrl] = useState(null);
+  const [showFullSignature, setShowFullSignature] = useState(false);
+  const [informedDr, setInformedDr] = useState("");
+  const [rmoName, setRmoName] = useState("");
+  const [signatureTime, setSignatureTime] = useState("");
 
   const handleMedicineSelect = (selected) => {
     console.log("Medicine selected:", selected);
@@ -70,9 +76,17 @@ const PresentMedication = ({
     }
   }, []);
 
+  const handleSignatureSave = (signatureImage) => {
+    console.log("parent saved:", signatureImage);
+  };
+
+  const handleInsert = () => {
+    console.log("Insert button clicked");
+    g
+  }
   return (
-    <div className=" bg-purple-50 min-h-screen flex justify-center text-[10px] leading-tight overflow-hidden">
-      <div className="w-full max-w-5xl mx-auto space-y-4">
+    <div className=" bg-purple-50 min-h-screen flex justify-center text-[10px] leading-tight">
+      <div className="w-full max-w-5xl mx-auto space-y-4 overflow-auto scrollbar-hide max-h-[400px] px-2">
         <label className="text-xs font-semibold text-gray-700 ">
           Present Ongoing Medication (s)
         </label>
@@ -158,7 +172,7 @@ const PresentMedication = ({
           <div className="mb-2">
             <ActionButton
               label="Insert"
-              onClick={" "}
+              onClick={handleInsert}
               //   onClick={handleInsert}
               className="text-xs px-4 py-1"
             />
@@ -166,7 +180,7 @@ const PresentMedication = ({
           <div className=" mb-2">
             <ActionButton
               label="Save"
-              onClick={" "}
+              onClick={handleInsert}
               //   onClick={handleInsert}
               className="text-xs px-4 py-1"
             />
@@ -209,80 +223,57 @@ const PresentMedication = ({
           />
         </div>
 
-        {/* Signature Section */}
-        <div className="mt-4 space-y-1">
-          <label className="text-xs font-semibold text-gray-700">
-            Digital Signature
-          </label>
-
-          <div
-            className="w-[150px] max-w-sm h-[75px] border border-dashed rounded-md flex items-center justify-center cursor-pointer bg-white hover:bg-gray-50 relative"
-            onClick={() => !signatureDataUrl && setShowSignatureModal(true)} // Prevent re-opening modal if already signed
-          >
-            {signatureDataUrl ? (
-              <>
-                <img
-                  src={signatureDataUrl}
-                  alt="Signature Preview"
-                  className="max-h-[90px]"
-                />
-              </>
-            ) : (
-              <span className="text-xs text-gray-500">Click to sign</span>
-            )}
-          </div>
-
-          <div className="flex gap-2 mb-2">
-            <ActionButton
-              label="Clear"
-              onClick={(e) => {
-                e.stopPropagation();
-                setSignatureDataUrl(null); // Clear from state
-                localStorage.removeItem("signatureImage"); // Clear from localStorage
-                console.log("Signature cleared");
-              }}
-              className="text-xs px-4 py-1"
-            />
-            <ActionButton
-              label="Save"
-              // onClick={handleInsert}
-
-              // }}
-              onClick={() => {
-                if (!signatureDataUrl) return;
-                localStorage.setItem("signatureImage", signatureDataUrl); // Save to localStorage
-                console.log("Signature saved:", signatureDataUrl); // Log dataURL (base64 image)
-                setShowSignatureModal(false); // Close modal
-              }}
-              className="text-xs px-4 py-1"
-            />
-          </div>
-
-          {/* Modal */}
-          {showSignatureModal && (
-            <div className="fixed inset-0 z-50 bg-transparent bg-opacity-30 flex items-center justify-center">
-              <div className="bg-white rounded-lg shadow-lg w-[600px] max-w-full p-4">
-                <div className="flex justify-end">
-                  <button
-                    onClick={() => setShowSignatureModal(false)}
-                    className="text-red-500 hover:text-gray-700 text-sm"
-                  >
-                    ✖ Close
-                  </button>
-                </div>
-                <SignaturePadComponent
-                  onSave={(dataUrl) => {
-                    setSignatureDataUrl(dataUrl);
-                    setShowSignatureModal(false);
-                  }}
-                  onClose={() => setShowSignatureModal(false)}
-                />
-              </div>
+        <div className="flex flex-col md:flex-row justify-between items-start gap-4 w-full">
+          {/* Left Side - Inputs */}
+          <div className="flex flex-row gap-6 text-[10px]">
+            {/* Informed Dr. */}
+            <div className="flex flex-col">
+              <label className="text-gray-700 text-xs font-sans font-medium mb-1">
+                Informed Dr.
+              </label>
+              <input
+                type="text"
+                className="border text-black border-gray-600 rounded px-4 py-[4px] w-full"
+                value={informedDr}
+                onChange={(e) => setInformedDr(e.target.value)}
+              />
             </div>
-          )}
+
+            {/* RMO Name */}
+            <div className="flex flex-col">
+              <label className="text-gray-700 text-xs font-sans  font-medium mb-1">
+                RMO Name
+              </label>
+              <input
+                type="text"
+                className="border text-black border-gray-600 rounded px-4 py-[4px] w-full"
+                value={rmoName}
+                onChange={(e) => setRmoName(e.target.value)}
+              />
+            </div>
+
+            {/* Time */}
+            <div className="flex flex-col">
+              <label className="text-gray-700 text-xs font-sans  font-medium mb-1">
+                Time
+              </label>
+              <input
+                type="time"
+                className="border text-black border-gray-600 rounded px-4 py-[4px] w-full"
+                value={signatureTime}
+                onChange={(e) => setSignatureTime(e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* Right Side - Signature Box */}
+          <div className="mt-0">
+            <DigitalSignatureSection onSignatureSave={handleSignatureSave} title="Signature"/>
+          </div>
         </div>
 
-        <hr className="border-t border-gray-300 mb-0" />
+        <hr className="border-t border-gray-300 " />
+        <ClinicalConsent />
       </div>
     </div>
   );
