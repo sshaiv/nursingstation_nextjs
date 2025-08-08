@@ -114,9 +114,9 @@ export default function Pediatrics({ visitid, gssuhid, empid }) {
   };
 
   return (
-    <div className=" bg-gray-50 min-h-screen flex justify-center text-[10px] leading-tight">
-      <div className="w-full max-w-5xl mx-auto space-y-4 overflow-auto scrollbar-hide max-h-[400px] px-2">
-        
+    <div className="  min-h-screen flex justify-center text-[10px] leading-tight">
+        <div className="w-full max-w-5xl mx-auto space-y-4 overflow-auto scrollbar-hide min-h-[200px] max-h-[70vh] px-2">
+          
         {/* Allergy Section */}
         <div className="space-y-3">
           <div className="flex items-center gap-4 mb-3">
@@ -204,7 +204,7 @@ export default function Pediatrics({ visitid, gssuhid, empid }) {
 
           {/* Right: Digital Signature */}
           <div className="w-full md:w-1/2 mt-0 ">
-            <DigitalSignatureSection onSignatureSave={handleSignatureSave} />
+            <DigitalSignatureSection onSignatureSave={handleSignatureSave} title="Signature" />
           </div>
         </div>
 

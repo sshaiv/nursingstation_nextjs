@@ -1,14 +1,15 @@
 "use client";
 import React, { useState } from "react";
 import SignaturePadComponent from "./SignaturePadComponent";
+import CloseButton from "./CrossButton";
 
-const DigitalSignatureSection = ({onSignatureSave,title} ) => {
+const DigitalSignatureSection = ({ onSignatureSave, title }) => {
   const [signatureDataUrl, setSignatureDataUrl] = useState(null);
   const [showSignatureModal, setShowSignatureModal] = useState(false);
   const [showFullSignature, setShowFullSignature] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
 
-   const handleSave = () => {
+  const handleSave = () => {
     if (!signatureDataUrl) {
       setToastMessage("⚠️ please upload signature");
       setTimeout(() => setToastMessage(""), 2000);
@@ -19,7 +20,7 @@ const DigitalSignatureSection = ({onSignatureSave,title} ) => {
     console.log("child:", signatureDataUrl);
 
     if (typeof onSignatureSave === "function") {
-      onSignatureSave(signatureDataUrl); 
+      onSignatureSave(signatureDataUrl);
     }
 
     setShowSignatureModal(false);
@@ -43,7 +44,7 @@ const DigitalSignatureSection = ({onSignatureSave,title} ) => {
         </div>
       )}
       <label className="text-xs font-medium font-sans text-gray-700">
-          {title}
+        {title}
       </label>
 
       <div
@@ -55,7 +56,7 @@ const DigitalSignatureSection = ({onSignatureSave,title} ) => {
             src={signatureDataUrl}
             alt="Signature"
             className="h-16 w-auto object-contain mt-2 "
-    />
+          />
         ) : (
           <span className="text-xs text-gray-500 bg-">Click to sign</span>
         )}
@@ -198,16 +199,10 @@ const DigitalSignatureSection = ({onSignatureSave,title} ) => {
 
       {/* Signature Modal */}
       {showSignatureModal && (
-        <div className="fixed inset-0 z-50  bg-opacity-30 flex items-center justify-center">
-          <div className="bg-white rounded-lg shadow-lg w-[600px] max-w-full p-4">
-            <div className="flex justify-end">
-              <button
-                onClick={() => setShowSignatureModal(false)}
-                className="text-red-500 hover:text-gray-700 text-sm"
-              >
-                ✖ Close
-              </button>
-            </div>
+        <div className="fixed inset-0 z-50 bg-opacity-30 flex items-center justify-center">
+          <div className="bg-white rounded-lg shadow-lg w-[600px] max-w-full p-2 relative">
+            <CloseButton onClick={() => setShowSignatureModal(false)} />
+
             <SignaturePadComponent
               onSave={(dataUrl) => {
                 setSignatureDataUrl(dataUrl);
@@ -222,15 +217,9 @@ const DigitalSignatureSection = ({onSignatureSave,title} ) => {
       {/* Full Signature View */}
       {showFullSignature && (
         <div className="fixed inset-0 z-50 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white rounded-md p-4 max-w-[90%] max-h-[90%] overflow-auto">
-            <div className="flex justify-end mb-2">
-              <button
-                onClick={() => setShowFullSignature(false)}
-                className="text-red-500 hover:text-gray-700 text-sm"
-              >
-                ✖ Close
-              </button>
-            </div>
+          <div className="bg-white rounded-md p-4 max-w-[90%] max-h-[90%] overflow-auto relative">
+            <CloseButton onClick={() => setShowFullSignature(false)} />
+
             <img
               src={signatureDataUrl}
               alt="Full Signature"

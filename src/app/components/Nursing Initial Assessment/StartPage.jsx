@@ -1,11 +1,11 @@
 import Select from "react-select";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { H3, Label, ModalHeading } from "../common/text";
-import { SaveButton } from "../common/Buttons";
-import PainScoreEmogy from "../common/PainScoreEmogy";
+import { H3, Label, ModalHeading } from "../../common/text";
+import { SaveButton } from "../../common/Buttons";
+import PainScoreEmogy from "../../common/PainScoreEmogy";
 
-export default function NutritionalInitial({
+export default function StartPage({
   visitid,
   gssuhid,
   empid,
@@ -264,12 +264,8 @@ export default function NutritionalInitial({
   };
 
   return (
-    <div className="p-2 bg-gray-50 text-xs text-gray-700 max-w-[1200px] mx-auto">
-      <div className="flex h-[1px]  items-center justify-center">
-        <ModalHeading title=" Nursing Initial Assessment " />
-      </div>
-
-      <hr className="border-t mb-3 mt-3 border-gray-300" />
+    <div className="p-2  text-xs text-gray-700 max-w-[1200px] mx-auto">
+     
 
       {/* VITAL INPUTS */}
       <div className="flex flex-wrap items-end gap-8 mb-4">
@@ -351,7 +347,8 @@ export default function NutritionalInitial({
 
       <hr className="border-t mb-3 border-gray-300" />
 
-     <PainScoreEmogy/>
+      {/* Pain Score */}
+      <PainScoreEmogy />
 
       {/* DROPDOWNS */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-4">
@@ -426,10 +423,12 @@ export default function NutritionalInitial({
         ))}
       </div>
 
-   <div className="flex justify-center">
+      <div className="flex justify-center">
         <button
-          onClick={handleSave}       
-          className={"w-full  px-6 py-2 rounded text-white  bg-blue-500 hover:bg-blue-600"}
+          onClick={handleSave}
+          className={
+            "w-full  px-6 py-2 rounded text-white  bg-blue-500 hover:bg-blue-600"
+          }
         >
           Save
         </button>

@@ -8,13 +8,13 @@ import axios from "axios";
 import API_ENDPOINTS from "../constants/api_url";
 import DropdownSelect from "../common/DropdownSelect";
 import ReusableInputField from "../common/SmallInputfields";
-import DoctorModal from "./Modal/DoctorModal";
-import MedicineIndentModal from "./Modal/MedicineIndentModal";
-import GetIndentDetail from "./Modal/GetIndentDetail";
-import SelectBatchModal from "./Modal/SelectBatchModal";
+import DoctorModal from "../common/Modal/DoctorModal";
+import MedicineIndentModal from "../common/Modal/MedicineIndentModal";
+import GetIndentDetail from "../common/Modal/GetIndentDetail";
+import SelectBatchModal from "../common/Modal/SelectBatchModal";
 import useSaveConData from "../hooks/useSaveConData";
 import { getCurrentDateTime } from "../utils/dateUtils";
-import MedicineHistoryModal from "./Modal/MedicineHistoryModal";
+import MedicineHistoryModal from "../common/Modal/MedicineHistoryModal";
 
 export default function Consumables({ visitid, gssuhid, empid, patientData }) {
   const [vitals, setVitals] = useState([]);

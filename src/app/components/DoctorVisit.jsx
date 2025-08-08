@@ -8,7 +8,7 @@ import ReusableInputField from "../common/SmallInputfields";
 import axios from "axios";
 import API_ENDPOINTS from "../constants/api_url";
 import useSaveDVData from "../hooks/useSaveDVData";
-import DoctorModal from "./Modal/DoctorModal";
+import DoctorModal from "../common/Modal/DoctorModal";
 import { getCurrentDate, getCurrentDateTime } from "../utils/dateUtils";
 
 export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {

@@ -1,14 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
-import { ActionButton } from "../common/Buttons";
-import { MainHeadings } from "../common/text";
+import { ActionButton } from "../../common/Buttons";
+import { MainHeadings } from "../../common/text";
 import { format } from "date-fns";
-import TableReuse from "../common/TableReuse";
-import DateTimeInput from "../common/DateTimeInput";
-import useSaveVitalData from "../hooks/useSaveVitalData";
-import API_ENDPOINTS from "../constants/api_url";
-import NursingServiceModal from "./NursingServiceModal";
-import PerformedByModal from "./Modal/PerformedByModal";
+import TableReuse from "../../common/TableReuse";
+import DateTimeInput from "../../common/DateTimeInput";
+import useSaveVitalData from "../../hooks/useSaveVitalData";
+import API_ENDPOINTS from "../../constants/api_url";
+import NursingServiceModal from "../NursingServiceModal";
+import PerformedByModal from "../../common/Modal/PerformedByModal";
 
 export default function VitalsTable({
   title,
@@ -378,7 +378,7 @@ export default function VitalsTable({
   }, [selectedDate, selectedTime]);
 
   return (
-    <div className="bg-gray-50 border border-gray-300 shadow rounded-2xl p-2">
+    <div className=" border border-gray-300 shadow rounded-2xl p-2">
       {toastMessage && (
         <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white text-sm px-6 py-3 rounded-md shadow-lg z-50 animate-slide-fade">
           {toastMessage}

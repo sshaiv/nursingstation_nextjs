@@ -99,7 +99,7 @@ export default function AssessmentCard({
   };
 
   return (
-    <div className="bg-gray-50 border border-gray-300 shadow rounded-lg p-1 flex flex-col gap-2 max-h-25">
+    <div className="border border-gray-300 shadow rounded-lg p-1 flex flex-col gap-2 max-h-25">
       {toastMessage && (
         <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white text-sm px-6 py-3 rounded-md shadow-lg z-50 animate-slide-fade">
           {toastMessage}

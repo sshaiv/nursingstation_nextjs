@@ -5,14 +5,14 @@ import TableReuse from "../common/TableReuse";
 import "react-datepicker/dist/react-datepicker.css";
 import DateTimeInput from "../common/DateTimeInput";
 
-import DoctorModal from "./Modal/DoctorModal";
+import DoctorModal from "../common/Modal/DoctorModal";
 
 import axios from "axios";
 import API_ENDPOINTS from "../constants/api_url";
 import NursingServiceModal from "./NursingServiceModal";
 import useSaveNSData from "../hooks/useSaveNSData";
 import ReusableInputField from "../common/SmallInputfields";
-import PerformedByModal from "./Modal/PerformedByModal";
+import PerformedByModal from "../common/Modal/PerformedByModal";
 
 import {
   getCurrentDate,

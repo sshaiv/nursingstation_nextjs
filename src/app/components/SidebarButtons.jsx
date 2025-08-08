@@ -24,7 +24,8 @@ import Investigation from "./Investigation";
 import NutritionalAssessmentProfile from "./NutritionalAssesmentProfile";
 import ProgressSheet from "./ProgressSheet";
 import DummyInvestigation from "./DummyInvestigation";
-import NutritionalInitial from "./NutritionalInitial";
+import NutritionalInitial from "./Nursing Initial Assessment/NutritionalInitial";
+import CloseButton from "../common/CrossButton";
 
 const buttons = [
   {
@@ -33,13 +34,13 @@ const buttons = [
     shadow: "#14767D",
     icon: FiFileText,
   },
-   {
+  {
     label: "CLINICAL EXAMINATION",
     color: "#1999A1",
     shadow: "#14767D",
     icon: FiClipboard,
   },
-    {
+  {
     label: "NUTRITIONAL ASSESSMENT",
     color: "#1999A1",
     shadow: "#14767D",
@@ -57,8 +58,8 @@ const buttons = [
     shadow: "#14767D",
     icon: FiClipboard,
   },
-   
-   {
+
+  {
     label: "PROGRESS SHEET",
     color: "#1999A1",
     shadow: "#14767D",
@@ -96,7 +97,6 @@ const buttons = [
     icon: FiCalendar,
   },
 
-
   {
     label: "NurRe Assessment",
     color: "#1999A1",
@@ -118,7 +118,6 @@ const buttons = [
     shadow: "#14767D",
     icon: GiFizzingFlask,
   },
- 
 ];
 
 export default function ButtonGrid({ visitid, gssuhid, empid, patientData }) {
@@ -129,9 +128,9 @@ export default function ButtonGrid({ visitid, gssuhid, empid, patientData }) {
   const [activeLabel, setActiveLabel] = useState(null);
 
   const handleButtonClick = (label) => {
-      setActiveLabel(label);
+    setActiveLabel(label);
     if (label === "INITIAL ASSESSMENT") {
-           setModalContent(
+      setModalContent(
         <InitialAssessmentForm
           visitid={visitid}
           gssuhid={gssuhid}
@@ -239,7 +238,7 @@ export default function ButtonGrid({ visitid, gssuhid, empid, patientData }) {
     }
   };
 
-  const closeModal = () => setShowModal(false);
+  const closeModal = ({onClick}) => setShowModal(false);
 
   return (
     <div>
@@ -260,18 +259,21 @@ export default function ButtonGrid({ visitid, gssuhid, empid, patientData }) {
         ))}
       </div>
 
-      {showModal  && (
+      {showModal && (
         <div className="fixed inset-0 backdrop- flex items-center justify-center z-50">
-          <div className="bg-gray-50 rounded-xl w-full max-w-6xl h-[90vh] relative shadow-2xl border flex flex-col overflow-hidden">
-            <button
-              className="absolute top-3 right-4 text-red-500 hover:text-gray-700 text-2xl"
-              onClick={closeModal}
-            >
-              &times;
-            </button>
+          <div className="bg-white rounded-lg w-full max-w-6xl h-[90vh] relative shadow-2xl border flex flex-col overflow-hidden">
+<CloseButton onClick={closeModal} />
+
 
             {/* Scrollable Content Area with hidden scrollbar */}
-            <div className={`mt-8 ${(activeLabel !== "INITIAL ASSESSMENT" && activeLabel!=="CLINICAL EXAMINATION") ? "overflow-y-auto": ""} pr-2 flex-grow scrollbar-hide`} >
+            <div
+              className={`mt-4 ${
+                activeLabel !== "INITIAL ASSESSMENT" &&
+                activeLabel !== "CLINICAL EXAMINATION"
+                  ? "overflow-y-auto"
+                  : ""
+              } pr-2 flex-grow scrollbar-hide`}
+            >
               {modalContent}
             </div>
           </div>

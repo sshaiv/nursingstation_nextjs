@@ -5,13 +5,13 @@ import TableReuse from "../common/TableReuse";
 import "react-datepicker/dist/react-datepicker.css";
 import DateTimeInput from "../common/DateTimeInput";
 import ReusableInputField from "../common/SmallInputfields";
-import DoctorModal from "./Modal/DoctorModal";
-import InvestigationModal from "./Modal/InvestigationModal";
+import DoctorModal from "../common/Modal/DoctorModal";
+import InvestigationModal from "../common/Modal/InvestigationModal";
 import useSaveInvData from "../hooks/useSaveInvData";
 import axios from "axios";
 import API_ENDPOINTS from "../constants/api_url";
 import { getCurrentDateTime, getCurrentDate } from "../utils/dateUtils";
-import InvestigationModalDummy from "./Modal/InvestigationModalDummy";
+import InvestigationModalDummy from "../common/Modal/InvestigationModalDummy";
 
 export default function DummyInvestigation({
   visitid,

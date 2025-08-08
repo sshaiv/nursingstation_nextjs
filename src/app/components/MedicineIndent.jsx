@@ -8,11 +8,11 @@ import ReusableInputField from "../common/SmallInputfields";
 import axios from "axios";
 import API_ENDPOINTS from "../constants/api_url";
 
-import DoctorModal from "./Modal/DoctorModal";
+import DoctorModal from "../common/Modal/DoctorModal";
 import Select from "react-select";
 import useSaveMIData from "../hooks/useSaveMIData";
 
-import MedicineModal from "./Modal/MedicineModal";
+import MedicineModal from "../common/Modal/MedicineModal";
 import { getCurrentDate, getCurrentDateTime } from "../utils/dateUtils";
 
 export default function MedicineIndent({

@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Suspense } from "react";
 import PatientInfoCard from "./components/PatientInfoCard";
-import VitalsTable from "./components/VitalsTable";
+import VitalsTable from "./components/Vitals/VitalsTable";
 import AssessmentCard from "./components/AssessmentCard";
 import MedicineTable from "./components/MedicineTable";
 import SidebarButtons from "./components/SidebarButtons";
@@ -59,7 +59,7 @@ function HomeContent() {
   };
 
   return (
-    <div className="p-4 space-y-4 bg-gray-50">
+    <div className="p-4 min-h-screen space-y-4 bg-gray-50">
       {/* Header always visible */}
       <Header />
 

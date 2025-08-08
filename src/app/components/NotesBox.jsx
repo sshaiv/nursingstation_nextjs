@@ -3,7 +3,7 @@ import ReusableTextareaField from "../common/ReusableTextareaField";
 
 export default function NotesBox() {
     return (
-      <div className="bg-gray-50 shadow rounded-2xl relative p-1">
+      <div className="shadow rounded-2xl relative p-1">
       
          <ReusableTextareaField
                       // id="allergies"

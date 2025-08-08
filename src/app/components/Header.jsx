@@ -4,7 +4,7 @@
 import { useState, useEffect, useRef } from "react";
 import API_ENDPOINTS from "../constants/api_url";
 import { useRouter } from "next/navigation";
-import SearchPatientModal from "./Modal/SearchPatientModal";
+import SearchPatientModal from "../common/Modal/SearchPatientModal";
 
 export default function Header() {
   const [showScanner, setShowScanner] = useState(false);

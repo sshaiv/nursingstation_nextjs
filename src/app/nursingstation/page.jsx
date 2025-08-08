@@ -2,7 +2,7 @@
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import PatientInfoCard from "../components/PatientInfoCard";
-import VitalsTable from "../components/VitalsTable";
+import VitalsTable from "../components/Vitals/VitalsTable";
 import AssessmentCard from "../components/AssessmentCard";
 import NotesBox from "../components/NotesBox";
 import MedicineTable from "../components/MedicineTable";
