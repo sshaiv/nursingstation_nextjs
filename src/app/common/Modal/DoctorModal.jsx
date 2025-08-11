@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 import DateTimeInput from '@/app/common/DateTimeInput';
 import API_ENDPOINTS from '@/app/constants/api_url';
+import { toast } from 'react-toastify';
 
 export default function DoctorModal({ isOpen, onClose, onSelectDoctor, visitid, gssuhid, empid }) {
    // console.log("doc pop", visitid, gssuhid, empid);
@@ -66,7 +67,8 @@ export default function DoctorModal({ isOpen, onClose, onSelectDoctor, visitid, 
             }
         }
         if (!doctorToSend) {
-            alert('Please select a doctor either from dropdown or radio list.');
+            toast.warning(' Please select a doctor either from dropdown or radio list.');
+         
             return;
         }
         console.log('Selected doctor to send:', doctorToSend);

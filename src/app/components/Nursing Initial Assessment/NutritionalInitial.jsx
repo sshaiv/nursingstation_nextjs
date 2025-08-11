@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { ModalHeading } from "../../common/text";
-
+import { toast } from "react-toastify";
 import StartPage from "./StartPage";
 import SecondPage from "./SecondPage";
 import Tabs from "@/app/common/TabView";

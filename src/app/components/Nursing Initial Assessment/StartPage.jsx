@@ -4,6 +4,8 @@ import axios from "axios";
 import { H3, Label, ModalHeading } from "../../common/text";
 import { SaveButton } from "../../common/Buttons";
 import PainScoreEmogy from "../../common/PainScoreEmogy";
+import { useKeyboardScrollFix } from "@/app/common/useKeyboardScrollFix";
+import { toast } from "react-toastify";
 
 export default function StartPage({
   visitid,
@@ -256,12 +258,16 @@ export default function StartPage({
         "https://doctorapi.medonext.com/API/HMS/SaveNursingInitialAssessmentData",
         savePayload
       );
-      alert("Data saved successfully!");
+      
+      toast.success("Data saved successfully!");
     } catch (error) {
-      alert("Failed to save data.");
+      toast.error("An error occurred while saving data: " + error.message);
+  
       console.error(error);
     }
   };
+
+  useKeyboardScrollFix();
 
   return (
     <div className="p-2  text-xs text-gray-700 max-w-[1200px] mx-auto">

@@ -10,6 +10,7 @@ import API_ENDPOINTS from "../constants/api_url";
 import useSaveDVData from "../hooks/useSaveDVData";
 import DoctorModal from "../common/Modal/DoctorModal";
 import { getCurrentDate, getCurrentDateTime } from "../utils/dateUtils";
+import { toast } from "react-toastify";
 
 export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
   const CurrentDate = getCurrentDate();
@@ -35,7 +36,6 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
   // This is the key state to hold multiple service entries
   const [serviceEntries, setServiceEntries] = useState([]);
   const [entries, setEntries] = useState([]); // Grid data
-const [toastMessage, setToastMessage] = useState("");
 
   const [saveData, setSaveData] = useSaveDVData();
   console.log("Updated DV", saveData);
@@ -191,9 +191,7 @@ const [toastMessage, setToastMessage] = useState("");
       console.log("Response:", result);
 
       if (response.ok) {
-          setToastMessage("✅ Data saved successfully!");
-        setTimeout(() => setToastMessage(""), 2000);
-       // alert("Data saved successfully!");
+          toast.success("Data saved successfully!");
         setRefreshData((prev) => !prev);
         // 🔁 Reset entries and form fields
         setVitals([]);
@@ -209,11 +207,11 @@ const [toastMessage, setToastMessage] = useState("");
 
         setIsSaved(true);
       } else {
-        alert("Failed to save data.");
+        toast.error("Failed to save data: " + result.message);
       }
     } catch (error) {
       console.error("Error saving data:", error);
-      alert("An error occurred while saving data.");
+     toast.error("An error occurred while saving data: " + error.message);
     }
   };
 
@@ -292,11 +290,7 @@ const [toastMessage, setToastMessage] = useState("");
 
   return (
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
-         {toastMessage && (
-        <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white text-sm px-6 py-3 rounded-md shadow-lg z-50 animate-slide-fade">
-          {toastMessage}
-        </div>
-      )}
+    
       <div className="flex h-[1px]  items-center justify-center">
         <ModalHeading title="Doctor Visit" />
       </div>

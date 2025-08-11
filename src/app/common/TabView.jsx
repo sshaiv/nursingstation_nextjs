@@ -21,7 +21,7 @@ export default function Tabs({ tabs, initialTab }) {
                     : "border-transparent hover:text-blue-500"
                 } transition-colors duration-150`}
               >
-                <span>{emoji}</span>
+                <span className=" hidden sm:inline">{emoji}</span>
                 <span>{label}</span>
               </button>
             </li>

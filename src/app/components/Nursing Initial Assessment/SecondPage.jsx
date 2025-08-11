@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useKeyboardScrollFix } from "@/app/common/useKeyboardScrollFix";
 
 export default function SecondPage(visitid, gssuhid, empid, patientData) {
   const [scores, setScores] = useState({
@@ -47,6 +48,7 @@ export default function SecondPage(visitid, gssuhid, empid, patientData) {
     if (bradenTotal >= 10) return "Medium risk";
     return "High risk";
   };
+useKeyboardScrollFix();
   return (
     <div className="p-0">
     <div className="flex flex-col md:flex-row gap-4">

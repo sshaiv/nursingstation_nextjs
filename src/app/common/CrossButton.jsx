@@ -1,17 +1,14 @@
-// components/CloseButton.jsx
-import React from "react";
 
 export default function CloseButton({
   onClick,
   className = "",
-  ariaLabel = "Close modal",
+  ariaLabel = "Close",
 }) {
   return (
     <button
       onClick={onClick}
       aria-label={ariaLabel}
-      className={`
-        absolute top-3 right-3
+      className={` 
         w-8 h-8
         flex items-center justify-center
         rounded-md

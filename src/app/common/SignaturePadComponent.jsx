@@ -1,6 +1,7 @@
 
 import React, { useRef } from "react";
 import SignatureCanvas from "react-signature-canvas";
+import { toast } from "react-toastify";
 
 const SignaturePadComponent = ({ onSave, onClose }) => {
   const sigRef = useRef();
@@ -11,7 +12,8 @@ const SignaturePadComponent = ({ onSave, onClose }) => {
 
   const saveSignature = () => {
     if (sigRef.current.isEmpty()) {
-      alert("Please provide a signature.");
+      toast.warning("Please provide a signature.");
+     
       return;
     }
     const dataUrl = sigRef.current.toDataURL("image/png");

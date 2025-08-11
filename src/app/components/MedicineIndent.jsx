@@ -7,7 +7,7 @@ import DateTimeInput from "../common/DateTimeInput";
 import ReusableInputField from "../common/SmallInputfields";
 import axios from "axios";
 import API_ENDPOINTS from "../constants/api_url";
-
+import { toast } from "react-toastify";
 import DoctorModal from "../common/Modal/DoctorModal";
 import Select from "react-select";
 import useSaveMIData from "../hooks/useSaveMIData";
@@ -48,7 +48,6 @@ export default function MedicineIndent({
 
   const [medicineName, setMedicineName] = useState(""); 
   const [medicineData, setMedicineData] = useState(null);
-    const [toastMessage, setToastMessage] = useState("");
 
   const handleSelectMedicineName = (selected) => {
     console.log("Medicine selected:", selected);
@@ -223,9 +222,8 @@ export default function MedicineIndent({
       console.log("Response:", result);
 
       if (response.ok) {
-          setToastMessage("✅ Data saved successfully!");
-      setTimeout(() => setToastMessage(""), 2000);
-       // alert("Data saved successfully!");
+         toast.success("Data saved successfully!");
+
         setRefreshData((prev) => !prev);
         setVitals([]);
         // setSaveData({});
@@ -241,11 +239,11 @@ export default function MedicineIndent({
 
         setIsSaved(true);
       } else {
-        alert("Failed to save data.");
+        toast.error("Failed to save data: " + result.message);
       }
     } catch (error) {
       console.error("Error saving data:", error);
-      alert("An error occurred while saving data.");
+     toast.error("An error occurred while saving data: " + error.message);
     }
   };
 
@@ -348,11 +346,7 @@ export default function MedicineIndent({
 
   return (
     <div className="p-2 rounded-xl w-full max-w-8xl mx-auto text-[12px] space-y-6">
-       {toastMessage && (
-        <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white text-sm px-6 py-3 rounded-md shadow-lg z-50 animate-slide-fade">
-          {toastMessage}
-        </div>
-      )}
+    
       {/* Modals */}
       {isDoctorModalOpen && (
         <DoctorModal

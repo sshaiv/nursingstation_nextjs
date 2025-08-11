@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { H3, Label, ModalHeading } from "../../common/text";
 import ReusableInputField from "../../common/SmallInputfields";
 import ReusableTextareaField from "../../common/ReusableTextareaField";
@@ -7,6 +7,8 @@ import useFetchPatientHistory from "../../hooks/fetchHistoryData";
 import API_ENDPOINTS from "../../constants/api_url";
 import axios from "axios";
 import PainScoreEmogy from "@/app/common/PainScoreEmogy";
+import { toast } from "react-toastify";
+import { useKeyboardScrollFix } from "@/app/common/useKeyboardScrollFix";
 
 export default function StartPage({ visitid, gssuhid, empid }) {
   const { historyData } = useFetchPatientHistory(visitid, gssuhid, empid);
@@ -273,12 +275,17 @@ export default function StartPage({ visitid, gssuhid, empid }) {
         derivedJson
       );
       console.log("api", response);
-      alert("Data saved successfully!");
+    
+      toast.success("Data saved successfully!");
     } catch (error) {
-      console.error("❌ Error saving data:", error);
-      alert("Failed to save data. Please try again.");
+    
+      toast.error("Failed to save data. Please try again.");
+    
     }
   };
+
+
+  useKeyboardScrollFix();
 
   return (
     <div className="  min-h-screen flex justify-center text-[10px] leading-tight">

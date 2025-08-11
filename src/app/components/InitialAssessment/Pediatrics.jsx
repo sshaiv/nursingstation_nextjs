@@ -9,6 +9,8 @@ import { H3, Label, ModalHeading } from "@/app/common/text";
 import useFetchPatientHistory from "@/app/hooks/fetchHistoryData";
 import API_ENDPOINTS from "@/app/constants/api_url";
 import DigitalSignatureSection from "@/app/common/DigitalSignatureSection";
+import { toast } from "react-toastify";
+import { useKeyboardScrollFix } from "@/app/common/useKeyboardScrollFix";
 
 export default function Pediatrics({ visitid, gssuhid, empid }) {
   const { historyData } = useFetchPatientHistory(visitid, gssuhid, empid);
@@ -97,10 +99,12 @@ export default function Pediatrics({ visitid, gssuhid, empid }) {
 
     try {
       await axios.post(API_ENDPOINTS.savePresentIllness, derivedJson);
-      alert("Data saved successfully!");
+      toast.success("Data saved successfully!");
+   
     } catch (error) {
       console.error("❌ Error saving data:", error);
-      alert("Failed to save data. Please try again.");
+      toast.error("Failed to save data. Please try again.");
+     
     }
   };
 
@@ -112,6 +116,7 @@ export default function Pediatrics({ visitid, gssuhid, empid }) {
     const handleSignatureSave = (signatureImage) => {
     console.log("parent saved:", signatureImage);
   };
+useKeyboardScrollFix();
 
   return (
     <div className="  min-h-screen flex justify-center text-[10px] leading-tight">

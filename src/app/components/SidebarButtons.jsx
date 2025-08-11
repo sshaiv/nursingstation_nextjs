@@ -21,101 +21,102 @@ import DoctorVisit from "./DoctorVisit";
 import AdvisedSurgery from "./AdvisedSurgery";
 import Implants from "./Implants";
 import Investigation from "./Investigation";
-import NutritionalAssessmentProfile from "./NutritionalAssesmentProfile";
+
 import ProgressSheet from "./ProgressSheet";
 import DummyInvestigation from "./DummyInvestigation";
 import NutritionalInitial from "./Nursing Initial Assessment/NutritionalInitial";
 import CloseButton from "../common/CrossButton";
+import NutritionalAssessmentProfile from "./Nutritional Assesment Profile/NutritionalAssesmentProfile";
 
 const buttons = [
   {
     label: "INITIAL ASSESSMENT",
-    color: "#1999A1",
-    shadow: "#14767D",
+    color: "#00809D",
+    shadow: "#89A8B2",
     icon: FiFileText,
   },
   {
     label: "CLINICAL EXAMINATION",
-    color: "#1999A1",
-    shadow: "#14767D",
+    color: "#00809D",
+    shadow: "#89A8B2",
     icon: FiClipboard,
   },
   {
-    label: "NUTRITIONAL ASSESSMENT",
-    color: "#1999A1",
-    shadow: "#14767D",
+    label: "NUTRITIONAL ASSESSMENT  PROFILE",
+    color: "#00809D",
+    shadow: "#89A8B2",
     icon: FiHeart,
   },
   {
     label: "INVESTIGATION SUMMARY",
-    color: "#1999A1",
-    shadow: "#14767D",
+    color: "#00809D",
+    shadow: "#89A8B2",
     icon: FiFileText,
   },
   {
     label: "NURSING INITIAL ASSESSMENT",
-    color: "#1999A1",
-    shadow: "#14767D",
+    color: "#00809D",
+    shadow: "#89A8B2",
     icon: FiClipboard,
   },
 
   {
     label: "PROGRESS SHEET",
-    color: "#1999A1",
-    shadow: "#14767D",
+    color: "#00809D",
+    shadow: "#89A8B2",
     icon: FiCheckCircle,
   },
   {
     label: "DAILY  MEDICATION SHEET",
-    color: "#1999A1",
-    shadow: "#14767D",
+    color: "#00809D",
+    shadow: "#89A8B2",
     icon: FiCheckCircle,
   },
   {
     label: "CLINICAL CHART",
-    color: "#1999A1",
-    shadow: "#14767D",
+    color: "#00809D",
+    shadow: "#89A8B2",
     icon: FiCheckCircle,
   },
   {
     label: "INTAKE OUTPUT CHART",
-    color: "#1999A1",
-    shadow: "#14767D",
+    color: "#00809D",
+    shadow: "#89A8B2",
     icon: FiCheckCircle,
   },
   {
     label: "Nursing Services",
-    color: "#1999A1",
-    shadow: "#14767D",
+    color: "#00809D",
+    shadow: "#89A8B2",
     icon: FiActivity,
   },
-  { label: "Consumables", color: "#1999A1", shadow: "#14767D", icon: FiBox },
+  { label: "Consumables", color: "#00809D", shadow: "#89A8B2", icon: FiBox },
   {
     label: "Doctor Visit",
-    color: "#1999A1",
-    shadow: "#14767D",
+    color: "#00809D",
+    shadow: "#89A8B2",
     icon: FiCalendar,
   },
 
   {
     label: "NurRe Assessment",
-    color: "#1999A1",
-    shadow: "#14767D",
+    color: "#00809D",
+    shadow: "#89A8B2",
     icon: FaStethoscope,
   },
   {
     label: "Advice Surgery",
-    color: "#1999A1",
-    shadow: "#14767D",
+    color: "#00809D",
+    shadow: "#89A8B2",
     icon: GiScissors,
   },
-  { label: "Implant", color: "#1999A1", shadow: "#14767D", icon: FiPackage },
+  { label: "Implant", color: "#00809D", shadow: "#89A8B2", icon: FiPackage },
   // { label: "Discharge Summary", color: "#1999A1", shadow: "#14767D", icon: FiCheckCircle },
   //{ label: "BugInvestigation", color: "#1999A1", shadow: "#14767D", icon: GiFizzingFlask },
   {
     label: "Investigation",
-    color: "#1999A1",
-    shadow: "#14767D",
+    color: "#00809D",
+    shadow: "#89A8B2",
     icon: GiFizzingFlask,
   },
 ];
@@ -200,7 +201,7 @@ export default function ButtonGrid({ visitid, gssuhid, empid, patientData }) {
         />
       );
       setShowModal(true);
-    } else if (label === "NUTRITIONAL ASSESSMENT") {
+    } else if (label === "NUTRITIONAL ASSESSMENT  PROFILE") {
       setModalContent(
         <NutritionalAssessmentProfile
           visitid={visitid}
@@ -238,23 +239,25 @@ export default function ButtonGrid({ visitid, gssuhid, empid, patientData }) {
     }
   };
 
-  const closeModal = ({onClick}) => setShowModal(false);
+  const closeModal = ({ onClick }) => setShowModal(false);
 
   return (
     <div>
-      <div className="w-full flex flex-wrap justify-center gap-3 px-2">
+      <div className="w-full grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-3 px-2">
         {buttons.map((button, index) => (
           <div
             key={index}
-            className="rounded-md p-1 flex items-center gap-1 text-white shadow-md cursor-pointer transition-transform hover:scale-105"
+            className="rounded-md p-1 flex flex-col items-center justify-center 
+                 h-10 text-white shadow-md cursor-pointer 
+                 transition-transform hover:scale-105 "
             style={{
               backgroundColor: button.color,
-              boxShadow: `0 4px 6px ${button.shadow}`,
+              boxShadow: `0 4px 6px ${button.shadow} `,
             }}
             onClick={() => handleButtonClick(button.label)}
           >
-            <button.icon className="text-lg" />
-            <span className="text-sm">{button.label}</span>
+            {/* <button.icon className="text-lg" /> */}
+            <span className="text-xs font-semibold">{button.label}</span>
           </div>
         ))}
       </div>
@@ -262,10 +265,13 @@ export default function ButtonGrid({ visitid, gssuhid, empid, patientData }) {
       {showModal && (
         <div className="fixed inset-0 backdrop- flex items-center justify-center z-50">
           <div className="bg-white rounded-lg w-full max-w-6xl h-[90vh] relative shadow-2xl border flex flex-col overflow-hidden">
-<CloseButton onClick={closeModal} />
+            {/* Close Button absolute top right */}
+            <CloseButton
+              onClick={closeModal}
+              className="absolute top-3 right-3"
+            />
 
-
-            {/* Scrollable Content Area with hidden scrollbar */}
+            {/* Scrollable Content Area */}
             <div
               className={`mt-4 ${
                 activeLabel !== "INITIAL ASSESSMENT" &&

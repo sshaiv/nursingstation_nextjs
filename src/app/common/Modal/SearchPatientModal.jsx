@@ -1,10 +1,12 @@
 import TableReuse from "@/app/common/TableReuse";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation"; // Import useRouter
+import { useRouter } from "next/navigation";
 import API_ENDPOINTS from "@/app/constants/api_url";
+import { toast } from "react-toastify";
+import CloseButton from "../CrossButton";
 
 const SearchPatientModal = ({ isOpen, onClose, patientData }) => {
-  const router = useRouter(); // Initialize the router
+  const router = useRouter();
   const [historyData, setHistoryData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState([]);
@@ -57,7 +59,6 @@ const SearchPatientModal = ({ isOpen, onClose, patientData }) => {
     setFilteredData(results);
   }, [searchTerm, historyData]);
 
- 
   const handleRowDoubleClick = async (visitId, index) => {
     console.log("🆔 Visit ID:", visitId);
     setSelectedRowIndex(index);
@@ -108,11 +109,11 @@ const SearchPatientModal = ({ isOpen, onClose, patientData }) => {
         );
       } else {
         console.warn("⚠️ No patient data found in table.");
-        alert("No patient data found.");
+        toast.error("No patient data found.");
       }
     } catch (error) {
       console.error("❌ Error fetching patient bed info:", error);
-      alert("Failed to fetch patient bed info: " + error.message);
+      toast.error("Failed to fetch patient bed info: " + error.message);
     } finally {
       setLoading(false);
     }
@@ -123,70 +124,81 @@ const SearchPatientModal = ({ isOpen, onClose, patientData }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-xs bg-black/30">
       <div className="bg-white rounded-xl shadow-lg max-w-[95vw] max-h-[90vh] w-full overflow-auto p-6">
-        <div className="flex items-center mb-2 justify-between bg-green-100 text-green-800 font-semibold px-2 py-2 rounded-t-md">
+     
+        <div className="flex items-center mb-2 font-semibold px-2 py-2 rounded-t-md space-x-2">
           <input
             type="text"
             placeholder="🔍 Search by Patient or Doctor Name"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="mb-2 mt-2 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-800"
-            autoFocus
+            className="border mt-2 flex-grow px-3 py-2 border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300 text-gray-800"
           />
-          <button
-            onClick={onClose}
-            className="text-red-500 hover:text-red-700 ml-2 mr-2 text-lg font-bold"
-          >
-            ✕
-          </button>
+          <CloseButton onClick={onClose} />
         </div>
 
-        <div className="overflow-auto max-h-[50vh]">
-          <div className="min-w-[1000px] overflow-x-auto">
-            <table className="min-w-full border-collapse table-auto text-left text-gray-700">
-              <thead className="bg-gray-100 sticky top-0 z-10">
-                <tr>
-                  <TableReuse type="th" >Bed No</TableReuse>
-                  <TableReuse type="th">Visit</TableReuse>
-                  <TableReuse type="th">Patient Name</TableReuse>
-                  <TableReuse type="th">Doctor Name</TableReuse>
-                  <TableReuse type="th">Room No</TableReuse>
-                  <TableReuse type="th">Ward</TableReuse>
-                  <TableReuse type="th">Corporate Name</TableReuse>
-                </tr>
-              </thead>
-              <tbody>
-                {Array.isArray(filteredData) && filteredData.length > 0 ? (
-                  filteredData.map((item, index) => (
-                    <tr
-                      key={index}
-                      className={`${
-                        selectedRowIndex === index
-                          ? "bg-blue-200"
-                          : index % 2 === 0
-                          ? "bg-white"
-                          : "bg-gray-50"
-                      }`}
-                      onClick={() =>
-                        handleRowDoubleClick(item.visitid, index)
-                      }
-                    >
-                      <TableReuse className="font-semibold text-lg p-2">{item.bedno}</TableReuse>
-                      <TableReuse className="font-semibold text-lg p-2">{item.visitid}</TableReuse>
-                      <TableReuse className="font-semibold text-lg p-2">{item.patname}</TableReuse>
-                      <TableReuse className="font-semibold text-lg p-2">{item.doctorname}</TableReuse>
-                      <TableReuse className="font-semibold text-lg p-2">{item.roomno}</TableReuse>
-                      <TableReuse className="font-semibold text-lg p-2">{item.servname}</TableReuse>
-                      <TableReuse className="font-semibold text-lg p-2">{item.corporatename}</TableReuse>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <TableReuse colSpan={7}>No records found.</TableReuse>
+        <div className="max-h-[50vh] overflow-auto">
+          <table className="min-w-full border-collapse table-auto text-left text-gray-700">
+            <thead className="bg-gray-300 sticky top-0 z-20">
+              <tr>
+                <th className="px-4 py-2 text-xs font-semibold">Bed No</th>
+                <th className="px-4 py-2 text-xs font-semibold">Visit</th>
+                <th className="px-4 py-2 text-xs font-semibold">
+                  Patient Name
+                </th>
+                <th className="px-4 py-2 text-xs font-semibold">Doctor Name</th>
+                <th className="px-4 py-2 text-xs font-semibold">Room No</th>
+                <th className="px-4 py-2 text-xs font-semibold">Ward</th>
+                <th className="px-4 py-2 text-xs font-semibold">
+                  Corporate Name
+                </th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {Array.isArray(filteredData) && filteredData.length > 0 ? (
+                filteredData.map((item, index) => (
+                  <tr
+                    key={index}
+                    className={`${
+                      selectedRowIndex === index
+                        ? "bg-blue-200"
+                        : index % 2 === 0
+                        ? "bg-white"
+                        : "bg-blue-50"
+                    }`}
+                    onClick={() => handleRowDoubleClick(item.visitid, index)}
+                  >
+                    <td className="font-semibold text-xs p-2">{item.bedno}</td>
+                    <td className="font-semibold text-xs p-2">
+                      {item.visitid}
+                    </td>
+                    <td className="font-semibold text-xs p-2">
+                      {item.patname}
+                    </td>
+                    <td className="font-semibold text-xs p-2">
+                      {item.doctorname}
+                    </td>
+                    <td className="font-semibold text-xs p-2">{item.roomno}</td>
+                    <td className="font-semibold text-xs p-2">
+                      {item.servname}
+                    </td>
+                    <td className="font-semibold text-xs p-2">
+                      {item.corporatename}
+                    </td>
                   </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan={7}
+                    className="text-center font-semibold text-xs p-2"
+                  >
+                    No records found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

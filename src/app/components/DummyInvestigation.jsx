@@ -12,6 +12,7 @@ import axios from "axios";
 import API_ENDPOINTS from "../constants/api_url";
 import { getCurrentDateTime, getCurrentDate } from "../utils/dateUtils";
 import InvestigationModalDummy from "../common/Modal/InvestigationModalDummy";
+import { toast } from "react-toastify";
 
 export default function DummyInvestigation({
   visitid,
@@ -40,7 +41,6 @@ export default function DummyInvestigation({
   const [canSave, setCanSave] = useState(false);
   const [refreshData, setRefreshData] = useState(false);
 
-  const [toastMessage, setToastMessage] = useState("");
 
   const [investigations, setInvestigations] = useState([]);
   const [selectedIds, setSelectedIds] = useState([]);
@@ -283,9 +283,8 @@ export default function DummyInvestigation({
       console.log("Response:", result);
 
       if (response.ok) {
-        setToastMessage("✅ Data saved successfully!");
-        setTimeout(() => setToastMessage(""), 2000);
-        // alert("Data saved successfully!");
+       toast.success("Data saved successfully!");
+
         setIsSaved(true);
         setRefreshData((prev) => !prev);
         // Reset vitals and form data
@@ -300,11 +299,11 @@ export default function DummyInvestigation({
         // Reload data from GET API
         setCanSave(false);
       } else {
-        alert("Failed to save data.");
+        toast.error("Failed to save data: " + result.message);
       }
     } catch (error) {
       console.error("Error saving data:", error);
-      alert("An error occurred while saving data.");
+      toast.error("An error occurred while saving data: " + error.message);
     }
   };
 
@@ -497,11 +496,7 @@ export default function DummyInvestigation({
 
   return (
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
-      {toastMessage && (
-        <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white text-sm px-6 py-3 rounded-md shadow-lg z-50 animate-slide-fade">
-          {toastMessage}
-        </div>
-      )}
+  
       <div className="flex items-center justify-center">
         <ModalHeading title="Investigation" />
       </div>

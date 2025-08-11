@@ -1,6 +1,7 @@
 import DateTimeInput from "@/app/common/DateTimeInput";
 import { useState } from "react";
 import DigitalSignatureSection from "@/app/common/DigitalSignatureSection";
+import { useKeyboardScrollFix } from "@/app/common/useKeyboardScrollFix";
 
 export default function ClinicalConsent() {
   const getCurrentTimeHHMM = () => {
@@ -16,6 +17,8 @@ export default function ClinicalConsent() {
   const handleSignatureSave = (signatureImage) => {
     console.log("parent saved:", signatureImage);
   };
+
+  useKeyboardScrollFix(); 
 
   return (
     <div className="max-w-full mx-auto p-6 border rounded-md shadow-sm text-black space-y-6 text-sm leading-relaxed">

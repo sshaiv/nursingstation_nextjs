@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { ActionButton } from "../../common/Buttons";
 import { MainHeadings } from "../../common/text";
 import { format } from "date-fns";
@@ -9,6 +9,8 @@ import useSaveVitalData from "../../hooks/useSaveVitalData";
 import API_ENDPOINTS from "../../constants/api_url";
 import NursingServiceModal from "../NursingServiceModal";
 import PerformedByModal from "../../common/Modal/PerformedByModal";
+import { useKeyboardScrollFix } from "@/app/common/useKeyboardScrollFix";
+import { toast } from "react-toastify";
 
 export default function VitalsTable({
   title,
@@ -62,7 +64,6 @@ export default function VitalsTable({
 
   // Array to keep inserted entries only
   const [insertedVitals, setInsertedVitals] = useState([]);
-  const [toastMessage, setToastMessage] = useState("");
 
   // When user selects from modal:
   const handleSelectPerformedBy = (selected) => {
@@ -101,10 +102,7 @@ export default function VitalsTable({
 
   const loadVitalData = async () => {
     if (!visitid) {
-      // console.warn("No visitid provided, skipping loadVitalData");
-      // return;
-      // setToastMessage("⚠️ Missing patient data or empty field");
-      // setTimeout(() => setToastMessage(""), 2000);
+      console.warn("No visitid provided, cannot load vital data.");
       return;
     }
     try {
@@ -171,8 +169,8 @@ export default function VitalsTable({
       painScore;
 
     if (
-      !performedByData ||
-      !hasVitalsData // Add this condition to check vital signs
+      !performedByData &&
+      !hasVitalsData 
     ) {
       const newErrors = {};
 
@@ -288,7 +286,8 @@ export default function VitalsTable({
 
       clearInputs();
     } else {
-      alert("Please fill at least one vital ");
+      toast.warning("Please fill at least one vital");
+   
     }
   };
 
@@ -325,9 +324,9 @@ export default function VitalsTable({
       console.log("Response:", result);
 
       if (response.ok) {
-        setToastMessage("✅ Data saved successfully!");
-        setTimeout(() => setToastMessage(""), 2000);
-        // alert("Data saved successfully!");
+        toast.success(" Data saved successfully!");
+      
+   
         // Clear inserted vitals
         setInsertedVitals([]);
         setPerformedByData(null);
@@ -335,11 +334,13 @@ export default function VitalsTable({
         // Reload fresh data from API
         loadVitalData();
       } else {
-        alert("Failed to save data.");
+        toast.error("❌ Failed to save data: " + result.message);
+     
       }
     } catch (error) {
       console.error("Error saving data:", error);
-      alert("An error occurred while saving data.");
+      toast.error("❌ An error occurred while saving data: " + error.message);
+    
     }
   };
 
@@ -377,25 +378,24 @@ export default function VitalsTable({
     }
   }, [selectedDate, selectedTime]);
 
+useKeyboardScrollFix();
+
   return (
-    <div className=" border border-gray-300 shadow rounded-2xl p-2">
-      {toastMessage && (
-        <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white text-sm px-6 py-3 rounded-md shadow-lg z-50 animate-slide-fade">
-          {toastMessage}
-        </div>
-      )}
+    <div className=" border border-gray-300 shadow p-2">
+     
       <div className="flex justify-between items-center mb-1">
         <MainHeadings title={title} icon="🩺" />
 
         <div className="justify-end gap-2 flex">
           <ActionButton label="Insert" onClick={handleInsert} />
+
           <button
             onClick={savebtn}
             disabled={insertedVitals.length === 0}
             className={`text-xs p-2 rounded text-white ${
               insertedVitals.length === 0
                 ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-500 hover:bg-blue-600"
+                : "bg-blue-600 hover:bg-blue-400"
             }`}
           >
             Save
@@ -435,7 +435,7 @@ export default function VitalsTable({
             value={performedBy}
             readOnly
             onClick={() => setShowPerformedByModal(true)}
-            className={`px-2 py-1 text-black text-xs border rounded-sm cursor-pointer bg-gray-100 hover:bg-gray-200 focus:outline-none ${
+            className={`px-2 py-1 text-black text-xs border rounded-sm cursor-pointer bg-gray-100 hover:bg-gray-300 focus:outline-none ${
               errors.performedBy ? "border-red-500" : "border-gray-300"
             }`}
             placeholder="Select PerformedBy"
@@ -483,7 +483,7 @@ export default function VitalsTable({
               {input.placeholder}
             </label>
             <input
-              type="text"
+              type={input.placeholder === "BP" ? "text" : "number"}
               value={input.value}
               onChange={(e) => input.setValue(e.target.value || "")}
               className={`border text-black rounded w-[75px] text-[9px] h-[25px] px-[2px] py-[1px] focus:outline-none focus:border-blue-500 ${
@@ -495,65 +495,65 @@ export default function VitalsTable({
       </div>
 
       {/* Table */}
-      <div className="max-h-[115px] overflow-y-auto hide-scrollbar mt-1">
+      <div className="max-h-[100px] border-gray-400 border-1 overflow-y-auto hide-scrollbar mt-1">
         <table className="w-full table-auto text-start border border-collapse text-2xl">
           <thead>
             <tr className="bg-white sticky top-0 z-10 text-gray-800">
-              <th className="min-w-[90px] font-semibold text-xs border p-1 bg-gray-200">
+              <th className="min-w-[90px] font-semibold text-xs border p-1 bg-gray-300">
                 Date/Time
               </th>
-              <th className="min-w-[100px] font-semibold text-xs border p-1 bg-gray-200">
+              <th className="min-w-[100px] font-semibold text-xs border p-1 bg-gray-300">
                 Nur.Services
               </th>
-              <th className="font-semibold text-xs border p-1 bg-gray-200">
+              <th className="font-semibold text-xs border p-1 bg-gray-300">
                 BP
               </th>
-              <th className="font-semibold text-xs border p-1 bg-gray-200">
+              <th className="font-semibold text-xs border p-1 bg-gray-300">
                 Pulse
               </th>
-              <th className="font-semibold text-xs border p-1 bg-gray-200">
+              <th className="font-semibold text-xs border p-1 bg-gray-300">
                 Temp
               </th>
-              <th className="font-semibold text-xs border p-1 bg-gray-200">
+              <th className="font-semibold text-xs border p-1 bg-gray-300">
                 SPO2
               </th>
-              <th className="font-semibold text-xs border p-1 bg-gray-200">
+              <th className="font-semibold text-xs border p-1 bg-gray-300">
                 Weight
               </th>
-              <th className="font-semibold text-xs border p-1 bg-gray-200">
+              <th className="font-semibold text-xs border p-1 bg-gray-300">
                 Height
               </th>
-              <th className="font-semibold text-xs border p-1 bg-gray-200">
+              <th className="font-semibold text-xs border p-1 bg-gray-300">
                 BMI
               </th>
-              <th className="font-semibold text-xs border p-1 bg-gray-200">
+              <th className="font-semibold text-xs border p-1 bg-gray-300">
                 R.R
               </th>
-              <th className="font-semibold text-xs border p-1 bg-gray-200">
+              <th className="font-semibold text-xs border p-1 bg-gray-300">
                 Pain
               </th>
-              <th className="font-semibold text-xs border p-1 bg-gray-200">
+              <th className="font-semibold text-xs border p-1 bg-gray-300">
                 Head Circum.
               </th>
-              <th className="font-semibold text-xs border p-1 bg-gray-200">
+              <th className="font-semibold text-xs border p-1 bg-gray-300">
                 BSL (R)
               </th>
-              <th className="font-semibold text-xs border p-1 bg-gray-200">
+              <th className="font-semibold text-xs border p-1 bg-gray-300">
                 CVS
               </th>
-              <th className="font-semibold text-xs border p-1 bg-gray-200">
+              <th className="font-semibold text-xs border p-1 bg-gray-300">
                 CNS
               </th>
-              <th className="font-semibold text-xs border p-1 bg-gray-200">
+              <th className="font-semibold text-xs border p-1 bg-gray-300">
                 RS
               </th>
-              <th className="font-semibold text-xs border p-1 bg-gray-200">
+              <th className="font-semibold text-xs border p-1 bg-gray-300">
                 P/A
               </th>
-              <th className="font-semibold text-xs border p-1 bg-gray-200">
+              <th className="font-semibold text-xs border p-1 bg-gray-300">
                 L/E
               </th>
-              <th className="font-semibold text-xs border p-1 bg-gray-200">
+              <th className="font-semibold text-xs border p-1 bg-gray-300">
                 Action
               </th>
             </tr>
@@ -567,33 +567,33 @@ export default function VitalsTable({
                   key={"inserted-" + idx}
                   className="hover:bg-gray-50 text-xs text-black"
                 >
-                  <td className="p-1 border border-gray-600 ">
+                  <td className="p-1  bg-blue-100 ">
                     {entry.vitaldatetime}
                   </td>
-                  <td className="p-1 border border-gray-600">{performedBy}</td>
-                  <td className="p-1 border border-gray-600">{entry.bp}</td>
-                  <td className="p-1 border border-gray-600">{entry.pulse}</td>
-                  <td className="p-1 border border-gray-600">{entry.temp}</td>
-                  <td className="p-1 border border-gray-600">{entry.spo2}</td>
-                  <td className="p-1 border border-gray-600">{entry.weight}</td>
-                  <td className="p-1 border border-gray-600">{entry.height}</td>
-                  <td className="p-1 border border-gray-600">{entry.bmi}</td>
-                  <td className="p-1 border border-gray-600">{entry.rr}</td>
-                  <td className="p-1 border border-gray-600">
+                  <td className="p-1 bg-blue-100">{performedBy}</td>
+                  <td className="p-1 bg-blue-100">{entry.bp}</td>
+                  <td className="p-1 bg-blue-100">{entry.pulse}</td>
+                  <td className="p-1 bg-blue-100">{entry.temp}</td>
+                  <td className="p-1 bg-blue-100">{entry.spo2}</td>
+                  <td className="p-1 bg-blue-100">{entry.weight}</td>
+                  <td className="p-1 bg-blue-100">{entry.height}</td>
+                  <td className="p-1 bg-blue-100">{entry.bmi}</td>
+                  <td className="p-1 bg-blue-100">{entry.rr}</td>
+                  <td className="p-1 bg-blue-100">
                     {entry.painScore}
                   </td>
-                  <td className="p-1 border border-gray-600">
+                  <td className="p-1 bg-blue-100">
                     {entry.Headcircumference}
                   </td>
-                  <td className="p-1 border border-gray-600">{entry.bsl}</td>
-                  <td className="p-1 border border-gray-600">{entry.cvs}</td>
-                  <td className="p-1 border border-gray-600">{entry.cns}</td>
-                  <td className="p-1 border border-gray-600">{entry.rs}</td>
-                  <td className="p-1 border border-gray-600">{entry.pa}</td>
-                  <td className="p-1 border border-gray-600">
+                  <td className="p-1 bg-blue-100">{entry.bsl}</td>
+                  <td className="p-1 bg-blue-100">{entry.cvs}</td>
+                  <td className="p-1 bg-blue-100">{entry.cns}</td>
+                  <td className="p-1 bg-blue-100">{entry.rs}</td>
+                  <td className="p-1 bg-blue-100">{entry.pa}</td>
+                  <td className="p-1 bg-blue-100">
                     {entry.logicalExam}
                   </td>
-                  <td className="p-1 border border-gray-600">
+                  <td className="p-1 bg-blue-100">
                     <button
                       className="text-red-500 hover:underline"
                       onClick={() => handleDeleteEntry(actualIndex)}
@@ -629,10 +629,13 @@ export default function VitalsTable({
                 <td className="p-1 border">{v.pa}</td>
                 <td className="p-1 border">{v.logicalExam}</td>
                 <td className="p-1 border">
-                  <button>{/* Action */}</button>
+                  <button></button>
                 </td>
               </tr>
             ))}
+
+ 
+
           </tbody>
         </table>
       </div>

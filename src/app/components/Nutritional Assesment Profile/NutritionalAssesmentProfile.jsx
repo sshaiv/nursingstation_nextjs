@@ -1,19 +1,22 @@
 import React, { useEffect, useState, useRef } from "react";
-import { H3, Label, ModalHeading } from "../common/text";
-import ReusableInputField from "../common/SmallInputfields";
-import ReusableTextareaField from "../common/ReusableTextareaField";
-import { SaveButton } from "../common/Buttons";
-import useFetchPatientHistory from "../hooks/fetchHistoryData";
-import API_ENDPOINTS from "../constants/api_url";
+import { H3, Label, ModalHeading } from "../../common/text";
+import ReusableInputField from "../../common/SmallInputfields";
+import ReusableTextareaField from "../../common/ReusableTextareaField";
+import { SaveButton } from "../../common/Buttons";
+import useFetchPatientHistory from "../../hooks/fetchHistoryData";
+import API_ENDPOINTS from "../../constants/api_url";
+import { toast } from "react-toastify";
 import axios from "axios";
 import Select from "react-select";
-import DateTimeInput from "../common/DateTimeInput";
+import DateTimeInput from "../../common/DateTimeInput";
+import { useKeyboardScrollFix } from "@/app/common/useKeyboardScrollFix";
 import {
   getCurrentDateTime,
   getCurrentDate,
   getCurrentDateISO,
-} from "../utils/dateUtils";
-import useVitalsData from "../hooks/useVitalsData";
+} from "../../utils/dateUtils";
+import useVitalsData from "../../hooks/useVitalsData";
+
 
 export default function NutritionalAssessmentProfile({
   visitid,
@@ -283,11 +286,12 @@ export default function NutritionalAssessmentProfile({
       console.log("save btn", derivedJson);
 
       console.log("save btn", response.data);
-
-      alert("Data saved successfully!");
+    
+      toast.success("Data saved successfully!");
     } catch (error) {
       console.error("Error saving nutritional assessment:", error);
-      alert("Failed to save data. Please try again.");
+      toast.error("Failed to save data. Please try again.");
+   
     }
   };
 
@@ -305,6 +309,8 @@ export default function NutritionalAssessmentProfile({
     }
   }, [latestVitals]);
 
+  useKeyboardScrollFix();
+  
   return (
     <div className="p-4 min-h-screen text-sm text-gray-700">
       <div className="flex h-[1px]  items-center justify-center">
@@ -808,6 +814,7 @@ export default function NutritionalAssessmentProfile({
             label="🖊️"
             value={dietPlan}
             onChange={(e) => setDietPlan(e.target.value)}
+            
           />
         </div>
       </div>

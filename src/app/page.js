@@ -1,25 +1,22 @@
 "use client";
-import { useState } from "react";
+import {useEffect, useState } from "react";
 import { Suspense } from "react";
 import PatientInfoCard from "./components/PatientInfoCard";
 import VitalsTable from "./components/Vitals/VitalsTable";
-import AssessmentCard from "./components/AssessmentCard";
-import MedicineTable from "./components/MedicineTable";
-import SidebarButtons from "./components/SidebarButtons";
-import NotesBox from "./components/NotesBox";
  import Header from "./components/Header";
 import ButtonGrid from "./components/SidebarButtons";
+import { toast } from "react-toastify";
+
 
 const WarningPopup = ({ visible }) => {
-  if (!visible) return null;
-  return (
-    <div className="fixed top-20 left-1/2 transform -translate-x-1/2 w-[90%] max-w-4xl bg-yellow-50 border border-yellow-400 text-yellow-800 px-6 py-4 rounded-lg shadow-md flex items-center gap-3 z-50">
-     
-      <span className="text-base font-medium">⚠️ Please scan the patient first to proceed.</span>
-    </div>
-  );
-};
+  useEffect(() => {
+    if (visible) {
+      toast.warning("Please scan patient first to proceed.");
+    }
+  }, [visible]);
 
+  return null; 
+};
 
 
 const BlockUntilScanned = ({ children, scanned, onBlockedClick }) => {
@@ -62,7 +59,8 @@ function HomeContent() {
     <div className="p-4 min-h-screen space-y-4 bg-gray-50">
       {/* Header always visible */}
       <Header />
-
+      
+  <BlockUntilScanned scanned={scanned} onBlockedClick={showScanWarning}>
       {/* ✅ Patient Card - full width, just below header */}
       <div className="w-full">
         <PatientInfoCard
@@ -77,7 +75,7 @@ function HomeContent() {
       </div>
 
       {/* ✅ Block rest until scanned */}
-      <BlockUntilScanned scanned={scanned} onBlockedClick={showScanWarning}>
+    
         <div className="flex flex-col gap-4">
                <VitalsTable
                  title="Vitals"

@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import API_ENDPOINTS from "../constants/api_url";
 import { useRouter } from "next/navigation";
 import SearchPatientModal from "../common/Modal/SearchPatientModal";
+import { toast } from "react-toastify";
 
 export default function Header() {
   const [showScanner, setShowScanner] = useState(false);
@@ -55,12 +56,14 @@ const fetchPatientBed = async (visitId) => {
       );
     } else {
       console.warn("⚠️ No data in Table array.");
-      alert("No patient data found.");
+      toast.error("No patient data found.");
+  
     }
 
   } catch (error) {
     console.error("❌ Error fetching patient bed info:", error);
-    alert("Failed to fetch patient bed info: " + error.message);
+    toast.error("Failed to fetch patient bed info: " + error.message);
+
   } finally {
     setLoading(false);
     setShowScanner(false);

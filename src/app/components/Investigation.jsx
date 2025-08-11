@@ -11,6 +11,7 @@ import useSaveInvData from "../hooks/useSaveInvData";
 import axios from "axios";
 import API_ENDPOINTS from "../constants/api_url";
 import { getCurrentDateTime, getCurrentDate } from "../utils/dateUtils";
+import {toast} from "react-toastify";
 
 export default function Investigation({
   visitid,
@@ -39,9 +40,7 @@ export default function Investigation({
   const [table, setTable] = useState([]);
   const [canSave, setCanSave] = useState(false);
   const [refreshData, setRefreshData] = useState(false);
-  
-  const [toastMessage, setToastMessage] = useState("");
-
+ 
   
   const handleSelectServices = (selectedIds) => {
     console.log("inv in inv", selectedIds);
@@ -125,9 +124,7 @@ export default function Investigation({
       console.log("Response:", result);
 
       if (response.ok) {
-        // alert("Data saved successfully!");
-        setToastMessage("✅ Data saved successfully!");
-        setTimeout(() => setToastMessage(""), 2000);
+       toast.success("Data saved successfully!");
         setIsSaved(true);
         setRefreshData((prev) => !prev);
         // Reset vitals and form data
@@ -142,11 +139,11 @@ export default function Investigation({
         // Reload data from GET API
         setCanSave(false);
       } else {
-        alert("Failed to save data.");
+        toast.error("Failed to save data: " + result.message);
       }
     } catch (error) {
       console.error("Error saving data:", error);
-      alert("An error occurred while saving data.");
+      toast.error("An error occurred while saving data: " + error.message);
     }
   };
 
@@ -206,11 +203,7 @@ export default function Investigation({
 
   return (
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
-       {toastMessage && (
-        <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white text-sm px-6 py-3 rounded-md shadow-lg z-50 animate-slide-fade">
-          {toastMessage}
-        </div>
-      )}
+      
       <div className="flex items-center justify-center">
         <ModalHeading title="Investigation" />
       </div>

@@ -4,7 +4,7 @@ import { ActionButton, SaveButton } from "../common/Buttons";
 import TableReuse from "../common/TableReuse";
 import "react-datepicker/dist/react-datepicker.css";
 import DateTimeInput from "../common/DateTimeInput";
-
+import { toast } from "react-toastify";
 import DoctorModal from "../common/Modal/DoctorModal";
 
 import axios from "axios";
@@ -56,9 +56,6 @@ export default function NursingServices({
   const [loading, setLoading] = useState(false);
   const [table, setTable] = useState([]);
   const [saveData, setSaveData] = useSaveNSData();
-
-   
-  const [toastMessage, setToastMessage] = useState("");
 
   console.log("Updated Nur service", saveData);
 
@@ -249,9 +246,7 @@ export default function NursingServices({
       console.log("Response:", result);
 
       if (response.ok) {
-        // alert("Data saved successfully!");
-            setToastMessage("✅ Data saved successfully!");
-        setTimeout(() => setToastMessage(""), 2000);
+       toast.success("Data saved successfully!");
         // Clear local new entries (already saved)
         // Clear the new entries so UI updates and doesn't show them anymore
         setEntries([]);
@@ -274,11 +269,11 @@ export default function NursingServices({
         setIsSaved(true);
         setIsSaveEnabled(false);
       } else {
-        alert("Failed to save data.");
+        toast.error("Failed to save data: " + result.message);
       }
     } catch (error) {
       console.error("Error saving data:", error);
-      alert("An error occurred while saving data.");
+     toast.error("An error occurred while saving data: " + error.message);
     }
   };
 
@@ -371,11 +366,7 @@ export default function NursingServices({
 
   return (
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
-       {toastMessage && (
-        <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white text-sm px-6 py-3 rounded-md shadow-lg z-50 animate-slide-fade">
-          {toastMessage}
-        </div>
-      )}
+     
       <div className="flex h-[1px] items-center justify-center">
         <ModalHeading title="Nursing Services" />
       </div>

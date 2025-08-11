@@ -5,6 +5,7 @@ import { MainHeadings } from "../common/text";
 import { ActionButton } from "../common/Buttons";
 import { getCurrentDateTime } from "../utils/dateUtils";
 import ReusableTextareaField from "../common/ReusableTextareaField";
+import { toast } from "react-toastify";
 
 export default function AssessmentCard({
   title,
@@ -13,7 +14,7 @@ export default function AssessmentCard({
   otherPatientData,
 }) {
   const [inputValue, setInputValue] = useState("");
-  const [toastMessage, setToastMessage] = useState("");
+
 
   useEffect(() => {
     const data = Array.isArray(otherPatientData)
@@ -31,15 +32,14 @@ export default function AssessmentCard({
  
 
     if (!patientData || !inputValue.trim()) {
-      // setToastMessage("⚠️ Missing patient data or empty field");
-      // setTimeout(() => setToastMessage(""), 2000);
+      toast.error("Please fill in the required fields.");
       return;
     }
 
     let apiUrl;
     let payload;
 
-    const currentDateTime = getCurrentDateTime(); // call the function, not just reference it
+    const currentDateTime = getCurrentDateTime(); 
 
     if (title === "Chief Complaints")
        {
@@ -89,22 +89,17 @@ export default function AssessmentCard({
 
       const result = await response.json();
       console.log("✅ Data saved successfully:", result);
-      // alert("Data saved successfully.");
-      setToastMessage("✅ Data saved successfully!");
-      setTimeout(() => setToastMessage(""), 2000);
+    
+     toast.success("Data saved successfully!");
     } catch (error) {
       console.error("❌ Error saving data:", error);
-      alert("Error while saving data.");
+     toast.error("An error occurred while saving data: " + error.message);
     }
   };
 
   return (
     <div className="border border-gray-300 shadow rounded-lg p-1 flex flex-col gap-2 max-h-25">
-      {toastMessage && (
-        <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white text-sm px-6 py-3 rounded-md shadow-lg z-50 animate-slide-fade">
-          {toastMessage}
-        </div>
-      )}
+    
 
       <div className="flex items-center justify-between">
         <MainHeadings title={title} icons={icons} />

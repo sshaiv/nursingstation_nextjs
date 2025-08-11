@@ -38,8 +38,8 @@ const ReusableTextareaField = ({
         htmlFor={id}
         className={`
     absolute left-2 transition-all bg-white px-1 
-    ${focusedOrFilled || value ? '-top-2 text-[8px] text-gray-600' : 'top-2 text-[7px] text-gray-400'}
-    sm:text-[7px] md:text-[8px] lg:text-[9px]
+    ${focusedOrFilled || value ? '-top-2 text-[10px] text-gray-600' : 'top-2 text-[10px] text-gray-400'}
+    sm:text-[10px] md:text-[10px] lg:text-[10px]
   `}
       >
         {label}

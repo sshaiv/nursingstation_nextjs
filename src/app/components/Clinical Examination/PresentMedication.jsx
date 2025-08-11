@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import MedicineModal from "../../common/Modal/MedicineModal";
 import { ActionButton } from "@/app/common/Buttons";
 import TableReuse from "@/app/common/TableReuse";
@@ -8,6 +8,8 @@ import ReusableTextareaField from "@/app/common/ReusableTextareaField";
 import SignaturePadComponent from "@/app/common/SignaturePadComponent";
 import DigitalSignatureSection from "@/app/common/DigitalSignatureSection";
 import ClinicalConsent from "./ClinicalConsent";
+import toast from "react-toastify";
+import { useKeyboardScrollFix } from "@/app/common/useKeyboardScrollFix";
 
 const PresentMedication = ({
   onSelectDoctor,
@@ -84,6 +86,9 @@ const PresentMedication = ({
     console.log("Insert button clicked");
     g
   }
+
+  useKeyboardScrollFix();
+  
   return (
     <div className="  min-h-screen flex justify-center text-[10px] leading-tight">
       <div className="w-full max-w-5xl mx-auto space-y-4 overflow-auto scrollbar-hide min-h-[200px] max-h-[70vh] px-2">

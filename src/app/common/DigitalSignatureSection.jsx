@@ -2,17 +2,17 @@
 import React, { useState } from "react";
 import SignaturePadComponent from "./SignaturePadComponent";
 import CloseButton from "./CrossButton";
+import { toast } from "react-toastify";
 
 const DigitalSignatureSection = ({ onSignatureSave, title }) => {
   const [signatureDataUrl, setSignatureDataUrl] = useState(null);
   const [showSignatureModal, setShowSignatureModal] = useState(false);
   const [showFullSignature, setShowFullSignature] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
+ 
 
   const handleSave = () => {
     if (!signatureDataUrl) {
-      setToastMessage("⚠️ please upload signature");
-      setTimeout(() => setToastMessage(""), 2000);
+     toast.warning(" Please upload a signature first.");
       return;
     }
 
@@ -28,8 +28,7 @@ const DigitalSignatureSection = ({ onSignatureSave, title }) => {
 
   const handleFullView = () => {
     if (!signatureDataUrl) {
-      setToastMessage("⚠️ please upload signature");
-      setTimeout(() => setToastMessage(""), 2000);
+      toast.warning(" Please upload a signature first.");
       return;
     }
 
@@ -38,11 +37,7 @@ const DigitalSignatureSection = ({ onSignatureSave, title }) => {
 
   return (
     <div className="mt-0 space-y-1">
-      {toastMessage && (
-        <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-red-500 text-white text-sm px-6 py-3 rounded-md shadow-lg z-50 animate-slide-fade">
-          {toastMessage}
-        </div>
-      )}
+      
       <label className="text-xs font-medium font-sans text-gray-700">
         {title}
       </label>

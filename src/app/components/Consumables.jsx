@@ -15,6 +15,7 @@ import SelectBatchModal from "../common/Modal/SelectBatchModal";
 import useSaveConData from "../hooks/useSaveConData";
 import { getCurrentDateTime } from "../utils/dateUtils";
 import MedicineHistoryModal from "../common/Modal/MedicineHistoryModal";
+import { toast } from "react-toastify";
 
 export default function Consumables({ visitid, gssuhid, empid, patientData }) {
   const [vitals, setVitals] = useState([]);
@@ -339,6 +340,13 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
     const newErrors = validateForm();
     setErrors(newErrors);
 
+    // fields empty 
+    if (!selectedItem || !selectedItem.value || !issueQty) {
+      toast.warn("Please fill all required fields before saving.");
+   
+      return;
+    }
+
     const currentDateTime = getCurrentDateTime();
 
     // Find the selected item details based on the selectedItem
@@ -532,6 +540,7 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
 
     // Update the vitals state to include the new entry
     setVitals((prev) => [...prev, newEntry]);
+
     // Resetting fields after insertion
     setIssueNo("");
     // setStore("");
@@ -578,7 +587,7 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
       console.log("Response:", result);
 
       if (response.ok) {
-        alert("Data saved successfully!");
+        toast.success("Data saved successfully!");
 
         // Reset JSON strings to empty arrays after saving
         setSaveData((prevData) => ({
@@ -593,11 +602,11 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
         setServiceEntries([]);
         setVitals([]);
       } else {
-        alert("Failed to save data.");
+        toast.error("Failed to save data: " + result.message);
       }
     } catch (error) {
       console.error("Error saving data:", error);
-      alert("An error occurred while saving data.");
+      toast.error("An error occurred while saving data: " + error.message);
     }
     // Step 3: Disable the Save button after saving
     setIsSaveButtonDisabled(true);
@@ -634,7 +643,6 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
       ...prevData,
       jsonStringsubipdconsumablemodels: JSON.stringify(updatedServiceEntries),
       jsonStringsubitemstockoutdetl: JSON.stringify(updatedServiceEntries),
-     
     }));
 
     // Step 3: Disable Save button if nothing to save
@@ -875,7 +883,6 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
             />
           </div>
 
-        
           <div className="flex flex-wrap md:flex-nowrap w-full items-end gap-2">
             {/* Remarks */}
             <div className="flex flex-col flex-1">
@@ -911,8 +918,6 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
             </div>
           </div>
         </div>
-
-      
       </div>
 
       {/* Table */}

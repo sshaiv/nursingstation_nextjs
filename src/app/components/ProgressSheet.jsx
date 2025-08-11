@@ -5,6 +5,7 @@ import API_ENDPOINTS from "../constants/api_url";
 import { SaveButton } from "../common/Buttons";
 import { getCurrentDateTime } from "../utils/dateUtils";
 import ReusableInputField from "../common/SmallInputfields";
+import { toast } from "react-toastify";
 
 export default function ProgressSheet({ visitid, gssuhid, empid }) {
   const [progressSheetData, setProgressSheetData] = useState([]);
@@ -141,11 +142,10 @@ export default function ProgressSheet({ visitid, gssuhid, empid }) {
     console.log("📝 Save Payload:", JSON.stringify(payload, null, 2));
     try {
       await axios.post(API_ENDPOINTS.saveProgressSheetData, payload);
-      setToastMessage("✅ Data saved successfully!");
-      setTimeout(() => setToastMessage(""), 2000);
-      // alert("Data saved successfully!");
+     toast.success("Data saved successfully!");
     } catch (error) {
       console.error("Error saving progress sheet:", error);
+      toast.error("Failed to save data: " + error.message);
     }
   };
   //  const handleChange = (key, value) => {
@@ -157,13 +157,6 @@ export default function ProgressSheet({ visitid, gssuhid, empid }) {
   //     setProgressSheetData(updated);
   //   };
 
-  const [toastMessage, setToastMessage] = useState("");
-  const showToast = (message) => {
-    setToastMessage(message);
-    setTimeout(() => {
-      setToastMessage("");
-    }, 3000); // hide after 3 seconds
-  };
   const handleChange = (key, value) => {
     if (key === "painscore") {
       const num = Number(value);
@@ -175,7 +168,7 @@ export default function ProgressSheet({ visitid, gssuhid, empid }) {
         };
         setProgressSheetData(updated);
       } else {
-        showToast("Pain score must be between 0 and 10");
+       toast.warning("Pain score must be between 0 and 10.");
       }
     } else {
       const updated = [...progressSheetData];
@@ -189,16 +182,7 @@ export default function ProgressSheet({ visitid, gssuhid, empid }) {
 
   return (
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-4">
-      {toastMessage && (
-        <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white text-sm px-6 py-3 rounded-md shadow-lg z-50 animate-slide-fade">
-          {toastMessage}
-        </div>
-      )}
-      {toastMessage && (
-        <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white text-sm px-6 py-3 rounded-md shadow-lg z-50 animate-slide-fade">
-          {toastMessage}
-        </div>
-      )}
+   
      
 
    <div className="flex justify-between items-center">

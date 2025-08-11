@@ -9,6 +9,8 @@ import MedicineTable from "../components/MedicineTable";
 import ButtonGrid from "../components/SidebarButtons";
 import NurHeader from "../components/NursingHeader";
 import API_ENDPOINTS from "../constants/api_url";
+import { useKeyboardScrollFix } from "../common/useKeyboardScrollFix";
+import { toast } from "react-toastify";
 
 function NursingStationContent() {
   const searchParams = useSearchParams();
@@ -56,7 +58,8 @@ function NursingStationContent() {
         const patient = tableData[0];
         setPatientData(patient);
       } else {
-        alert("No patient data found.");
+        toast.error("No patient data found.");
+       
         setPatientData(null);
       }
 
@@ -70,7 +73,8 @@ function NursingStationContent() {
       }
     } catch (error) {
       console.error("❌ Error fetching patient bed info:", error);
-      alert("Failed to fetch patient bed info: " + error.message);
+      toast.error("Failed to fetch patient bed info: " + error.message);
+
       setPatientData(null);
       setOtherPatientData(null);
     } finally {
@@ -93,8 +97,10 @@ function NursingStationContent() {
     }
   }, [searchParams]);
 
+ useKeyboardScrollFix();
+
   return (
-   <div className="flex flex-col min-h-screen p-4 space-y-4 bg-gray-50">
+   <div className="flex flex-col min-h-screen p-2 space-y-2 bg-gray-50">
       <NurHeader />
 
       {/* PATIENT INFO ALWAYS ON TOP */}
@@ -141,7 +147,7 @@ function NursingStationContent() {
       </div>
 
       {/* GRID BELOW */}
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2">
         <VitalsTable
           title="Vitals"
           visitid={visitid}

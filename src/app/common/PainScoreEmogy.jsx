@@ -7,7 +7,7 @@ export default function PainScoreEmogy() {
   return (
     <div className="flex flex-col items-center gap-2 mb-6">
         <H3>Pain Assessment Scale</H3>
-        <div className="overflow-x-auto w-full">
+        <div className="overflow-x-auto scrollbar-hide w-full">
           <div className="flex justify-between gap-4 px-2 min-w-[800px]">
             {[
               { score: 0, emoji: "😄", Label: "No Pain" },
