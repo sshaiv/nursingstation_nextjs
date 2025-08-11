@@ -8,7 +8,7 @@ import ReusableTextareaField from "@/app/common/ReusableTextareaField";
 import SignaturePadComponent from "@/app/common/SignaturePadComponent";
 import DigitalSignatureSection from "@/app/common/DigitalSignatureSection";
 import ClinicalConsent from "./ClinicalConsent";
-import toast from "react-toastify";
+import { toast } from "react-toastify";
 import { useKeyboardScrollFix } from "@/app/common/useKeyboardScrollFix";
 
 const PresentMedication = ({
@@ -32,6 +32,10 @@ const PresentMedication = ({
   const [informedDr, setInformedDr] = useState("");
   const [rmoName, setRmoName] = useState("");
   const [signatureTime, setSignatureTime] = useState("");
+  const [medicines, setMedicines] = useState([]);
+
+  // Dedicated state for treatment instructions textarea
+  const [treatmentInstructions, setTreatmentInstructions] = useState("");
 
   const handleMedicineSelect = (selected) => {
     console.log("Medicine selected:", selected);
@@ -83,16 +87,35 @@ const PresentMedication = ({
   };
 
   const handleInsert = () => {
-    console.log("Insert button clicked");
-    g
-  }
+    if (!medicineName) {
+      toast.warn("Please select a medicine");
+      return;
+    }
+
+    const newEntry = {
+      medicineName,
+      dose,
+      route,
+      frequency,
+      continue:
+        document.querySelector('input[name="ongoing"]:checked')?.value || "no",
+    };
+
+    setMedicines((prev) => [...prev, newEntry]);
+
+    // Optionally clear inputs after insert
+    setMedicineName("");
+    setDose("");
+    setRoute("");
+    setFrequency("");
+    // Reset radio buttons if you want (handle manually)
+  };
 
   useKeyboardScrollFix();
-  
+
   return (
     <div className="  min-h-screen flex justify-center text-[10px] leading-tight">
       <div className="w-full max-w-5xl mx-auto space-y-4 overflow-auto scrollbar-hide min-h-[200px] max-h-[70vh] px-2">
-        
         <label className="text-xs font-semibold text-gray-700 ">
           Present Ongoing Medication (s)
         </label>
@@ -186,29 +209,59 @@ const PresentMedication = ({
           <div className=" mb-2">
             <ActionButton
               label="Save"
-              onClick={handleInsert}
               //   onClick={handleInsert}
               className="text-xs px-4 py-1"
             />
           </div>
         </div>
 
-        <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
-          <div className="max-h-[225px] overflow-y-auto scrollbar-hide">
+        <div className="border border-gray-200 overflow-hidden shadow-sm">
+          <div className="max-h-[100px] overflow-y-auto scrollbar-hide">
             <table className="w-full text-[11px] text-center border-collapse">
-              <thead className="bg-blue-50 text-gray-800 font-semibold sticky top-0 z-10">
+              <thead className="bg-gray-200 text-gray-800 font-semibold sticky top-0 z-10">
                 <tr>
-                  <TableReuse type="th">Medication Name</TableReuse>
-                  <TableReuse type="th">Dose</TableReuse>
-                  <TableReuse type="th">Route </TableReuse>
-                  <TableReuse type="th">Frequency</TableReuse>
-                  <TableReuse type="th">Continue</TableReuse>
-
-                  <TableReuse type="th">Remove</TableReuse>
+                  <th className="p-1 border-b border-gray-200">
+                    Medication Name
+                  </th>
+                  <th className="p-1 border-b border-gray-200">Dose</th>
+                  <th className="p-1 border-b border-gray-200">Route</th>
+                  <th className="p-1 border-b border-gray-200">Frequency</th>
+                  <th className="p-1 border-b border-gray-200">Continue</th>
+                  <th className="p-1 border-b border-gray-200">Remove</th>
                 </tr>
               </thead>
 
-              <tbody></tbody>
+              <tbody>
+                {medicines.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className="text-gray-500 text-xs py-2">
+                      No medicines added yet.
+                    </td>
+                  </tr>
+                ) : (
+                  medicines.map((med, idx) => (
+                    <tr key={idx} className="border-b border-gray-200">
+                      <td className="p-1">{med.medicineName}</td>
+                      <td className="p-1">{med.dose}</td>
+                      <td className="p-1">{med.route}</td>
+                      <td className="p-1">{med.frequency}</td>
+                      <td className="p-1">{med.continue}</td>
+                      <td className="p-1">
+                        <button
+                          className="text-red-500 hover:text-red-700"
+                          onClick={() =>
+                            setMedicines((prev) =>
+                              prev.filter((_, i) => i !== idx)
+                            )
+                          }
+                        >
+                          Remove
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
             </table>
           </div>
         </div>
@@ -224,8 +277,8 @@ const PresentMedication = ({
             rows={1}
             style={{ minHeight: "28px", padding: "6px 8px" }}
             label=" "
-            value={""}
-            onChange={(e) => setPresentingComplaint(e.target.value)}
+            value={treatmentInstructions}
+            onChange={(e) => setTreatmentInstructions(e.target.value)}
           />
         </div>
 
@@ -274,11 +327,13 @@ const PresentMedication = ({
 
           {/* Right Side - Signature Box */}
           <div className="mt-0">
-            <DigitalSignatureSection onSignatureSave={handleSignatureSave} title="Signature"/>
+            <DigitalSignatureSection
+              onSignatureSave={handleSignatureSave}
+              title="Signature"
+            />
           </div>
         </div>
 
-        <hr className="border-t border-gray-300 " />
         <ClinicalConsent />
       </div>
     </div>

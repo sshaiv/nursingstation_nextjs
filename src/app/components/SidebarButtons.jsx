@@ -243,7 +243,7 @@ export default function ButtonGrid({ visitid, gssuhid, empid, patientData }) {
 
   return (
     <div>
-      <div className="w-full grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-3 px-2">
+      <div className="w-full grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-6 gap-3 px-2">
         {buttons.map((button, index) => (
           <div
             key={index}
@@ -257,7 +257,7 @@ export default function ButtonGrid({ visitid, gssuhid, empid, patientData }) {
             onClick={() => handleButtonClick(button.label)}
           >
             {/* <button.icon className="text-lg" /> */}
-            <span className="text-xs font-semibold">{button.label}</span>
+            <span className="text-xs  font-semibold">{button.label}</span>
           </div>
         ))}
       </div>
@@ -273,6 +273,7 @@ export default function ButtonGrid({ visitid, gssuhid, empid, patientData }) {
 
             {/* Scrollable Content Area */}
             <div
+            
               className={`mt-4 ${
                 activeLabel !== "INITIAL ASSESSMENT" &&
                 activeLabel !== "CLINICAL EXAMINATION"

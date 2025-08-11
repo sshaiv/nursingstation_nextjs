@@ -237,8 +237,8 @@ export default function InvestigationModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-xs">
       <div className="w-[500px] mx-auto border rounded-md shadow p-3 bg-white text-sm">
-        <div className="bg-green-100 text-center py-1 rounded">
-          <h2 className="text-sm font-semibold text-green-800">
+        <div className="bg-blue-100 text-center py-1 rounded">
+          <h2 className="text-sm font-semibold text-blue-800">
             SELECT INVESTIGATIONS
           </h2>
         </div>

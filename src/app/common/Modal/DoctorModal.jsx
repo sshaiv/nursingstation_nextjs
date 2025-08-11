@@ -86,7 +86,7 @@ export default function DoctorModal({ isOpen, onClose, onSelectDoctor, visitid, 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-xs">
             <div className="w-[320px] rounded-md border shadow-lg bg-white p-3 text-xs font-sans">
-                <div className="bg-green-100 text-green-800 text-center font-semibold py-2 rounded-t-md text-[13px]">
+                <div className="bg-blue-100 text-blue-800 text-center font-semibold py-2 rounded-t-md text-[13px]">
                   🩺👩🏻‍⚕️  PATIENT'S DOCTORS
                 </div>
 

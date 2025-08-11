@@ -21,7 +21,7 @@ export default function ClinicalConsent() {
   useKeyboardScrollFix(); 
 
   return (
-    <div className="max-w-full mx-auto p-6 border rounded-md shadow-sm text-black space-y-6 text-sm leading-relaxed">
+    <div className="max-w-full bg-gray-100 mx-auto p-4 shadow-lg shadow-gray-800 rounded-md  text-black space-y-6 text-sm leading-relaxed">
       <p>
         I/we <input type="text" className="border-b border-black w-48 mx-1" />{" "}
         have been explained (by my treating doctor) about my disease condition,

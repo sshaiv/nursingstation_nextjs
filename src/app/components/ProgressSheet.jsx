@@ -195,7 +195,7 @@ export default function ProgressSheet({ visitid, gssuhid, empid }) {
       </div>
     )}
     {currentIndex === progressSheetData.length - 1 && (
-      <div className="text-[11px] px-2 py-[2px] bg-green-100 text-green-800 rounded font-medium inline-block shadow-sm border border-green-300">
+      <div className="text-[11px] px-2 py-[2px] bg-blue-100 text-blue-800 rounded font-medium inline-block shadow-sm border border-green-300">
         🆕 New Entry
       </div>
     )}

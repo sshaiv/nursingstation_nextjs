@@ -58,7 +58,7 @@ const MedicineHistoryModal = ({ isOpen, onClose, patientData }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-xs bg-black/30">
       <div className="bg-white rounded-xl shadow-lg max-w-[95vw] max-h-[90vh] w-full overflow-auto p-6">
-        <div className="flex items-center justify-between bg-green-100 text-green-800 font-semibold px-4 py-2 rounded-t-md">
+        <div className="flex items-center justify-between bg-blue-100 text-blue-800 font-semibold px-4 py-2 rounded-t-md">
           <span className="text-sm">Medicine History</span>
           <button
             onClick={onClose}
