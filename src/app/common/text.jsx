@@ -18,7 +18,7 @@ export function Label({ children, htmlFor, ...props }) {
   return (
     <label
       htmlFor={htmlFor}
-      className="flex text-xs md:text-[10px] items-center text-gray-800 gap-2"
+      className="flex text-xs md:text-[12px] items-center text-gray-800 gap-2"
       {...props}
     >
       {children}

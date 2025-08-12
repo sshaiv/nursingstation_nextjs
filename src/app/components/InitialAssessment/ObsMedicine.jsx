@@ -355,9 +355,9 @@ export default function ObsMedicine({ visitid, gssuhid, empid }) {
         <hr className="border-t border-gray-300 mb-2" />
         
          <div className="flex justify-center">
-        <button
+         <button
           onClick={handleSave}       
-          className={"w-full  px-6 py-2 rounded text-white  bg-blue-500 hover:bg-blue-600"}
+          className={"w-full text-sm font-semibold rounded-b-full  rounded-lg p-2 text-white  bg-blue-500 hover:bg-blue-600"}
         >
           Save
         </button>

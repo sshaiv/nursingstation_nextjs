@@ -467,7 +467,7 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
         <button
           onClick={savebtn}
           disabled={!isValidToSave}
-          className={`w-full  px-6 py-2 rounded text-white ${
+          className={`w-full text-sm font-semibold rounded-b-full  rounded-lg p-2 text-white ${
             !isValidToSave
               ? "bg-gray-400 cursor-not-allowed"
               : "bg-blue-500 hover:bg-blue-600"
@@ -535,10 +535,20 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
                           idx % 2 === 0 ? "bg-white" : "bg-blue-50"
                         }`}
                       >
-                        <TableReuse>{row.visitdatetime || "-"}</TableReuse>
-                        <TableReuse>{row.bedno || "-"}</TableReuse>
-                        <TableReuse>{row.consultantname || "-"}</TableReuse>
-                        <TableReuse>{row.qty || "-"}</TableReuse>
+                        <td className=" font-semibold text-xs p-2">
+                          {row.visitdatetime || "N/A"}
+                        </td>
+                        <td className=" font-semibold text-xs p-2">
+                          {row.bedno || "N/A"}
+                        </td>
+                        <td className=" font-semibold text-xs p-2">
+                          {row.consultantname || "N/A"}
+                        </td>
+                        <td className=" font-semibold text-xs p-2">
+                          {row.qty || "N/A"}
+                        </td>
+                       
+                        
                         <TableReuse>
                           {row.isemergency != null
                             ? String(row.isemergency ? 1 : 0)

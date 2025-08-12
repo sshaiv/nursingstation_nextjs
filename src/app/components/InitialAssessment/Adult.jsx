@@ -336,13 +336,11 @@ export default function Adult({ visitid, gssuhid, empid }) {
 
         <div className="flex justify-center">
           <button
-            onClick={handleSave}
-            className={
-              "w-full  px-6 py-2 rounded text-white  bg-blue-500 hover:bg-blue-600"
-            }
-          >
-            Save
-          </button>
+          onClick={handleSave}       
+          className={"w-full text-sm font-semibold rounded-b-full  rounded-lg p-2 text-white  bg-blue-500 hover:bg-blue-600"}
+        >
+          Save
+        </button>
         </div>
       </div>
     </div>

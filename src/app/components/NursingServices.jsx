@@ -610,7 +610,7 @@ export default function NursingServices({
         <button
           onClick={savebtn}
           disabled={!isSaveEnabled}
-          className={`w-full  px-6 py-2 rounded text-white ${
+          className={`w-full text-sm font-semibold rounded-b-full  rounded-lg p-2 text-white   ${
             !isSaveEnabled
               ? "bg-gray-400 cursor-not-allowed"
               : "bg-blue-500 hover:bg-blue-600"

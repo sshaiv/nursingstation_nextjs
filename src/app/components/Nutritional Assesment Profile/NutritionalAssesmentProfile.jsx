@@ -17,7 +17,6 @@ import {
 } from "../../utils/dateUtils";
 import useVitalsData from "../../hooks/useVitalsData";
 
-
 export default function NutritionalAssessmentProfile({
   visitid,
   gssuhid,
@@ -153,10 +152,7 @@ export default function NutritionalAssessmentProfile({
       }
     };
     fetchNutritionalData();
-  }, [
-    visitid, 
-    gssuhid, 
-    empid]);
+  }, [visitid, gssuhid, empid]);
 
   const [weightChangeOptions, setWeightChangeOptions] = useState([]);
   const [yesNoOptions, setYesNoOptions] = useState([]);
@@ -286,12 +282,11 @@ export default function NutritionalAssessmentProfile({
       console.log("save btn", derivedJson);
 
       console.log("save btn", response.data);
-    
+
       toast.success("Data saved successfully!");
     } catch (error) {
       console.error("Error saving nutritional assessment:", error);
       toast.error("Failed to save data. Please try again.");
-   
     }
   };
 
@@ -310,7 +305,7 @@ export default function NutritionalAssessmentProfile({
   }, [latestVitals]);
 
   useKeyboardScrollFix();
-  
+
   return (
     <div className="p-4 min-h-screen text-sm text-gray-700">
       <div className="flex h-[1px]  items-center justify-center">
@@ -325,7 +320,7 @@ export default function NutritionalAssessmentProfile({
         <H3 className="text-xs">📋 Personal Details</H3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="flex items-center gap-2">
-            <Label className="w-24 text-[10px]">Height</Label>
+            <Label>Height</Label>
             <input
               type="number"
               placeholder="cms"
@@ -335,7 +330,7 @@ export default function NutritionalAssessmentProfile({
             />
           </div>
           <div className="flex items-center gap-2">
-            <Label className="w-24 text-[10px]">Weight</Label>
+            <Label>Weight</Label>
             <input
               type="number"
               placeholder="kgs"
@@ -345,7 +340,7 @@ export default function NutritionalAssessmentProfile({
             />
           </div>
           <div className="flex items-center gap-2">
-            <Label className="w-40 text-[10px]">Body Mass Index</Label>
+            <Label>Body Mass Index</Label>
             <input
               type="text"
               placeholder="Kg/M2"
@@ -358,7 +353,7 @@ export default function NutritionalAssessmentProfile({
 
         {/* Food Habits */}
         <div className="flex items-center gap-4 flex-wrap">
-          <Label className="w-28 text-[10px]">Food Habits</Label>
+          <Label>Food Habits</Label>
           <div className="flex gap-4">
             {foodHabitOptions.map((option) => (
               <label
@@ -382,10 +377,8 @@ export default function NutritionalAssessmentProfile({
         </div>
 
         {/* Food Allergy */}
-      
-        {/* Food Allergy */}
         <div className="flex items-center gap-4 flex-wrap">
-          <Label className="w-28 text-[10px]">Food Allergy</Label>
+          <Label>Food Allergy</Label>
           <div className="flex gap-4">
             {yesNoOptions.map((option) => (
               <label
@@ -427,7 +420,7 @@ export default function NutritionalAssessmentProfile({
               <H3 className="text-[10px] font-semibold m-0 inline">
                 Other Habits
               </H3>
-              <span>
+              <span className="text-[12px]">
                 (Any 1 = score 1, 2–3 = score 2, {">"}3 = score 3, None = score
                 0)
               </span>
@@ -443,7 +436,7 @@ export default function NutritionalAssessmentProfile({
             {["Alcohol", "Smoking", "Tobacco Chewing", "None"].map((habit) => (
               <Label
                 key={habit}
-                className="flex items-center gap-1 text-[10px]"
+                className="flex items-center gap-1 text-[12px]"
               >
                 <input
                   type="checkbox"
@@ -493,7 +486,7 @@ export default function NutritionalAssessmentProfile({
               <H3 className="text-[10px] font-semibold m-0 inline">
                 Clinical Data
               </H3>
-              <span>
+              <span className="text-[12px]">
                 (Any 1 = score 1, 2–3 = score 2, {">"}3 = score 3, None = score
                 0)
               </span>
@@ -511,7 +504,7 @@ export default function NutritionalAssessmentProfile({
       <div className="mt-4 space-y-2 text-[10px] text-gray-700">
         <div className="flex flex-wrap items-center gap-3">
           <H3 className="text-xs">📋 Past History</H3>
-          <Label className="flex items-center gap-1">
+          <Label>
             <input
               type="checkbox"
               className="text-[10px]"
@@ -520,7 +513,7 @@ export default function NutritionalAssessmentProfile({
             />
             DM
           </Label>
-          <Label className="flex items-center gap-1">
+          <Label>
             <input
               type="checkbox"
               className="text-[10px]"
@@ -529,7 +522,7 @@ export default function NutritionalAssessmentProfile({
             />
             Hypertension
           </Label>
-          <Label className="flex items-center gap-1">
+          <Label>
             <input
               type="checkbox"
               className="text-[10px]"
@@ -538,7 +531,7 @@ export default function NutritionalAssessmentProfile({
             />
             Renal
           </Label>
-          <Label className="flex items-center gap-1">
+          <Label>
             <input
               type="checkbox"
               className="text-[10px]"
@@ -547,7 +540,7 @@ export default function NutritionalAssessmentProfile({
             />
             Cardiac
           </Label>
-          <Label className="flex items-center gap-1">
+          <Label>
             <input
               type="checkbox"
               className="text-[10px]"
@@ -556,7 +549,7 @@ export default function NutritionalAssessmentProfile({
             />
             Respiratory Disease
           </Label>
-          <Label className="flex items-center gap-1">
+          <Label>
             <input
               type="checkbox"
               className="text-[10px]"
@@ -565,7 +558,7 @@ export default function NutritionalAssessmentProfile({
             />
             Liver Disease
           </Label>
-          <Label className="flex items-center gap-1">
+          <Label>
             <input
               type="checkbox"
               className="text-[10px]"
@@ -590,72 +583,12 @@ export default function NutritionalAssessmentProfile({
         </div>
       </div>
 
-      {/* <hr className="border-t mt-6 mb-2 border-gray-300" />
-      <div className="space-y-4">
-        <H3>✅ Daily Nutritional Assessment</H3>
-
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="flex flex-col gap-3 w-full md:w-1/2">
-            <div className="flex items-center gap-2">
-              <Label>Route of Feeding</Label>
-              <Label>
-                Oral
-                <input
-                  name="routeOfFeeding"
-                  type="radio"
-                  className="ml-1"
-                  value="Oral"
-                  onChange={() =>
-                    handleSelect("routeOfFeeding", { CID: 1, CNAME: "Oral" })
-                  } 
-                />
-              </Label>{" "}
-              <Label>
-                Enteral (RT)
-                <input
-                  name="routeOfFeeding"
-                  type="radio"
-                  className="ml-1"
-                  value="Enteral"
-                  onChange={() =>
-                    handleSelect("routeOfFeeding", { CID: 2, CNAME: "Enteral" })
-                  } 
-                />
-              </Label>
-            </div>
-
-            <ReusableTextareaField
-              className="border-2 text-[10px]"
-              id="diet"
-              label="Diet"
-              rows={1}
-              style={{ minHeight: "28px", padding: "6px 8px" }}
-              value={historyGivenBy}
-              onChange={(e) => setHistoryGivenBy(e.target.value)}
-            />
-
-            <ReusableTextareaField
-              className="border-2 text-[10px]"
-              id="remark"
-              label="Remark"
-              rows={1}
-              style={{ minHeight: "28px", padding: "6px 8px" }}
-              value={historyGivenBy}
-              onChange={(e) => setHistoryGivenBy(e.target.value)}
-            />
-          </div>
-        </div>
-
-      
-      </div> 
-      <hr className="border-t mt-6 mb-2 border-gray-300" />*/}
-
       <div className="rounded-md space-y-4 text-[10px] text-gray-700">
         <H3 className="text-xs">📋 Nutritional Assessment</H3>
 
         {/* Food Intake */}
         <div>
-          <Label className="block mb-1">Food Intake</Label>
+          <Label>Food Intake</Label>
           <div className="flex flex-wrap gap-4">
             {foodIntakeOptions.map((option) => (
               <label
@@ -666,13 +599,13 @@ export default function NutritionalAssessmentProfile({
                   type="radio"
                   name="foodIntake"
                   value={option.CID}
-                  checked={foodIntakeId === option.CID} // ✅ controlled selection
+                  checked={foodIntakeId === option.CID}
                   onChange={() => {
-                    handleSelect("foodIntake", option); // optional (CNAME usage)
-                    setFoodIntakeId(option.CID); // ✅ set selected ID
+                    handleSelect("foodIntake", option);
+                    setFoodIntakeId(option.CID);
                   }}
                 />
-                <span>{option.CNAME}</span>
+                <span className="text-[11px] mt-1">{option.CNAME}</span>
               </label>
             ))}
           </div>
@@ -680,9 +613,7 @@ export default function NutritionalAssessmentProfile({
 
         {/* Weight Change */}
         <div>
-          <Label className="block mb-1 text-[10px]">
-            Overall weight change (over past 3 months)
-          </Label>
+          <Label>Overall weight change (over past 3 months)</Label>
           <div className="flex flex-wrap gap-4">
             {weightChangeOptions.map((option) => (
               <label
@@ -699,7 +630,7 @@ export default function NutritionalAssessmentProfile({
                     setOverallWeightChangeId(option.CID);
                   }}
                 />
-                <span>{option.CNAME}</span>
+                <span className="text-[11px] mt-1">{option.CNAME}</span>
               </label>
             ))}
           </div>
@@ -707,9 +638,7 @@ export default function NutritionalAssessmentProfile({
 
         {/* Nutritional Status */}
         <div>
-          <Label className="block mb-1 text-[10px]">
-            Overall nutritional status (physical signs)
-          </Label>
+          <Label>Overall nutritional status (physical signs)</Label>
           <div className="flex flex-wrap gap-4">
             {nutritionalStatusOptions.map((option) => (
               <label
@@ -726,7 +655,7 @@ export default function NutritionalAssessmentProfile({
                     setOverallNutritionalStatusId(option.CID); // ✅ set ID
                   }}
                 />
-                <span>{option.CNAME}</span>
+                <span className="text-[11px] mt-1">{option.CNAME}</span>
               </label>
             ))}
           </div>
@@ -734,7 +663,7 @@ export default function NutritionalAssessmentProfile({
 
         {/* Nutritional Signs / Symptoms */}
         <div>
-          <Label className="block mb-1">Nutritional Signs / Symptoms</Label>
+          <Label>Nutritional Signs / Symptoms</Label>
           <div className="flex flex-wrap items-center gap-4 text-[10px]">
             {[
               ["Hyperacidity", isHyperacidity, setIsHyperacidity],
@@ -748,7 +677,7 @@ export default function NutritionalAssessmentProfile({
               ["Other Complaint", isOtherComplaint, setIsOtherComplaint],
               ["None", isSignsNone, setIsSignsNone], // Important: use correct variable
             ].map(([label, value, setValue]) => (
-              <Label key={label} className="flex items-center gap-1">
+              <Label key={label}>
                 <input
                   type="checkbox"
                   checked={value}
@@ -814,16 +743,15 @@ export default function NutritionalAssessmentProfile({
             label="🖊️"
             value={dietPlan}
             onChange={(e) => setDietPlan(e.target.value)}
-            
           />
         </div>
       </div>
 
       <hr className="border-t mt-6 mb-2 border-gray-300" />
-  <div className="flex justify-center">
-        <button
+      <div className="flex justify-center">
+       <button
           onClick={handleSave}       
-          className={"w-full  px-6 py-2 rounded text-white  bg-blue-500 hover:bg-blue-600"}
+          className={"w-full text-sm font-semibold rounded-b-full  rounded-lg p-2 text-white  bg-blue-500 hover:bg-blue-600"}
         >
           Save
         </button>
