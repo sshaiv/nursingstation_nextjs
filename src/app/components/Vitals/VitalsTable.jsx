@@ -168,10 +168,7 @@ export default function VitalsTable({
       rr ||
       painScore;
 
-    if (
-      !performedByData &&
-      !hasVitalsData 
-    ) {
+    if (!performedByData && !hasVitalsData) {
       const newErrors = {};
 
       if (!performedByData) newErrors.performedBy = "Performed By is required.";
@@ -287,7 +284,6 @@ export default function VitalsTable({
       clearInputs();
     } else {
       toast.warning("Please fill at least one vital");
-   
     }
   };
 
@@ -325,8 +321,7 @@ export default function VitalsTable({
 
       if (response.ok) {
         toast.success(" Data saved successfully!");
-      
-   
+
         // Clear inserted vitals
         setInsertedVitals([]);
         setPerformedByData(null);
@@ -335,12 +330,10 @@ export default function VitalsTable({
         loadVitalData();
       } else {
         toast.error("❌ Failed to save data: " + result.message);
-     
       }
     } catch (error) {
       console.error("Error saving data:", error);
       toast.error("❌ An error occurred while saving data: " + error.message);
-    
     }
   };
 
@@ -378,11 +371,10 @@ export default function VitalsTable({
     }
   }, [selectedDate, selectedTime]);
 
-useKeyboardScrollFix();
+  useKeyboardScrollFix();
 
   return (
     <div className=" border border-gray-300 shadow p-2">
-     
       <div className="flex justify-between items-center mb-1">
         <MainHeadings title={title} icon="🩺" />
 
@@ -416,13 +408,17 @@ useKeyboardScrollFix();
       <div className="flex flex-wrap gap-2 mb-2">
         {/* Date & Time Input */}
 
-        <DateTimeInput
-          selectedDate={selectedDate}
-          onDateChange={setSelectedDate}
-          time={selectedTime}
-          onTimeChange={setSelectedTime}
-          label="Date & Time"
-        />
+     <div className="flex flex-col">
+          <label className="text-xs text-gray-700 font-medium mb-1">
+            Date & Time
+          </label>
+          <DateTimeInput
+            selectedDate={selectedDate}
+            onDateChange={setSelectedDate}
+            time={selectedTime}
+            onTimeChange={(e) => setTime(e.target.value)}
+          /></div>
+    
 
         {/* Performed By Input */}
         <div className="flex flex-col w-40">
@@ -479,7 +475,7 @@ useKeyboardScrollFix();
           },
         ].map((input, index) => (
           <div className="flex flex-col items-start" key={index}>
-            <label className="text-gray-500 font-semibold text-[10px] mb-[1px]">
+            <label className="text-gray-500 font-semibold text-[11px] mb-[1px]">
               {input.placeholder}
             </label>
             <input
@@ -567,9 +563,7 @@ useKeyboardScrollFix();
                   key={"inserted-" + idx}
                   className="hover:bg-gray-50 text-xs text-black"
                 >
-                  <td className="p-1  bg-blue-100 ">
-                    {entry.vitaldatetime}
-                  </td>
+                  <td className="p-1  bg-blue-100 ">{entry.vitaldatetime}</td>
                   <td className="p-1 bg-blue-100">{performedBy}</td>
                   <td className="p-1 bg-blue-100">{entry.bp}</td>
                   <td className="p-1 bg-blue-100">{entry.pulse}</td>
@@ -579,20 +573,14 @@ useKeyboardScrollFix();
                   <td className="p-1 bg-blue-100">{entry.height}</td>
                   <td className="p-1 bg-blue-100">{entry.bmi}</td>
                   <td className="p-1 bg-blue-100">{entry.rr}</td>
-                  <td className="p-1 bg-blue-100">
-                    {entry.painScore}
-                  </td>
-                  <td className="p-1 bg-blue-100">
-                    {entry.Headcircumference}
-                  </td>
+                  <td className="p-1 bg-blue-100">{entry.painScore}</td>
+                  <td className="p-1 bg-blue-100">{entry.Headcircumference}</td>
                   <td className="p-1 bg-blue-100">{entry.bsl}</td>
                   <td className="p-1 bg-blue-100">{entry.cvs}</td>
                   <td className="p-1 bg-blue-100">{entry.cns}</td>
                   <td className="p-1 bg-blue-100">{entry.rs}</td>
                   <td className="p-1 bg-blue-100">{entry.pa}</td>
-                  <td className="p-1 bg-blue-100">
-                    {entry.logicalExam}
-                  </td>
+                  <td className="p-1 bg-blue-100">{entry.logicalExam}</td>
                   <td className="p-1 bg-blue-100">
                     <button
                       className="text-red-500 hover:underline"
@@ -633,9 +621,6 @@ useKeyboardScrollFix();
                 </td>
               </tr>
             ))}
-
- 
-
           </tbody>
         </table>
       </div>

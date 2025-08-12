@@ -53,7 +53,7 @@ export default function Implants({ visitid, gssuhid, empid }) {
 
         setErrors({});
 
-        const formattedDate = `${selectedDate.toLocaleDateString()} ${time}`;
+        // const formattedDate = `${selectedDate.toLocaleDateString()} ${time}`;
         const newEntry = {
             date: formattedDate,
             nursingService,
