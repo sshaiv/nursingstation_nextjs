@@ -199,7 +199,7 @@ export default function Implants({ visitid, gssuhid, empid }) {
                             label="Expiry Date"
                         />
                         {errors.dateTime && (
-                            <p className="text-red-500 text-[10px] mt-[2px] ml-[2px] col-span-full -mt-2">{errors.dateTime}</p>
+                            <p className="text-red-500 text-[10px]  ml-[2px] col-span-full -mt-2">{errors.dateTime}</p>
                         )}
                     </div>
                     <ReusableInputField

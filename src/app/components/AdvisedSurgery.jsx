@@ -176,7 +176,7 @@ export default function AdviceSurgery({ visitid, gssuhid, empid }) {
                     </label>
                 </div>
                 {errors.serviceType && (
-                    <p className="text-red-500 text-[10px] mt-[2px] ml-[2px] col-span-full -mt-2">{errors.serviceType}</p>
+                    <p className="text-red-500 text-[10px]  ml-[2px] col-span-full -mt-2">{errors.serviceType}</p>
                 )}
 
                 {/* Inputs Grid */}
@@ -192,7 +192,7 @@ export default function AdviceSurgery({ visitid, gssuhid, empid }) {
             label="Date & Time"
         />
         {errors.dateTime && (
-            <p className="text-red-500 text-[10px] mt-[2px] ml-[2px] col-span-full -mt-2">{errors.dateTime}</p>
+            <p className="text-red-500 text-[10px]  ml-[2px] col-span-full -mt-2">{errors.dateTime}</p>
         )}
     </div>
 
