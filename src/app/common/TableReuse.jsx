@@ -3,8 +3,8 @@
 const TableReuse = ({ type = 'td', children, className = '' }) => {
   const isTextSizeOverridden = className.includes('text-['); 
 
-  const tdTextSize = isTextSizeOverridden ? '' : 'text-[9px]';
-  const thTextSize = isTextSizeOverridden ? '' : 'text-[9px]';
+  const tdTextSize = isTextSizeOverridden ? '' : 'text-[9px] sm:text-[12px]';
+  const thTextSize = isTextSizeOverridden ? '' : 'text-[9px] sm:text-[12px]';
 
   const defaultTdStyle = `border text-gray-700 p-[2px] ${tdTextSize}`;
   const defaultThStyle = `border p-[2px] font-semibold bg-gray-200 ${thTextSize}`;

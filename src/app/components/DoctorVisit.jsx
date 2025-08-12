@@ -11,6 +11,7 @@ import useSaveDVData from "../hooks/useSaveDVData";
 import DoctorModal from "../common/Modal/DoctorModal";
 import { getCurrentDate, getCurrentDateTime } from "../utils/dateUtils";
 import { toast } from "react-toastify";
+import CloseButton from "../common/CrossButton";
 
 export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
   const CurrentDate = getCurrentDate();
@@ -36,7 +37,7 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
   // This is the key state to hold multiple service entries
   const [serviceEntries, setServiceEntries] = useState([]);
   const [entries, setEntries] = useState([]); // Grid data
-
+  const [historyModal, setHistoryModal] = useState(false);
   const [saveData, setSaveData] = useSaveDVData();
   console.log("Updated DV", saveData);
 
@@ -191,7 +192,7 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
       console.log("Response:", result);
 
       if (response.ok) {
-          toast.success("Data saved successfully!");
+        toast.success("Data saved successfully!");
         setRefreshData((prev) => !prev);
         // 🔁 Reset entries and form fields
         setVitals([]);
@@ -211,7 +212,7 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
       }
     } catch (error) {
       console.error("Error saving data:", error);
-     toast.error("An error occurred while saving data: " + error.message);
+      toast.error("An error occurred while saving data: " + error.message);
     }
   };
 
@@ -287,10 +288,18 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
     console.log("✅ Updated Service Entries:", updatedServiceEntries);
     console.log("🧾 Updated JSON String:", newJSONString);
   };
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // Filtered data based on service or consultant name
+  const filteredTable = table.filter((item) => {
+    const service = item.servname?.toLowerCase() || "";
+    const consultant = item.consultantname?.toLowerCase() || "";
+    const term = searchTerm.toLowerCase();
+    return service.includes(term) || consultant.includes(term);
+  });
 
   return (
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
-    
       <div className="flex h-[1px]  items-center justify-center">
         <ModalHeading title="Doctor Visit" />
       </div>
@@ -309,7 +318,7 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
         />
       )}
 
-      <div className="border border-gray-100 rounded-lg space-y-2">
+      <div className="space-y-2">
         <div className="flex flex-wrap items-start gap-x-2 gap-y-2 text-sm">
           {/* Date & Time */}
           <div className="flex flex-col min-w-[180px]">
@@ -381,12 +390,18 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
               placeholder="Remarks"
             />
           </div>
-          <div className="items-center mt-5">
-          <ActionButton
-            label="Insert"
-            onClick={handleInsert}
-            className="text-xs px-4 py-1"
-          /></div>
+          <div className="flex items-center gap-2 mt-5">
+            <ActionButton
+              label="Insert"
+              onClick={handleInsert}
+              className="text-xs px-4 py-1"
+            />
+            <ActionButton
+              label="History Data"
+              onClick={() => setHistoryModal(true)}
+              className="text-xs px-4 py-1"
+            />
+          </div>
         </div>
       </div>
 
@@ -442,37 +457,7 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
                 );
               })}
 
-              {/* API fetched data */}
-              {loading ? (
-                <tr>
-                  <td colSpan={7} className="py-4 text-center text-gray-500">
-                    Loading...
-                  </td>
-                </tr>
-              ) : table && table.length > 0 ? (
-                [...table].reverse().map((row, idx) => (
-                  <tr key={"api-" + idx} className="hover:bg-gray-50 border-t">
-                    <TableReuse>{row.visitdatetime || "-"}</TableReuse>
-                    <TableReuse>{row.bedno || "-"}</TableReuse>
-                    <TableReuse>{row.consultantname || "-"}</TableReuse>
-                    <TableReuse>{row.qty || "-"}</TableReuse>
-                    <TableReuse>
-                      {row.isemergency != null
-                        ? String(row.isemergency ? 1 : 0)
-                        : "-"}
-                    </TableReuse>
-
-                    <TableReuse>{row.remark || "-"}</TableReuse>
-                    <TableReuse>-</TableReuse>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={7} className="py-4 text-center text-gray-500">
-                    No records found.
-                  </td>
-                </tr>
-              )}
+             
             </tbody>
           </table>
         </div>
@@ -491,6 +476,95 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
           Save
         </button>
       </div>
+      {/* Modal */}
+      {historyModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-xs bg-black/30">
+          <div className="bg-white rounded-xl shadow-lg max-w-[95vw] max-h-[90vh] w-full overflow-auto p-6">
+            <div className="flex items-center justify-between bg-blue-100 text-blue-800 font-semibold px-4 py-2 rounded-t-md">
+              <span className="text-sm">Doctor Visit History</span>
+            </div>
+            {/* Search Input */}
+            <div className="flex items-center mb-2 font-semibold px-2 py-2 rounded-t-md space-x-2">
+              <input
+                type="text"
+                placeholder="🔍 Search by Service or Consultant Name"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="border mt-2 flex-grow px-3 py-2 border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300 text-gray-800"
+              />
+              <CloseButton onClick={() => setHistoryModal(false)} />
+            </div>
+
+            {/* Table */}
+            <div className=" overflow-auto max-h-[60vh]">
+              <table className="w-full border-collapse border border-gray-100  text-gray-700 text-left">
+                <thead className="bg-gray-300 sticky top-0 z-10">
+                  <tr className="bg-gray-300 ">
+                    <th className="px-4 py-2 text-xs font-semibold">
+                      Visit Date/Time
+                    </th>
+                    <th className="px-4 py-2 text-xs font-semibold">Bed No</th>
+                    <th className="px-4 py-2 text-xs font-semibold">
+                      Doctor Name
+                    </th>
+                    <th className="px-4 py-2 text-xs font-semibold">Qty</th>
+                    <th className="px-4 py-2 text-xs font-semibold">
+                      Emergency
+                    </th>
+                    <th className="px-4 py-2 text-xs font-semibold">Remarks</th>
+                   
+                  </tr>
+                </thead>
+                <tbody>
+                  {/* API fetched data */}
+                  {loading ? (
+                    <tr>
+                      <td
+                        colSpan={7}
+                        className="py-4 text-center text-gray-500"
+                      >
+                        Loading...
+                      </td>
+                    </tr>
+                  ) :
+                  filteredTable.length > 0 ? (
+                  [...filteredTable].reverse().map((row, idx) => (
+                      <tr
+                        key={"api-" + idx}
+                          className={`hover:bg-amber-50 ${
+                          idx % 2 === 0 ? "bg-white" : "bg-blue-50"
+                        }`}
+                      >
+                        <TableReuse>{row.visitdatetime || "-"}</TableReuse>
+                        <TableReuse>{row.bedno || "-"}</TableReuse>
+                        <TableReuse>{row.consultantname || "-"}</TableReuse>
+                        <TableReuse>{row.qty || "-"}</TableReuse>
+                        <TableReuse>
+                          {row.isemergency != null
+                            ? String(row.isemergency ? 1 : 0)
+                            : "-"}
+                        </TableReuse>
+
+                        <TableReuse>{row.remark || "-"}</TableReuse>
+                      
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan={7}
+                        className="py-4 text-center text-gray-500"
+                      >
+                        No records found.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

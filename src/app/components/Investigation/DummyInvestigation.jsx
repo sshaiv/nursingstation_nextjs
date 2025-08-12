@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { ModalHeading } from "../common/text";
-import { ActionButton, SaveButton } from "../common/Buttons";
-import TableReuse from "../common/TableReuse";
+import { ModalHeading } from "@/app/common/text"; 
+import { ActionButton, SaveButton } from "@/app/common/Buttons";
+import TableReuse from "@/app/common/TableReuse";
 import "react-datepicker/dist/react-datepicker.css";
-import DateTimeInput from "../common/DateTimeInput";
-import ReusableInputField from "../common/SmallInputfields";
-import DoctorModal from "../common/Modal/DoctorModal";
-import InvestigationModal from "../common/Modal/InvestigationModal";
-import useSaveInvData from "../hooks/useSaveInvData";
+import DateTimeInput from "@/app/common/DateTimeInput";
+import ReusableInputField from "@/app/common/SmallInputfields";
+import DoctorModal from "@/app/common/Modal/DoctorModal";
+import useSaveInvData from "@/app/hooks/useSaveInvData";
 import axios from "axios";
-import API_ENDPOINTS from "../constants/api_url";
-import { getCurrentDateTime, getCurrentDate } from "../utils/dateUtils";
-import InvestigationModalDummy from "../common/Modal/InvestigationModalDummy";
+import API_ENDPOINTS from "@/app/constants/api_url";
+import { getCurrentDateTime, getCurrentDate } from "../../utils/dateUtils";
+import InvestigationModalDummy from "@/app/common/Modal/InvestigationModalDummy";
 import { toast } from "react-toastify";
+import CloseButton from "@/app/common/CrossButton";
 
 export default function DummyInvestigation({
   visitid,
@@ -40,7 +40,7 @@ export default function DummyInvestigation({
   const [table, setTable] = useState([]);
   const [canSave, setCanSave] = useState(false);
   const [refreshData, setRefreshData] = useState(false);
-
+  const [historyModal, setHistoryModal] = useState(false);
 
   const [investigations, setInvestigations] = useState([]);
   const [selectedIds, setSelectedIds] = useState([]);
@@ -262,7 +262,7 @@ export default function DummyInvestigation({
     ]);
   };
 
-  const [insertedServices, setInsertedServices] = useState([]); 
+  const [insertedServices, setInsertedServices] = useState([]);
 
   const savebtn = async () => {
     console.log("savebtn ", saveData);
@@ -283,10 +283,10 @@ export default function DummyInvestigation({
       console.log("Response:", result);
 
       if (response.ok) {
-       toast.success("Data saved successfully!");
+        toast.success("Data saved successfully!");
 
         setIsSaved(true);
-        setRefreshData((prev) => !prev);
+        setRefreshData(true);
         // Reset vitals and form data
         setVitals([]);
         // setSaveData({});
@@ -305,6 +305,7 @@ export default function DummyInvestigation({
       console.error("Error saving data:", error);
       toast.error("An error occurred while saving data: " + error.message);
     }
+    
   };
 
   useEffect(() => {
@@ -494,9 +495,18 @@ export default function DummyInvestigation({
     }
   };
 
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // Filtered data based on service or consultant name
+  const filteredTable = table.filter((item) => {
+    const service = item.servname?.toLowerCase() || "";
+    const consultant = item.consultantname?.toLowerCase() || "";
+    const term = searchTerm.toLowerCase();
+    return service.includes(term) || consultant.includes(term);
+  });
+
   return (
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
-  
       <div className="flex items-center justify-center">
         <ModalHeading title="Investigation" />
       </div>
@@ -531,7 +541,7 @@ export default function DummyInvestigation({
         />
       )}
 
-      <div className="border border-gray-100 rounded-lg space-y-4">
+      <div className="  space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-start">
           {/* Date & Time */}
           <div className="flex flex-col w-full">
@@ -601,11 +611,11 @@ export default function DummyInvestigation({
               onClick={handleInsert}
               className="text-xs px-4 py-1"
             />
-            {/* <ActionButton
-      label="Posted Data"
-      onClick={() => console.log("Posted Data Clicked")}
-      className="text-xs px-4 py-1"
-    /> */}
+            <ActionButton
+              label="History Data"
+              onClick={() => setHistoryModal(true)}
+              className="text-xs px-4 py-1"
+            />
           </div>
         </div>
       </div>
@@ -624,8 +634,6 @@ export default function DummyInvestigation({
               </tr>
             </thead>
             <tbody>
-             
-
               {vitals
                 .map((v, realIdx) => ({ ...v, originalIndex: realIdx }))
                 .reverse()
@@ -649,35 +657,6 @@ export default function DummyInvestigation({
                     </TableReuse>
                   </tr>
                 ))}
-
-              {/* Conditional rendering for loading */}
-              {loading ? (
-                <tr>
-                  <td colSpan={5} className="text-center py-2 text-gray-500">
-                    ⟳ Loading investigations...
-                  </td>
-                </tr>
-              ) : (
-                <>
-                  {/* Render API fetched data below */}
-                  {table.map((item, idx) => (
-                    <tr
-                      key={"api-" + idx}
-                      className="hover:bg-gray-100 border-t"
-                    >
-                      <TableReuse>{item.orddate || "N/A"}</TableReuse>
-                      <TableReuse>{item.consultantname || "N/A"}</TableReuse>
-                      <TableReuse>{item.servname || "N/A"}</TableReuse>
-                      <TableReuse>{item.remarks || "-"}</TableReuse>
-                      <TableReuse>
-                        <div className="flex justify-center space-x-2">
-                          {/* Actions if needed */}
-                        </div>
-                      </TableReuse>
-                    </tr>
-                  ))}
-                </>
-              )}
             </tbody>
           </table>
         </div>
@@ -698,6 +677,91 @@ export default function DummyInvestigation({
           Save
         </button>
       </div>
+
+      {/* Modal */}
+      {historyModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-xs bg-black/30">
+          <div className="bg-white rounded-xl shadow-lg max-w-[95vw] max-h-[90vh] w-full overflow-auto p-6">
+            <div className="flex items-center justify-between bg-blue-100 text-blue-800 font-semibold px-4 py-2 rounded-t-md">
+          <span className="text-sm">Investigation History</span>
+         
+        </div>
+            {/* Search Input */}
+            <div className="flex items-center mb-2 font-semibold px-2 py-2 rounded-t-md space-x-2">
+              <input
+                type="text"
+                placeholder="🔍 Search by Service or Consultant Name"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="border mt-2 flex-grow px-3 py-2 border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300 text-gray-800"
+              />
+              <CloseButton onClick={() => setHistoryModal(false)} />
+            </div>
+
+            {/* Table */}
+            <div className=" overflow-auto max-h-[60vh]">
+              <table className="w-full border-collapse border border-gray-100  text-gray-700 text-left">
+                <thead className="bg-gray-300 sticky top-0 z-10">
+                  <tr className="bg-gray-300 ">
+                    <th className="px-4 py-2 text-xs font-semibold">
+                      Order Date
+                    </th>
+                    <th className="px-4 py-2 text-xs font-semibold">
+                      Consultant
+                    </th>
+                    <th className="px-4 py-2 text-xs font-semibold">Service</th>
+                    <th className="px-4 py-2 text-xs font-semibold">Remarks</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {loading ? (
+                    <tr>
+                      <td
+                        colSpan={4}
+                        className="text-center py-2 text-gray-500"
+                      >
+                        ⟳ Loading investigations...
+                      </td>
+                    </tr>
+                  ) : 
+                  filteredTable.length > 0 ? (
+                    filteredTable.map((item, idx) => (
+                      <tr
+                        key={idx}
+                        className={`hover:bg-amber-50 ${
+                          idx % 2 === 0 ? "bg-white" : "bg-blue-50"
+                        }`}
+                      >
+                        <td className=" font-semibold text-xs p-2">
+                          {item.orddate || "N/A"}
+                        </td>
+                        <td className="font-semibold text-xs p-2">
+                          {item.consultantname || "N/A"}
+                        </td>
+                        <td className="font-semibold text-xs p-2">
+                          {item.servname || "N/A"}
+                        </td>
+                        <td className=" font-semibold text-xs p-2">
+                          {item.remarks || "-"}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan={4}
+                        className="text-center py-2 text-gray-400"
+                      >
+                        No matching records found
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

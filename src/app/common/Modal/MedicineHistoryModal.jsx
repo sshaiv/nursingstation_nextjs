@@ -1,5 +1,6 @@
 import TableReuse from "@/app/common/TableReuse";
 import React, { useEffect, useState } from "react";
+import CloseButton from "../CrossButton";
 
 const MedicineHistoryModal = ({ isOpen, onClose, patientData }) => {
   const [historyData, setHistoryData] = useState([]);
@@ -42,7 +43,7 @@ const MedicineHistoryModal = ({ isOpen, onClose, patientData }) => {
   };
 
   useEffect(() => {
-    if (!Array.isArray(historyData)) return; // safeguard
+    if (!Array.isArray(historyData)) return; 
 
     const lowerTerm = searchTerm.toLowerCase();
     const results = historyData.filter(
@@ -60,40 +61,62 @@ const MedicineHistoryModal = ({ isOpen, onClose, patientData }) => {
       <div className="bg-white rounded-xl shadow-lg max-w-[95vw] max-h-[90vh] w-full overflow-auto p-6">
         <div className="flex items-center justify-between bg-blue-100 text-blue-800 font-semibold px-4 py-2 rounded-t-md">
           <span className="text-sm">Medicine History</span>
-          <button
-            onClick={onClose}
-            className="text-red-500 hover:text-red-700 text-lg font-bold"
-          >
-            ✕
-          </button>
         </div>
 
-        <input
-          type="text"
-          placeholder="Search by Consumable or Doctor Name"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="mb-2 mt-2 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-800"
-          autoFocus
-        />
+        {/* Search Input */}
+        <div className="flex items-center mb-2 font-semibold px-2 py-2 rounded-t-md space-x-2">
+          <input
+            type="text"
+            placeholder="🔍 Search by Service or Consultant Name"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="border mt-2 flex-grow px-3 py-2 border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300 text-gray-800"
+          />
+          <CloseButton onClick={onClose} />
+        </div>
 
         <div className="overflow-auto max-h-[50vh]">
-          <div className="min-w-[1000px] overflow-x-auto">
-            <table className="min-w-full border-collapse table-auto text-left text-gray-700">
-              <thead className="bg-gray-100 sticky top-0 z-10">
+          <div className="min-w-[1000px] ">
+            <table className="w-full border-collapse border border-gray-100  text-gray-700 text-left">
+              <thead className="bg-gray-300 sticky top-0 z-10">
                 <tr>
-                  <TableReuse type="th">Date/Time </TableReuse>
-                  <TableReuse type="th">Bed No </TableReuse>
-                  <TableReuse type="th">Consumable </TableReuse>
-                  <TableReuse type="th">Doctor Name </TableReuse>
-                  <TableReuse type="th">Issue No </TableReuse>
-                  <TableReuse type="th">Batch No </TableReuse>
-                  <TableReuse type="th">Qty </TableReuse>
-                  <TableReuse type="th">MRP </TableReuse>
-                  <TableReuse type="th">Expiry </TableReuse>
-                  <TableReuse type="th">Total Amt. </TableReuse>
-                  <TableReuse type="th">Store </TableReuse>
-                  <TableReuse type="th">Issued By </TableReuse>
+                  <th className="px-4 py-2 text-xs font-semibold">
+                    Date/Time
+                    </th>
+                  {/* <th className="px-4 py-2 text-xs font-semibold">
+                    Bed No 
+                    </th> */}
+                  <th className="px-4 py-2 text-xs font-semibold">
+                   Consumable 
+                    </th>
+                  <th className="px-4 py-2 text-xs font-semibold">
+                   Doctor Name
+                    </th>
+                  <th className="px-4 py-2 text-xs font-semibold">
+                   Issue No 
+                    </th>
+                  <th className="px-4 py-2 text-xs font-semibold">
+                 Batch No
+                    </th>
+                  <th className="px-4 py-2 text-xs font-semibold">
+                 Qty
+                    </th>
+                  <th className="px-4 py-2 text-xs font-semibold">
+                MRP
+                    </th>
+                  <th className="px-4 py-2 text-xs font-semibold">
+                   Expiry
+                    </th>
+                  <th className="px-4 py-2 text-xs font-semibold">
+                  Total Amt.
+                    </th>
+                  <th className="px-4 py-2 text-xs font-semibold">
+                  Store
+                    </th>
+                  <th className="px-4 py-2 text-xs font-semibold">
+                  Issued By
+                    </th>              
+             
                 </tr>
               </thead>
               <tbody>
@@ -104,20 +127,47 @@ const MedicineHistoryModal = ({ isOpen, onClose, patientData }) => {
                     .map((item, index) => (
                       <tr
                         key={index}
-                        className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
+                          className={`hover:bg-amber-50 ${
+                          index % 2 === 0 ? "bg-white" : "bg-blue-50"
+                        }`}
                       >
-                        <TableReuse>{item.consumabledatetime}</TableReuse>
-                        <TableReuse>{item.bedno}</TableReuse>
-                        <TableReuse>{item.itemname}</TableReuse>
-                        <TableReuse>{item.consultantname}</TableReuse>
-                        <TableReuse>{item.outtransactionid}</TableReuse>
-                        <TableReuse>{item.batchno}</TableReuse>
-                        <TableReuse>{item.qty}</TableReuse>
-                        <TableReuse>{item.salerate?.toFixed(2)}</TableReuse>
-                        <TableReuse>{item.expirydate}</TableReuse>
-                        <TableReuse>{item.totalamt?.toFixed(2)}</TableReuse>
-                        <TableReuse>{item.storename}</TableReuse>
-                        <TableReuse>{item.issuedby}</TableReuse>
+                         <td className=" font-semibold text-xs p-2">
+                          {item.consumabledatetime|| "N/A"}
+                        </td>
+                         {/* <td className=" font-semibold text-xs p-2">
+                          {item.bedno|| "N/A"}
+                        </td> */}
+                         <td className=" font-semibold text-xs p-2">
+                          {item.itemname|| "N/A"}
+                        </td>
+                         <td className=" font-semibold text-xs p-2">
+                          {item.consultantname|| "N/A"}
+                        </td>
+                         <td className=" font-semibold text-xs p-2">
+                          {item.outtransactionid|| "N/A"}
+                        </td>
+                         <td className=" font-semibold text-xs p-2">
+                          {item.batchno|| "N/A"}
+                        </td>
+                         <td className=" font-semibold text-xs p-2">
+                          {item.qty|| "N/A"}
+                        </td>
+                         <td className=" font-semibold text-xs p-2">
+                          {item.salerate?.toFixed(2)|| "N/A"}
+                        </td>
+                         <td className=" font-semibold text-xs p-2">
+                          {item.expirydate|| "N/A"}
+                        </td>
+                         <td className=" font-semibold text-xs p-2">
+                          {item.totalamt?.toFixed(2)|| "N/A"}
+                        </td>
+                         <td className=" font-semibold text-xs p-2">
+                          {item.storename|| "N/A"}
+                        </td>
+                         <td className=" font-semibold text-xs p-2">
+                          {item.issuedby|| "N/A"}
+                        </td>
+                        
                       </tr>
                     ))
                 ) : (

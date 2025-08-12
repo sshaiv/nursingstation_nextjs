@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { ModalHeading } from "../common/text";
-import { ActionButton, SaveButton } from "../common/Buttons";
-import TableReuse from "../common/TableReuse";
+import { ModalHeading } from "@/app/common/text"; 
+import { ActionButton,SaveButton } from "@/app/common/Buttons";
+import TableReuse from "@/app/common/TableReuse";
 import "react-datepicker/dist/react-datepicker.css";
-import DateTimeInput from "../common/DateTimeInput";
+import DateTimeInput from "@/app/common/DateTimeInput";
 import axios from "axios";
-import API_ENDPOINTS from "../constants/api_url";
-import DropdownSelect from "../common/DropdownSelect";
-import ReusableInputField from "../common/SmallInputfields";
-import DoctorModal from "../common/Modal/DoctorModal";
-import MedicineIndentModal from "../common/Modal/MedicineIndentModal";
-import GetIndentDetail from "../common/Modal/GetIndentDetail";
-import SelectBatchModal from "../common/Modal/SelectBatchModal";
-import useSaveConData from "../hooks/useSaveConData";
-import { getCurrentDateTime } from "../utils/dateUtils";
-import MedicineHistoryModal from "../common/Modal/MedicineHistoryModal";
+import API_ENDPOINTS from "@/app/constants/api_url";
+import DropdownSelect from "@/app/common/DropdownSelect";
+import ReusableInputField from "@/app/common/SmallInputfields";
+import DoctorModal from "@/app/common/Modal/DoctorModal";
+import MedicineIndentModal from "@/app/common/Modal/MedicineIndentModal";
+import GetIndentDetail from "@/app/common/Modal/GetIndentDetail";
+import SelectBatchModal from "@/app/common/Modal/SelectBatchModal";
+import useSaveConData from "@/app/hooks/useSaveConData";
+import { getCurrentDateTime } from "@/app/utils/dateUtils";
+import MedicineHistoryModal from "@/app/common/Modal/MedicineHistoryModal";
 import { toast } from "react-toastify";
 
 export default function Consumables({ visitid, gssuhid, empid, patientData }) {
@@ -705,7 +705,7 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
         <ModalHeading title="Consumables" />
       </div>
       <hr className="border-t mt-6 mb-2 border-gray-300" />
-      <div className="border border-gray-100 rounded-lg space-y-4">
+      <div className=" space-y-4">
         {/* Inputs Grid */}
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-1 items-start">
@@ -885,7 +885,7 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
 
           <div className="flex flex-wrap md:flex-nowrap w-full items-end gap-2">
             {/* Remarks */}
-            <div className="flex flex-col flex-1">
+            {/* <div className="flex flex-col flex-1">
               <label className="text-xs text-gray-700 font-medium mb-1">
                 Remarks
               </label>
@@ -896,10 +896,10 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
                 value={remarks}
                 onChange={(e) => setRemarks(e.target.value)}
               />
-            </div>
+            </div> */}
 
             {/* Buttons */}
-            <div className="flex gap-2 mb-4 self-end shrink-0">
+            <div className="flex gap-2  self-end shrink-0">
               <ActionButton
                 label="Insert"
                 onClick={handleInsert}
@@ -985,7 +985,7 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
                           className="text-red-500 hover:underline"
                           onClick={() => handleDeleteEntry(actualIndex)} // Call the delete function with the actual index
                         >
-                          🗑 Delete
+                           Delete
                         </button>
                       )}
                     </div>

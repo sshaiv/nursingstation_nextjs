@@ -159,7 +159,7 @@ const SearchPatientModal = ({ isOpen, onClose, patientData }) => {
                 filteredData.map((item, index) => (
                   <tr
                     key={index}
-                    className={`${
+                    className={`hover:bg-amber-50 ${
                       selectedRowIndex === index
                         ? "bg-blue-200"
                         : index % 2 === 0

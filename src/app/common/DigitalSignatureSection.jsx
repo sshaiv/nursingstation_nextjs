@@ -213,7 +213,7 @@ const DigitalSignatureSection = ({ onSignatureSave, title }) => {
       {showFullSignature && (
         <div className="fixed inset-0 z-50 bg-opacity-50 flex items-center justify-center">
           <div className="bg-white rounded-md p-4 max-w-[90%] max-h-[90%] overflow-auto relative">
-            <CloseButton onClick={() => setShowFullSignature(false)} />
+            <CloseButton onClick={() => setShowFullSignature(false)} className="absolute top-2 right-2"/>
 
             <img
               src={signatureDataUrl}

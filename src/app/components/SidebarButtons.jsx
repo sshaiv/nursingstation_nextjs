@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   FiActivity,
   FiBox,
@@ -16,17 +16,19 @@ import { FaStethoscope } from "react-icons/fa";
 import InitialAssessmentForm from "./InitialAssessment/InitialAssessment";
 import ClinicalExamination from "./Clinical Examination/ClinicalExamination";
 import NursingServices from "./NursingServices";
-import Consumables from "./Consumables";
+
 import DoctorVisit from "./DoctorVisit";
 import AdvisedSurgery from "./AdvisedSurgery";
 import Implants from "./Implants";
 import Investigation from "./Investigation";
 
 import ProgressSheet from "./ProgressSheet";
-import DummyInvestigation from "./DummyInvestigation";
+
 import NutritionalInitial from "./Nursing Initial Assessment/NutritionalInitial";
 import CloseButton from "../common/CrossButton";
 import NutritionalAssessmentProfile from "./Nutritional Assesment Profile/NutritionalAssesmentProfile";
+import Consumables from "./Consumables/Consumables";
+import DummyInvestigation from "./Investigation/DummyInvestigation";
 
 const buttons = [
   {
@@ -85,14 +87,14 @@ const buttons = [
     icon: FiCheckCircle,
   },
   {
-    label: "Nursing Services",
+    label: "NURSING SERVICES",
     color: "#00809D",
     shadow: "#89A8B2",
     icon: FiActivity,
   },
   { label: "Consumables", color: "#00809D", shadow: "#89A8B2", icon: FiBox },
   {
-    label: "Doctor Visit",
+    label: "DOCTOR VISIT",
     color: "#00809D",
     shadow: "#89A8B2",
     icon: FiCalendar,
@@ -114,7 +116,7 @@ const buttons = [
   // { label: "Discharge Summary", color: "#1999A1", shadow: "#14767D", icon: FiCheckCircle },
   //{ label: "BugInvestigation", color: "#1999A1", shadow: "#14767D", icon: GiFizzingFlask },
   {
-    label: "Investigation",
+    label: "INVESTIGATION",
     color: "#00809D",
     shadow: "#89A8B2",
     icon: GiFizzingFlask,
@@ -148,7 +150,7 @@ export default function ButtonGrid({ visitid, gssuhid, empid, patientData }) {
         />
       );
       setShowModal(true);
-    } else if (label === "Nursing Services") {
+    } else if (label === "NURSING SERVICES") {
       setModalContent(
         <NursingServices
           visitid={visitid}
@@ -168,7 +170,7 @@ export default function ButtonGrid({ visitid, gssuhid, empid, patientData }) {
         />
       );
       setShowModal(true);
-    } else if (label === "Doctor Visit") {
+    } else if (label === "DOCTOR VISIT") {
       setModalContent(
         <DoctorVisit
           visitid={visitid}
@@ -191,7 +193,7 @@ export default function ButtonGrid({ visitid, gssuhid, empid, patientData }) {
     //     setModalContent(<Investigation visitid={visitid} gssuhid={gssuhid} empid={empid} patientData={patientData}/>);
     //     setShowModal(true);
     // }
-    else if (label === "Investigation") {
+    else if (label === "INVESTIGATION") {
       setModalContent(
         <DummyInvestigation
           visitid={visitid}
@@ -273,7 +275,6 @@ export default function ButtonGrid({ visitid, gssuhid, empid, patientData }) {
 
             {/* Scrollable Content Area */}
             <div
-            
               className={`mt-4 ${
                 activeLabel !== "INITIAL ASSESSMENT" &&
                 activeLabel !== "CLINICAL EXAMINATION"

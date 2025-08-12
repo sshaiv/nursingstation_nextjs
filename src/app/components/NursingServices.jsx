@@ -19,6 +19,7 @@ import {
   getCurrentDateTime,
   getgetCurrentDateTime,
 } from "../utils/dateUtils";
+import CloseButton from "../common/CrossButton";
 
 export default function NursingServices({
   visitid,
@@ -133,7 +134,7 @@ export default function NursingServices({
       source: "local",
     };
 
-   // console.log("aai", newEntry.date);
+    // console.log("aai", newEntry.date);
 
     const newServiceEntry = {
       rowid: 0,
@@ -246,7 +247,7 @@ export default function NursingServices({
       console.log("Response:", result);
 
       if (response.ok) {
-       toast.success("Data saved successfully!");
+        toast.success("Data saved successfully!");
         // Clear local new entries (already saved)
         // Clear the new entries so UI updates and doesn't show them anymore
         setEntries([]);
@@ -273,7 +274,7 @@ export default function NursingServices({
       }
     } catch (error) {
       console.error("Error saving data:", error);
-     toast.error("An error occurred while saving data: " + error.message);
+      toast.error("An error occurred while saving data: " + error.message);
     }
   };
 
@@ -364,9 +365,21 @@ export default function NursingServices({
     console.log("🧾 Updated JSON String:", newJSONString);
   };
 
+  const [historyModal, setHistoryModal] = useState(false);
+
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // Filtered data based on service or consultant name
+  const filteredTable = table.filter((item) => {
+    const service = item.servname?.toLowerCase() || "";
+    const consultant = item.consultantname?.toLowerCase() || "";
+    const term = searchTerm.toLowerCase();
+    return service.includes(term) || consultant.includes(term);
+  });
+
+
   return (
     <div className="p-2 rounded-xl w-full max-w-5xl mx-auto text-[12px] space-y-6">
-     
       <div className="flex h-[1px] items-center justify-center">
         <ModalHeading title="Nursing Services" />
       </div>
@@ -407,9 +420,8 @@ export default function NursingServices({
         />
       )}
 
-      <div className="border border-gray-100 rounded-lg space-y-2">
+      <div className=" space-y-2">
         <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-2 items-start">
-         
           {/* Date & Time */}
           <div className="flex flex-col   w-full ">
             <label className="text-xs text-gray-700  font-medium mb-1">
@@ -516,18 +528,20 @@ export default function NursingServices({
               </p>
             )}
           </div>
-          <div className="flex items-center w-full mt-5">
+          <div className="flex items-center gap-2 w-full mt-5">
             <ActionButton
               label="Insert"
               onClick={handleInsert}
               className="text-xs px-4 py-1 w-fit "
             />
+            <ActionButton
+              label="History Data"
+              onClick={() => setHistoryModal(true)}
+              className="text-xs px-4 py-1"
+            />
           </div>
         </div>
       </div>
-
-
-
 
       <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
         <div className="max-h-[225px] overflow-y-auto scrollbar-hide">
@@ -567,7 +581,7 @@ export default function NursingServices({
                             className="text-red-500 hover:underline"
                             onClick={() => handleDeleteEntry(actualIndex)}
                           >
-                            🗑 Delete
+                            Delete
                           </button>
 
                           // Or if you prefer the icon version:
@@ -583,35 +597,7 @@ export default function NursingServices({
                 );
               })}
 
-              {/* Conditional rendering for loading */}
-              {loading ? (
-                <tr>
-                  <td colSpan={8} className="text-center py-2 text-gray-500">
-                    ⟳ Loading investigations...
-                  </td>
-                </tr>
-              ) : (
-                <>
-                  {/* Render API fetched data below */}
-                  {[...table].reverse().map((item, idx) => (
-                    <tr
-                      key={"api-" + idx}
-                      className="hover:bg-gray-100 border-t"
-                    >
-                      <TableReuse>{item.servdatetime || "-"}</TableReuse>
-                      <TableReuse>{item.bedno || "-"}</TableReuse>
-                      <TableReuse>{item.proposedby || "-"}</TableReuse>
-                      <TableReuse>{item.servname || "-"}</TableReuse>
-                      <TableReuse>{item.performby || "-"}</TableReuse>
-                      <TableReuse>{item.qty || "-"}</TableReuse>
-
-                      <TableReuse>
-                        {/* No remove button for API data */}
-                      </TableReuse>
-                    </tr>
-                  ))}
-                </>
-              )}
+          
             </tbody>
           </table>
         </div>
@@ -633,6 +619,99 @@ export default function NursingServices({
           Save
         </button>
       </div>
+
+        {/* Modal */}
+      {historyModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-xs bg-black/30">
+          <div className="bg-white rounded-xl shadow-lg max-w-[95vw] max-h-[90vh] w-full overflow-auto p-6">
+            <div className="flex items-center justify-between bg-blue-100 text-blue-800 font-semibold px-4 py-2 rounded-t-md">
+          <span className="text-sm">Investigation History</span>
+         
+        </div>
+            {/* Search Input */}
+            <div className="flex items-center mb-2 font-semibold px-2 py-2 rounded-t-md space-x-2">
+              <input
+                type="text"
+                placeholder="🔍 Search by Nursing Service or Consultant Name"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="border mt-2 flex-grow px-3 py-2 border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300 text-gray-800"
+              />
+              <CloseButton onClick={() => setHistoryModal(false)} />
+            </div>
+
+            {/* Table */}
+            <div className=" overflow-auto max-h-[60vh]">
+              <table className="w-full border-collapse border border-gray-100  text-gray-700 text-left">
+                <thead className="bg-gray-300 sticky top-0 z-10">
+                  <tr className="bg-gray-300 ">
+                    <th className="px-4 py-2 text-xs font-semibold">
+                     Date/Time
+                    </th>
+                    <th className="px-4 py-2 text-xs font-semibold">
+                      BedNo
+                    </th>
+                    <th className="px-4 py-2 text-xs font-semibold">Doctor Name</th>
+                    <th className="px-4 py-2 text-xs font-semibold">Nursing Service</th>
+                    <th className="px-4 py-2 text-xs font-semibold">Performed By</th>
+                    <th className="px-4 py-2 text-xs font-semibold">Quantity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {loading ? (
+                    <tr>
+                      <td
+                        colSpan={4}
+                        className="text-center py-2 text-gray-500"
+                      >
+                        ⟳ Loading investigations...
+                      </td>
+                    </tr>
+                  ) :
+                   filteredTable.length > 0 ? (
+                  [...filteredTable].reverse().map((item, idx) => (
+                      <tr
+                        key={idx}
+                        className={`hover:bg-amber-50 ${
+                          idx % 2 === 0 ? "bg-white" : "bg-blue-50"
+                        }`}
+                      >
+                        <td className=" font-semibold text-xs p-2">
+                          {item.servdatetime || "N/A"}
+                        </td>
+                        <td className="font-semibold text-xs p-2">
+                          {item.bedno || "N/A"}
+                        </td>
+                        <td className="font-semibold text-xs p-2">
+                          {item.proposedby || "N/A"}
+                        </td>
+                        <td className=" font-semibold text-xs p-2">
+                          {item.servname || "-"}
+                        </td>
+                        <td className=" font-semibold text-xs p-2">
+                          {item.performby || "-"}
+                        </td>
+                        <td className=" font-semibold text-xs p-2">
+                          {item.qty || "-"}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan={4}
+                        className="text-center py-2 text-gray-400"
+                      >
+                        No matching records found
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
