@@ -51,8 +51,11 @@ const fetchPatientBed = async (visitId) => {
       const patient = data.Table[0];
       console.log("✅ Patient found:", patient);
 
+      // router.push(
+      //   `/nursingstation?visitid=${patient.visitid}&gssuhid=${patient.gssuhid}&empid=${patient.empid}`
+      // );
       router.push(
-        `/nursingstation?visitid=${patient.visitid}&gssuhid=${patient.gssuhid}&empid=${patient.empid}`
+        `/?visitid=${patient.visitid}&gssuhid=${patient.gssuhid}&empid=${patient.empid}`
       );
     } else {
       console.warn("⚠️ No data in Table array.");
@@ -130,21 +133,14 @@ const fetchPatientBed = async (visitId) => {
       alt="Scan"
       className="w-8 h-8 hover:scale-110 transition-transform duration-300"
     />
-    <span
-      className="absolute -right-2 top-3 animate-ping"
-      style={{ fontSize: "0.75rem" }}
-      aria-label="pointing hand"
-      role="img"
-    >
-      ❮❮
-    </span>
+   
   </div>
 
   {/* MAGNIFYING GLASS */}
   <div
     className="cursor-pointer text-white text-2xl"
     title="Search Patient"
-    onClick={() => setShowSearchModal(true)}
+   // onClick={() => setShowSearchModal(true)}
   >
     🔍
   </div>

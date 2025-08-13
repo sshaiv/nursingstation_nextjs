@@ -101,13 +101,20 @@ const SearchPatientModal = ({ isOpen, onClose, patientData }) => {
         console.log("✅ Patient found:", patient);
 
         router.push(
-          `/nursingstation?visitid=${encodeURIComponent(
+          `/?visitid=${encodeURIComponent(
             patient.visitid
           )}&gssuhid=${encodeURIComponent(
             patient.gssuhid
           )}&empid=${encodeURIComponent(patient.empid)}`
         );
-    
+        // router.push(
+        //   `/nursingstation?visitid=${encodeURIComponent(
+        //     patient.visitid
+        //   )}&gssuhid=${encodeURIComponent(
+        //     patient.gssuhid
+        //   )}&empid=${encodeURIComponent(patient.empid)}`
+        // );
+     onClose();
       } else {
         console.warn("⚠️ No patient data found in table.");
         toast.error("No patient data found.");

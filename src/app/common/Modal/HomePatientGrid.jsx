@@ -2,7 +2,7 @@ import API_ENDPOINTS from "@/app/constants/api_url";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-const HomePatientGrid = () => {
+const HomePatientGrid = ({ onPatientSelect }) => {
   const router = useRouter();
   //   const [floor, setFloor] = useState("");
   //   const [ward, setWard] = useState("");
@@ -157,20 +157,24 @@ const HomePatientGrid = () => {
         const patient = tableData[0];
         console.log("✅ Patient found:", patient);
 
-        // router.push(
-        //   `/?visitid=${encodeURIComponent(
-        //     patient.visitid
-        //   )}&gssuhid=${encodeURIComponent(
-        //     patient.gssuhid
-        //   )}&empid=${encodeURIComponent(patient.empid)}`
-        // );
         router.push(
-          `/nursingstation?visitid=${encodeURIComponent(
+          `/?visitid=${encodeURIComponent(
             patient.visitid
           )}&gssuhid=${encodeURIComponent(
             patient.gssuhid
           )}&empid=${encodeURIComponent(patient.empid)}`
         );
+        // router.push(
+        //   `/nursingstation?visitid=${encodeURIComponent(
+        //     patient.visitid
+        //   )}&gssuhid=${encodeURIComponent(
+        //     patient.gssuhid
+        //   )}&empid=${encodeURIComponent(patient.empid)}`
+        // );
+        // Notify parent
+        if (onPatientSelect) {
+          onPatientSelect(patient); // <-- send the patient data to parent
+        }
       } else {
         console.warn("⚠️ No patient data found in table.");
         toast.error("No patient data found.");
@@ -242,7 +246,7 @@ const HomePatientGrid = () => {
           Admit Patient
         </legend>
 
-        <div className="max-h-[40vh] overflow-auto scrollbar-hide">
+        <div className="max-h-[35vh] overflow-auto scrollbar-hide">
           {/* Horizontal scroll wrapper */}
           <div className="max-h-[50vh] overflow-auto scrollbar-hide">
             <table className="min-w-full border-collapse  table-auto text-left text-gray-700">
