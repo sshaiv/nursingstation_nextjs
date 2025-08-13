@@ -39,7 +39,13 @@ const ClinicalExamination = ({ visitid, gssuhid, empid, patientData }) => {
   return (
     <div className="p-2 min-h-screen flex flex-col items-center text-[10px] leading-tight overflow-hidden">
       <div className="w-full max-w-5xl mx-auto space-y-4">
- 
+      <div className="flex h-[1px] items-center justify-center">
+           <ModalHeading
+             title="Clinical Examination"
+             className="text-[11px] mb-3"
+           />
+         </div>
+         <hr className="border-t border-gray-300 mb-0" />
 
         <Tabs tabs={tabData} initialTab="first" />
       </div>

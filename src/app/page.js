@@ -1,12 +1,13 @@
 "use client";
-import {useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Suspense } from "react";
 import PatientInfoCard from "./components/PatientInfoCard";
 import VitalsTable from "./components/Vitals/VitalsTable";
- import Header from "./components/Header";
+import Header from "./components/Header";
 import ButtonGrid from "./components/SidebarButtons";
 import { toast } from "react-toastify";
-
+import HomePatientGrid from "./common/Modal/HomePatientGrid";
+import NurHeader from "./components/NursingHeader";
 
 const WarningPopup = ({ visible }) => {
   useEffect(() => {
@@ -15,9 +16,8 @@ const WarningPopup = ({ visible }) => {
     }
   }, [visible]);
 
-  return null; 
+  return null;
 };
-
 
 const BlockUntilScanned = ({ children, scanned, onBlockedClick }) => {
   const handleBlockedClick = (e) => {
@@ -31,9 +31,7 @@ const BlockUntilScanned = ({ children, scanned, onBlockedClick }) => {
   return (
     <div className={scanned ? "" : "relative"}>
       {/* Child components are unclickable and faded if not scanned */}
-      <div className={scanned ? "" : "pointer-events-none "}>
-        {children}
-      </div>
+      <div className={scanned ? "" : "pointer-events-none "}>{children}</div>
 
       {/* Invisible overlay to intercept clicks and show warning */}
       {!scanned && (
@@ -47,7 +45,7 @@ const BlockUntilScanned = ({ children, scanned, onBlockedClick }) => {
 };
 
 function HomeContent() {
-  const [scanned, setScanned] = useState(false); 
+  const [scanned, setScanned] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
 
   const showScanWarning = () => {
@@ -56,49 +54,37 @@ function HomeContent() {
   };
 
   return (
-    <div className="p-4 min-h-screen space-y-4 bg-gray-50">
+    <div className="p-4 min-h-screen space-y-2 bg-gray-50">
       {/* Header always visible */}
       <Header />
-      
-  <BlockUntilScanned scanned={scanned} onBlockedClick={showScanWarning}>
-      {/* ✅ Patient Card - full width, just below header */}
-      <div className="w-full">
-        <PatientInfoCard
-          name="demo"
-          age="123"
-          gender="Male"
-          bedNo="12B"
-          doctor="Dr. xyz"
-          billingGroup="Premium"
-          phone="123-456-7890"
-        />
-      </div>
+        {/* <NurHeader /> */}
+      <HomePatientGrid />
 
-      {/* ✅ Block rest until scanned */}
-    
-        <div className="flex flex-col gap-4">
-               <VitalsTable
-                 title="Vitals"
-                //  visitid={visitid}
-                //  gssuhid={gssuhid}
-                //  empid={empid}
-                //  patientData={patientData}
-               />
-       
-               <ButtonGrid
-                //  visitid={visitid}
-                //  gssuhid={gssuhid}
-                //  empid={empid}
-                //  patientData={patientData}
-               />
-             </div>
+      <BlockUntilScanned scanned={scanned} onBlockedClick={showScanWarning}>
+        {/* ✅ Block rest until scanned */}
+
+        <div className="flex flex-col gap-2">
+          {/* <VitalsTable
+            title="Vitals"
+            //  visitid={visitid}
+            //  gssuhid={gssuhid}
+            //  empid={empid}
+            //  patientData={patientData}
+          /> */}
+
+          <ButtonGrid
+          //  visitid={visitid}
+          //  gssuhid={gssuhid}
+          //  empid={empid}
+          //  patientData={patientData}
+          />
+        </div>
       </BlockUntilScanned>
 
       <WarningPopup visible={showWarning} />
     </div>
   );
 }
-
 
 export default function Page() {
   return (

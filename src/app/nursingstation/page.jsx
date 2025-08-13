@@ -1,5 +1,6 @@
 "use client";
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, Suspense} from "react";
+
 import { useSearchParams } from "next/navigation";
 import PatientInfoCard from "../components/PatientInfoCard";
 import VitalsTable from "../components/Vitals/VitalsTable";
@@ -21,6 +22,8 @@ function NursingStationContent() {
   const [showScanner, setShowScanner] = useState(false);
   const [patientData, setPatientData] = useState(null);
   const [otherPatientData, setOtherPatientData] = useState(null);
+
+ 
 
   const fetchPatientBed = async (visitId) => {
     const cleanedVisitId = visitId.trim();

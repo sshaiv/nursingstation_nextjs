@@ -29,6 +29,7 @@ import CloseButton from "../common/CrossButton";
 import NutritionalAssessmentProfile from "./Nutritional Assesment Profile/NutritionalAssesmentProfile";
 import Consumables from "./Consumables/Consumables";
 import DummyInvestigation from "./Investigation/DummyInvestigation";
+import NursingReassessment from "./Nursing Reassessment/NursingReassessment";
 
 const buttons = [
   {
@@ -92,7 +93,12 @@ const buttons = [
     shadow: "#89A8B2",
     icon: FiActivity,
   },
-  { label: "CONSUMABLES", color: "#00809D", shadow: "#89A8B2", icon: FiBox },
+  {
+     label: "CONSUMABLES", 
+    color: "#00809D", 
+    shadow: "#89A8B2", 
+    icon: FiBox 
+  },
   {
     label: "DOCTOR VISIT",
     color: "#00809D",
@@ -141,7 +147,8 @@ export default function ButtonGrid({ visitid, gssuhid, empid, patientData }) {
         />
       );
       setShowModal(true);
-    } else if (label === "CLINICAL EXAMINATION") {
+    }
+     else if (label === "CLINICAL EXAMINATION") {
       setModalContent(
         <ClinicalExamination
           visitid={visitid}
@@ -150,7 +157,8 @@ export default function ButtonGrid({ visitid, gssuhid, empid, patientData }) {
         />
       );
       setShowModal(true);
-    } else if (label === "NURSING SERVICES") {
+    } 
+    else if (label === "NURSING SERVICES") {
       setModalContent(
         <NursingServices
           visitid={visitid}
@@ -160,7 +168,8 @@ export default function ButtonGrid({ visitid, gssuhid, empid, patientData }) {
         />
       );
       setShowModal(true);
-    } else if (label === "CONSUMABLES") {
+    } 
+    else if (label === "CONSUMABLES") {
       setModalContent(
         <Consumables
           visitid={visitid}
@@ -170,7 +179,8 @@ export default function ButtonGrid({ visitid, gssuhid, empid, patientData }) {
         />
       );
       setShowModal(true);
-    } else if (label === "DOCTOR VISIT") {
+    }
+     else if (label === "DOCTOR VISIT") {
       setModalContent(
         <DoctorVisit
           visitid={visitid}
@@ -223,9 +233,20 @@ export default function ButtonGrid({ visitid, gssuhid, empid, patientData }) {
         />
       );
       setShowModal(true);
-    } else if (label === "PROGRESS SHEET") {
+    } 
+    else if (label === "PROGRESS SHEET") {
       setModalContent(
         <ProgressSheet
+          visitid={visitid}
+          gssuhid={gssuhid}
+          empid={empid}
+          patientData={patientData}
+        />
+      );
+      setShowModal(true);}
+    else if (label === "NURSING REASSESSMENT") {
+      setModalContent(
+        <NursingReassessment
           visitid={visitid}
           gssuhid={gssuhid}
           empid={empid}

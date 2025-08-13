@@ -107,6 +107,7 @@ const SearchPatientModal = ({ isOpen, onClose, patientData }) => {
             patient.gssuhid
           )}&empid=${encodeURIComponent(patient.empid)}`
         );
+    
       } else {
         console.warn("⚠️ No patient data found in table.");
         toast.error("No patient data found.");
