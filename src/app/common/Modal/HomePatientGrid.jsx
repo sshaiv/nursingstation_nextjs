@@ -25,62 +25,7 @@ const HomePatientGrid = ({ onPatientSelect }) => {
   }, [searchTerm, historyData]);
 
   const [patients, setPatients] = useState([
-    {
-      ipdNo: "IPD001",
-      name: "John Doe",
-      ageGender: "32/M",
-      dob: "01-01-1990",
-      primaryDr: "Dr. Smith",
-      medicine: "Paracetamol",
-      vitalSchedule: "08:00, 12:00",
-      appointedNurse: "Nurse Joy",
-      selected: false,
-    },
-    {
-      ipdNo: "IPD001",
-      name: "John Doe",
-      ageGender: "32/M",
-      dob: "01-01-1990",
-      primaryDr: "Dr. Smith",
-      medicine: "Paracetamol",
-      vitalSchedule: "08:00, 12:00",
-      appointedNurse: "Nurse Joy",
-      selected: false,
-    },
-    {
-      ipdNo: "IPD001",
-      name: "John Doe",
-      ageGender: "32/M",
-      dob: "01-01-1990",
-      primaryDr: "Dr. Smith",
-      medicine: "Paracetamol",
-      vitalSchedule: "08:00, 12:00",
-      appointedNurse: "Nurse Joy",
-      selected: false,
-    },
-    {
-      ipdNo: "IPD001",
-      name: "John Doe",
-      ageGender: "32/M",
-      dob: "01-01-1990",
-      primaryDr: "Dr. Smith",
-      medicine: "Paracetamol",
-      vitalSchedule: "08:00, 12:00",
-      appointedNurse: "Nurse Joy",
-      selected: false,
-    },
-    {
-      ipdNo: "IPD001",
-      name: "John Doe",
-      ageGender: "32/M",
-      dob: "01-01-1990",
-      primaryDr: "Dr. Smith",
-      medicine: "Paracetamol",
-      vitalSchedule: "08:00, 12:00",
-      appointedNurse: "Nurse Joy",
-      selected: false,
-    },
-    // ...more patients
+  
   ]);
 
   // Call API on component mount
@@ -181,7 +126,7 @@ const HomePatientGrid = ({ onPatientSelect }) => {
       }
     } catch (error) {
       console.error("❌ Error fetching patient bed info:", error);
-      toast.error("Failed to fetch patient bed info: " + error.message);
+      toast.error("Failed to fetch patient bed info: ");
     } finally {
       setLoading(false);
     }
@@ -279,7 +224,7 @@ const HomePatientGrid = ({ onPatientSelect }) => {
                       key={index}
                       className={`hover:bg-gray-100 ${
                         selectedRowIndex === index
-                          ? "bg-blue-200"
+                          ? "bg-blue-200 "
                           : index % 2 === 0
                           ? "bg-white"
                           : "bg-gray-50"

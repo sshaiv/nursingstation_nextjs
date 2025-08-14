@@ -157,7 +157,7 @@ export default function ProgressSheet({ visitid, gssuhid, empid }) {
       setReload((prev) => !prev);
     } catch (error) {
       console.error("Error saving progress sheet:", error);
-      toast.error("Failed to save data: " + error.message);
+      toast.error("Failed to save data: ");
     }
   };
   //  const handleChange = (key, value) => {

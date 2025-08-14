@@ -94,9 +94,10 @@ function HomeContent() {
       }
 
       setOtherPatientData(table1Data.length > 0 ? table1Data : null);
-    } catch (error) {
-      console.error("❌ Error fetching patient bed info:", error);
-      toast.error("Failed to fetch patient bed info: " + error.message);
+    } 
+    catch (error) {
+      console.error("❌ Error fetching patient bed info:", error.message);
+      toast.error("Failed to fetch patient bed info: ");
       setPatientData(null);
       setPatientSelected(false);
       setOtherPatientData(null);
@@ -116,11 +117,14 @@ function HomeContent() {
     }
   }, []);
 
+
   return (
-    <div className="p-4 min-h-screen space-y-2 bg-gray-50">
+    <div className="p-4 min-h-screen space-y-1 bg-gray-50">
       {/* Header always visible */}
       <Header />
       {/* <NurHeader /> */}
+
+    
 
       {patientSelected && (
         <PatientInfoCard

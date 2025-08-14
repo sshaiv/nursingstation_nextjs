@@ -208,11 +208,13 @@ export default function DoctorVisit({ visitid, gssuhid, empid, patientData }) {
 
         setIsSaved(true);
       } else {
-        toast.error("Failed to save data: " + result.message);
+        toast.error("Failed to save data: " );
+        console.log(result.message);
+        
       }
     } catch (error) {
       console.error("Error saving data:", error);
-      toast.error("An error occurred while saving data: " + error.message);
+      toast.error("An error occurred while saving data: " );
     }
   };
 

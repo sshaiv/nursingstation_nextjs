@@ -602,11 +602,11 @@ export default function Consumables({ visitid, gssuhid, empid, patientData }) {
         setServiceEntries([]);
         setVitals([]);
       } else {
-        toast.error("Failed to save data: " + result.message);
+        toast.error("Failed to save data: " );
       }
     } catch (error) {
       console.error("Error saving data:", error);
-      toast.error("An error occurred while saving data: " + error.message);
+      toast.error("An error occurred while saving data: ");
     }
     // Step 3: Disable the Save button after saving
     setIsSaveButtonDisabled(true);

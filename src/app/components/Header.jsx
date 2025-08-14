@@ -65,7 +65,7 @@ const fetchPatientBed = async (visitId) => {
 
   } catch (error) {
     console.error("❌ Error fetching patient bed info:", error);
-    toast.error("Failed to fetch patient bed info: " + error.message);
+    toast.error("Failed to fetch patient bed info: " );
 
   } finally {
     setLoading(false);
@@ -140,7 +140,7 @@ const fetchPatientBed = async (visitId) => {
   <div
     className="cursor-pointer text-white text-2xl"
     title="Search Patient"
-   // onClick={() => setShowSearchModal(true)}
+    onClick={() => setShowSearchModal(true)}
   >
     🔍
   </div>

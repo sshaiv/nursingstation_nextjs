@@ -270,11 +270,11 @@ export default function NursingServices({
         setIsSaved(true);
         setIsSaveEnabled(false);
       } else {
-        toast.error("Failed to save data: " + result.message);
+        toast.error("Failed to save data: ");
       }
     } catch (error) {
       console.error("Error saving data:", error);
-      toast.error("An error occurred while saving data: " + error.message);
+      toast.error("An error occurred while saving data: " );
     }
   };
 

@@ -261,7 +261,7 @@ export default function StartPage({
       
       toast.success("Data saved successfully!");
     } catch (error) {
-      toast.error("An error occurred while saving data: " + error.message);
+      toast.error("An error occurred while saving data: " );
   
       console.error(error);
     }

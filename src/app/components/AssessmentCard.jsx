@@ -93,7 +93,7 @@ export default function AssessmentCard({
      toast.success("Data saved successfully!");
     } catch (error) {
       console.error("❌ Error saving data:", error);
-     toast.error("An error occurred while saving data: " + error.message);
+     toast.error("An error occurred while saving data: " );
     }
   };
 

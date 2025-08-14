@@ -30,6 +30,7 @@ import NutritionalAssessmentProfile from "./Nutritional Assesment Profile/Nutrit
 import Consumables from "./Consumables/Consumables";
 import DummyInvestigation from "./Investigation/DummyInvestigation";
 import NursingReassessment from "./Nursing Reassessment/NursingReassessment";
+import PythonPractice from "./pythonpractice";
 
 const buttons = [
   {
@@ -123,6 +124,12 @@ const buttons = [
   //{ label: "BugInvestigation", color: "#1999A1", shadow: "#14767D", icon: GiFizzingFlask },
   {
     label: "INVESTIGATION",
+    color: "#00809D",
+    shadow: "#89A8B2",
+    icon: GiFizzingFlask,
+  },
+  {
+    label: "-",
     color: "#00809D",
     shadow: "#89A8B2",
     icon: GiFizzingFlask,
@@ -254,7 +261,19 @@ export default function ButtonGrid({ visitid, gssuhid, empid, patientData }) {
         />
       );
       setShowModal(true);
-    } else if (label === "xyz") {
+    } 
+    else if (label === "-") {
+      setModalContent(
+        <PythonPractice
+          visitid={visitid}
+          gssuhid={gssuhid}
+          empid={empid}
+          patientData={patientData}
+        />
+      );
+      setShowModal(true);
+    } 
+    else if (label === "xyz") {
       setModalContent(<div>Placeholder for Doctor Visit</div>);
       setShowModal(true);
     } else {

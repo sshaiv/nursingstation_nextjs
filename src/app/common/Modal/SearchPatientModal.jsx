@@ -121,7 +121,7 @@ const SearchPatientModal = ({ isOpen, onClose, patientData }) => {
       }
     } catch (error) {
       console.error("❌ Error fetching patient bed info:", error);
-      toast.error("Failed to fetch patient bed info: " + error.message);
+      toast.error("Failed to fetch patient bed info: " );
     } finally {
       setLoading(false);
     }
