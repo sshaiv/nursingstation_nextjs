@@ -6,7 +6,7 @@ import random
 sys.stdout.reconfigure(encoding='utf-8')
 
 # Function-wise random generators
-def generate_random_int(start=1, end=100):
+def generate_random_int(start=1, end=10):
     return random.randint(start, end)
 
 def generate_random_float():
@@ -14,7 +14,7 @@ def generate_random_float():
 
 def choose_random_item(choices=None):
     if choices is None:
-        choices = ["Apple", "Banana", "Cherry", "Date"]
+        choices = ["Apple", "Banana", "Cherry", "orange"]
     return random.choice(choices)
 
 # Main execution
