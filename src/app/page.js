@@ -94,8 +94,7 @@ function HomeContent() {
       }
 
       setOtherPatientData(table1Data.length > 0 ? table1Data : null);
-    } 
-    catch (error) {
+    } catch (error) {
       console.error("❌ Error fetching patient bed info:", error.message);
       toast.error("Failed to fetch patient bed info: ");
       setPatientData(null);

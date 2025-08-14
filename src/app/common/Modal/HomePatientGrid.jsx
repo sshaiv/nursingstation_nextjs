@@ -145,6 +145,18 @@ const HomePatientGrid = ({ onPatientSelect }) => {
     { cid: 2, cname: "Ward B" },
     { cid: 3, cname: "Ward C" },
   ];
+// Save selection
+useEffect(() => {
+  if (selectedPatient) {
+    localStorage.setItem("selectedPatient", selectedPatient);
+  }
+}, [selectedPatient]);
+
+// Restore selection on mount
+useEffect(() => {
+  const saved = localStorage.getItem("selectedPatient");
+  if (saved) setSelectedPatient(saved);
+}, []);
 
   return (
     <div className="p-2 border border-gray-300 shadow -md overflow-auto scrollbar-hide">
@@ -223,20 +235,20 @@ const HomePatientGrid = ({ onPatientSelect }) => {
                     <tr
                       key={index}
                       className={`hover:bg-gray-100 ${
-                        selectedRowIndex === index
+                        selectedRowIndex === index ||selectedPatient === patient.visitid
                           ? "bg-blue-200 "
                           : index % 2 === 0
                           ? "bg-white"
                           : "bg-gray-50"
                       }`}
-                      onDoubleClick={() =>
-                        handleRowDoubleClick(patient.visitid, index)
-                      }
+                      // onDoubleClick={() =>
+                      //   handleRowDoubleClick(patient.visitid, index)
+                      // }
                     >
                       <td className="font-semibold text-xs p-2 ">
                         <input
                           type="radio"
-                          checked={!!selectedPatient === patient.visitid}
+                          checked={selectedPatient === patient.visitid}
                           onChange={() => setSelectedPatient(patient.visitid)}
                           onClick={() =>
                             handleRowDoubleClick(patient.visitid, index)
