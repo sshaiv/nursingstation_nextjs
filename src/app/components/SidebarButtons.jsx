@@ -39,12 +39,12 @@ const buttons = [
     shadow: "#89A8B2",
     icon: FiFileText,
   },
-  {
-    label: "CLINICAL EXAMINATION",
-    color: "#00809D",
-    shadow: "#89A8B2",
-    icon: FiClipboard,
-  },
+  // {
+  //   label: "CLINICAL EXAMINATION",
+  //   color: "#00809D",
+  //   shadow: "#89A8B2",
+  //   icon: FiClipboard,
+  // },
   {
     label: "NUTRITIONAL ASSESSMENT  PROFILE",
     color: "#00809D",
@@ -88,6 +88,12 @@ const buttons = [
     shadow: "#89A8B2",
     icon: FiCheckCircle,
   },
+    {
+    label: "NURSING REASSESSMENT",
+    color: "#00809D",
+    shadow: "#89A8B2",
+    icon: FaStethoscope,
+  },
   {
     label: "NURSING SERVICES",
     color: "#00809D",
@@ -107,12 +113,7 @@ const buttons = [
     icon: FiCalendar,
   },
 
-  {
-    label: "NURSING REASSESSMENT",
-    color: "#00809D",
-    shadow: "#89A8B2",
-    icon: FaStethoscope,
-  },
+
   {
     label: "ADVICE SURGERY",
     color: "#00809D",
@@ -317,7 +318,7 @@ export default function ButtonGrid({ visitid, gssuhid, empid, patientData }) {
             {/* Scrollable Content Area */}
             <div
               className={`mt-4 ${
-                activeLabel !== "INITIAL ASSESSMENT" &&
+                activeLabel !== "INITIAL " &&
                 activeLabel !== "CLINICAL EXAMINATION"
                   ? "overflow-y-auto"
                   : ""

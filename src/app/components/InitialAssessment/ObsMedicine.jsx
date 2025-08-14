@@ -125,7 +125,9 @@ export default function ObsMedicine({ visitid, gssuhid, empid }) {
   
   return (
     <div className=" min-h-screen flex justify-center text-[10px] leading-tight">
-    <div className="w-full max-w-5xl mx-auto space-y-4 overflow-auto scrollbar-hide min-h-[200px] max-h-[70vh] px-2">
+    <div className="w-full max-w-5xl mx-auto space-y-4  px-2">
+      {/* overflow-auto scrollbar-hide min-h-[200px] max-h-[70vh] */}
+      
         {/* Allergy Section */}
         <div className="space-y-3">
           <div className="flex items-center gap-4 mb-3">

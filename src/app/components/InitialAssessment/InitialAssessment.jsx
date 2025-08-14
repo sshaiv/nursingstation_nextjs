@@ -5,6 +5,7 @@ import Adult from "./Adult";
 import Pediatrics from "./Pediatrics";
 import ObsMedicine from "./ObsMedicine";
 import Tabs from "@/app/common/TabView";
+import ClinicalExamination from "../Clinical Examination/ClinicalExamination";
 
 
 
@@ -51,7 +52,9 @@ const InitialAssessmentForm = ({ visitid, gssuhid, empid, patientData }) => {
     },
   ];
   return (
- <div className="p-2 min-h-screen flex flex-col items-center text-[10px] leading-tight overflow-hidden">
+    <div className="p-2 min-h-screen flex flex-col items-center text-[10px] leading-tight overflow-y-auto">
+
+  {/* <div className="p-2 min-h-screen flex flex-col items-center text-[10px] leading-tight overflow-hidden"> */}
       <div className="w-full max-w-5xl mx-auto space-y-4">
       <div className="flex h-[1px] items-center justify-center">
            <ModalHeading
@@ -62,8 +65,17 @@ const InitialAssessmentForm = ({ visitid, gssuhid, empid, patientData }) => {
          <hr className="border-t border-gray-300 mb-0" />
 
         <Tabs tabs={tabData} initialTab="first" />
+          <hr className="border-t border-gray-300 mb-0" />
+
+         <div className="mt-6"> 
+           <ClinicalExamination
+          visitid={visitid}
+          gssuhid={gssuhid}
+          empid={empid}
+        /></div>
       </div>
     </div>
+    
   );
 };
 

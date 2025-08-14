@@ -99,12 +99,12 @@ export default function Adult({ visitid, gssuhid, empid }) {
 
     try {
       await axios.post(API_ENDPOINTS.savePresentIllness, derivedJson);
-   
-    toast.success("Data saved successfully!");
+
+      toast.success("Data saved successfully!");
     } catch (error) {
       console.error("❌ Error saving data:", error);
 
-     toast.error("Failed to save data. Please try again.");
+      toast.error("Failed to save data. Please try again.");
     }
   };
 
@@ -120,10 +120,11 @@ export default function Adult({ visitid, gssuhid, empid }) {
   useKeyboardScrollFix();
 
   return (
-    <div className="   flex justify-center text-[10px] leading-tight">
-      <div className="w-full max-w-5xl mx-auto space-y-4 overflow-auto scrollbar-hide min-h-[200px] max-h-[70vh] px-2">
+    <div className=" flex justify-center text-[10px] leading-tight">
+      <div className="w-full max-w-5xl mx-auto space-y-4   px-2">
+        {/*min-h-[200px] max-h-[70vh] overflow-auto scrollbar-hide */}
 
- {/* Allergy Section */}
+        {/* Allergy Section */}
         <div className="space-y-3">
           <div className="flex items-center gap-4 mb-3">
             <H3>📋 Allergy</H3>
@@ -161,7 +162,6 @@ export default function Adult({ visitid, gssuhid, empid }) {
 
         {/* History of Present Illness */}
         <div className="flex flex-col md:flex-row gap-10 items-start ">
-
           {/* Left: History of Present Illness */}
           <div className="w-full md:w-1/2 space-y-2">
             <H3>✅ History of Present Illness</H3>
@@ -210,7 +210,10 @@ export default function Adult({ visitid, gssuhid, empid }) {
 
           {/* Right: Digital Signature */}
           <div className="w-full md:w-1/2  ">
-            <DigitalSignatureSection onSignatureSave={handleSignatureSave} title="Signature" />
+            <DigitalSignatureSection
+              onSignatureSave={handleSignatureSave}
+              title="Signature"
+            />
           </div>
         </div>
 
@@ -336,11 +339,13 @@ export default function Adult({ visitid, gssuhid, empid }) {
 
         <div className="flex justify-center">
           <button
-          onClick={handleSave}       
-          className={"w-full text-sm font-semibold rounded-b-full  rounded-lg p-2 text-white  bg-blue-500 hover:bg-blue-600"}
-        >
-          Save
-        </button>
+            onClick={handleSave}
+            className={
+              "w-full text-sm font-semibold rounded-b-full  rounded-lg p-2 text-white  bg-blue-500 hover:bg-blue-600"
+            }
+          >
+            Save
+          </button>
         </div>
       </div>
     </div>

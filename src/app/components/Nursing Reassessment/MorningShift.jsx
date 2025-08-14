@@ -1,296 +1,146 @@
-import React, { useState, useRef, useEffect } from "react";
-import axios from "axios";
-import useFetchPatientHistory from "@/app/hooks/fetchHistoryData";
-import API_ENDPOINTS from "@/app/constants/api_url";
-import { useKeyboardScrollFix } from "@/app/common/useKeyboardScrollFix";
+import React from "react";
 
-export default function MorningShift({ visitid, gssuhid, empid }) {
-
-
-
-  useKeyboardScrollFix();
-
+export default function MorningShift() {
   return (
-    <div className="   flex justify-center text-[10px] leading-tight">
-      <div className="w-full max-w-5xl mx-auto space-y-4 overflow-auto scrollbar-hide min-h-[200px] max-h-[70vh] px-2">
+    <div className="min-h-screen">
+      <div className="mx-auto max-w-5xl">
+        <h3 className="text-center  text-sm font-bold text-blue-900">
+          Morning Shift
+        </h3>
+        <section className="avoid-break mt-2  border border-neutral-400  p-4">
+          <div className="grid grid-cols-12 text-sm">
+            <div className="col-span-3 border-r border-neutral-300 pr-2">
+              <Block label="Situation">
+                <Field label="Diagnosis" />
+                <Field label="Present Complaint" />
+              </Block>
 
+              <Block label="Background">
+                <Field label="Investigation" rows={2} />
+                <Field label="Medication / IV Fluid" rows={2} />
+              </Block>
 
-    {/* Morse Fall Scale */}
-        <div className="flex-1 max-w-full text-black p-2 shadow-lg rounded-lg  shadow-gray-400 overflow-x-auto">
-          <h1 className="text-sm   font-bold mb-2">MORSE FALL SCALE</h1>
-          <table className="w-full border border-gray-200 text-sm">
-            <thead>
-              <tr className="bg-gray-100 text-black ">
-                <th className="border border-gray-200 p-2 text-left">Item</th>
-                <th className="border border-gray-200 p-2 text-left">Scale</th>
-                <th className="border border-gray-200 p-2 text-center">
-                  Scoring
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {/* Q1 */}
-              <tr>
-                <td className="border border-gray-200 p-2">
-                  1. History of falling; immediate or within 3 months
-                </td>
-                <td className=" flex  gap-2 border border-gray-200 p-2">
-                  <label className="flex items-center gap-1">
-                    <input
-                      type="radio"
-                      name="q1"
-                      value={0}
-                      checked={scores.q1 === 0}
-                      onChange={() => handleChange("q1", 0)}
-                    />
-                    No (0)
-                  </label>
-                  <label className="flex items-center gap-1">
-                    <input
-                      type="radio"
-                      name="q1"
-                      value={25}
-                      checked={scores.q1 === 25}
-                      onChange={() => handleChange("q1", 25)}
-                    />
-                    Yes (25)
-                  </label>
-                </td>
-                <td className="border border-gray-200 text-center">
-                  <input
-                    type="number"
-                    className="w-16 border p-1 text-center"
-                    value={scores.q1}
-                    onChange={(e) => handleChange("q1", e.target.value)}
-                  />
-                </td>
-              </tr>
+              <div className="mt-3">
+                <textarea
+                  rows={4}
+                  placeholder="Additional notes"
+                  className="w-full resize-none rounded-lg border border-neutral-300 bg-white p-2 outline-none focus:ring-2 focus:ring-neutral-400"
+                />
+              </div>
+            </div>
 
-              {/* Q2 */}
-              <tr>
-                <td className="border border-gray-200 p-2">
-                  2. Secondary diagnosis
-                </td>
-                <td className="flex  gap-2 border border-gray-200 p-2">
-                  <label className="flex items-center gap-1">
-                    <input
-                      type="radio"
-                      name="q2"
-                      value={0}
-                      checked={scores.q2 === 0}
-                      onChange={() => handleChange("q2", 0)}
-                    />
-                    No (0)
-                  </label>
-                  <label className="flex items-center gap-1">
-                    <input
-                      type="radio"
-                      name="q2"
-                      value={15}
-                      checked={scores.q2 === 15}
-                      onChange={() => handleChange("q2", 15)}
-                    />
-                    Yes (15)
-                  </label>
-                </td>
-                <td className="border border-gray-200 p-2 text-center">
-                  <input
-                    type="number"
-                    className="w-16 border p-1 text-center"
-                    value={scores.q2}
-                    onChange={(e) => handleChange("q2", e.target.value)}
-                  />
-                </td>
-              </tr>
+            <div className="col-span-9 pl-3">
+              <div className="rounded-lg border border-neutral-300 p-3">
+                <div className="mb-2 font-medium">Assessment-Vital</div>
+                <div className="flex flex-col gap-4 md:flex-row">
+                  {/* Left side vitals */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-2 flex-1">
+                    <Tiny label="T" />
+                    <Tiny label="P" />
+                    <Tiny label="R" />
+                    <Tiny label="BP" className="col-span-2 sm:col-span-2" />
+                    <Mini label="SpO₂" />
+                    <Mini label="Pain" />
+                  </div>
 
-              {/* Q3 */}
-              <tr>
-                <td className="border border-gray-200 p-2">
-                  3. Ambulatory aid
-                </td>
-                <td className="border border-gray-200 p-2">
-                  <label className="flex items-center gap-1">
-                    <input
-                      type="radio"
-                      name="q3"
-                      value={0}
-                      checked={scores.q3 === 0}
-                      onChange={() => handleChange("q3", 0)}
-                    />
-                    Bed rest / nurse assist (0)
-                  </label>
-                  <label className="flex items-center gap-1">
-                    <input
-                      type="radio"
-                      name="q3"
-                      value={15}
-                      checked={scores.q3 === 15}
-                      onChange={() => handleChange("q3", 15)}
-                    />
-                    Crutches / cane / walker (15)
-                  </label>
-                  <label className="flex items-center gap-1">
-                    <input
-                      type="radio"
-                      name="q3"
-                      value={20}
-                      checked={scores.q3 === 20}
-                      onChange={() => handleChange("q3", 20)}
-                    />
-                    Furniture (20)
-                  </label>
-                </td>
-                <td className="border border-gray-200 p-2 text-center">
-                  <input
-                    type="number"
-                    className="w-16 border p-1 text-center"
-                    value={scores.q3}
-                    onChange={(e) => handleChange("q3", e.target.value)}
-                  />
-                </td>
-              </tr>
+                  {/* Right side scores */}
+                  <div className="grid grid-cols-2 gap-2 flex-1">
+                    <LabeledInput small label="MEWS" />
+                    <LabeledInput small label="GCS" />
+                    <LabeledInput small label="Braden Score" />
+                    <LabeledInput small label="Morse Score" />
+                  </div>
+                </div>
+              </div>
 
-              {/* Q4 */}
-              <tr>
-                <td className="border border-gray-200 p-2">
-                  4. IV / Heparin Lock
-                </td>
-                <td className="flex  gap-2 border border-gray-200 p-2">
-                  <label className="flex items-center gap-1">
-                    <input
-                      type="radio"
-                      name="q4"
-                      value={0}
-                      checked={scores.q4 === 0}
-                      onChange={() => handleChange("q4", 0)}
-                    />
-                    No (0)
-                  </label>
-                  <label className="flex items-center gap-1">
-                    <input
-                      type="radio"
-                      name="q4"
-                      value={20}
-                      checked={scores.q4 === 20}
-                      onChange={() => handleChange("q4", 20)}
-                    />
-                    Yes (20)
-                  </label>
-                </td>
-                <td className="border border-gray-200 p-2 text-center">
-                  <input
-                    type="number"
-                    className="w-16 border p-1 text-center"
-                    value={scores.q4}
-                    onChange={(e) => handleChange("q4", e.target.value)}
-                  />
-                </td>
-              </tr>
+              <Block label="Recommendation">
+                <Field label="Pending Investigation" />
+                <Field label="Pending Report" />
+                <Field label="Referral" />
+                <Field label="Remark" rows={2} />
+              </Block>
 
-              {/* Q5 */}
-              <tr>
-                <td className="border border-gray-200 p-2">
-                  5. Gait / Transferring
-                </td>
-                <td className="border border-gray-200 p-2">
-                  <label className="flex items-center gap-1">
-                    <input
-                      type="radio"
-                      name="q5"
-                      value={0}
-                      checked={scores.q5 === 0}
-                      onChange={() => handleChange("q5", 0)}
-                    />
-                    Normal / bedrest / immobile (0)
-                  </label>
-                  <label className="flex items-center gap-1">
-                    <input
-                      type="radio"
-                      name="q5"
-                      value={10}
-                      checked={scores.q5 === 10}
-                      onChange={() => handleChange("q5", 10)}
-                    />
-                    Weak (10)
-                  </label>
-                  <label className="flex items-center gap-1">
-                    <input
-                      type="radio"
-                      name="q5"
-                      value={20}
-                      checked={scores.q5 === 20}
-                      onChange={() => handleChange("q5", 20)}
-                    />
-                    Impaired (20)
-                  </label>
-                </td>
-                <td className="border border-gray-200 p-2 text-center">
-                  <input
-                    type="number"
-                    className="w-16 border p-1 text-center"
-                    value={scores.q5}
-                    onChange={(e) => handleChange("q5", e.target.value)}
-                  />
-                </td>
-              </tr>
-
-              {/* Q6 */}
-              <tr>
-                <td className="border border-gray-200 p-2">6. Mental status</td>
-                <td className="border border-gray-200 p-2">
-                  <label className="flex items-center gap-1">
-                    <input
-                      type="radio"
-                      name="q6"
-                      value={0}
-                      checked={scores.q6 === 0}
-                      onChange={() => handleChange("q6", 0)}
-                    />
-                    Oriented to own ability (0)
-                  </label>
-                  <label className="flex items-center gap-1">
-                    <input
-                      type="radio"
-                      name="q6"
-                      value={15}
-                      checked={scores.q6 === 15}
-                      onChange={() => handleChange("q6", 15)}
-                    />
-                    Forgets limitations (15)
-                  </label>
-                </td>
-                <td className="border border-gray-200 p-2 text-center">
-                  <input
-                    type="number"
-                    className="w-16 border p-1 text-center"
-                    value={scores.q6}
-                    onChange={(e) => handleChange("q6", e.target.value)}
-                  />
-                </td>
-              </tr>
-
-              {/* Total */}
-              <tr className="bg-gray-100 font-semibold">
-                <td className="border border-gray-200 p-2">TOTAL SCORE :</td>
-                <td className="border border-gray-200 p-2"></td>
-                <td className="border border-gray-200 p-2 text-center">
-                  {totalScore}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div className="mt-4 text-sm">
-            <p>0 - 24 : No Risk — Basic Nursing Care</p>
-            <p>25 - 50 : Low Risk — Implement Standard Fall Prevention</p>
-            <p>
-              &gt; 50 : High Risk — Implement High Risk Fall Prevention
-              Intervention
-            </p>
+              <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
+                <LabeledInput label="Handover Given By" />
+                <LabeledInput label="Hand over Received By" />
+              </div>
+            </div>
           </div>
-        </div>
-        
+        </section>
       </div>
     </div>
+  );
+}
+
+// functions
+function Block({ label, children }) {
+  return (
+    <div className="mb-4  border border-neutral-300 bg-white">
+      <div className="border-b border-neutral-300 bg-neutral-100 px-2 py-1 text-xs font-semibold">
+        {label}
+      </div>
+      <div className="space-y-2 p-2">{children}</div>
+    </div>
+  );
+}
+
+function Field({ label, rows = 1 }) {
+  const isText = rows > 1;
+  return (
+    <label className="block text-xs">
+      <span className="mb-1 block font-medium text-neutral-700">{label}</span>
+      {isText ? (
+        <textarea
+          rows={rows}
+          className="w-full resize-none rounded-md border border-neutral-300 p-2 focus:ring-2 focus:ring-neutral-400"
+        />
+      ) : (
+        <input
+          className="w-full rounded-md border border-neutral-300 p-2 focus:ring-2 focus:ring-neutral-400"
+          type="text"
+        />
+      )}
+    </label>
+  );
+}
+
+function LabeledInput({ label, placeholder = "", small = false }) {
+  return (
+    <label className={`block ${small ? "text-xs" : "text-sm"}`}>
+      <span className="mb-1 block font-medium text-neutral-700">{label}</span>
+      <input
+        placeholder={placeholder}
+        className="w-full rounded-md border border-neutral-300 bg-white p-2 text-sm focus:ring-2 focus:ring-neutral-400"
+        type="text"
+      />
+    </label>
+  );
+}
+
+function Tiny({ label, className = "" }) {
+  return (
+    <label className={`col-span-2 flex items-center gap-2 ${className}`}>
+      <span className="min-w-[2rem] text-xs font-medium text-neutral-700">
+        {label}:
+      </span>
+      <input
+        type="text"
+        className="w-full rounded-sm border border-neutral-300 bg-white p-2 text-sm focus:ring-2 focus:ring-neutral-400"
+      />
+    </label>
+  );
+}
+
+function Mini({ label }) {
+  return (
+    <label className="col-span-2 flex items-center gap-2">
+      <span className="min-w-[2.5rem] text-xs font-medium text-neutral-700">
+        {label}:
+      </span>
+      <input
+        type="text"
+        className="w-full rounded-sm border border-neutral-300 bg-white p-2 text-sm focus:ring-2 focus:ring-neutral-400"
+      />
+    </label>
   );
 }

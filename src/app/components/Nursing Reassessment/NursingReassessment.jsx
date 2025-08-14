@@ -7,8 +7,6 @@ import MorningShift from "./MorningShift";
 import EveningShift from "./EveningShift";
 import NightShift from "./NightShift";
 
-
-
 const NursingReassessment = ({ visitid, gssuhid, empid, patientData }) => {
    const tabData = [
     {

@@ -7,7 +7,7 @@ export default function PythonPractice({ visitid, gssuhid, empid }) {
   
     const runPython = async () => {
       setLoading(true);
-      const res = await fetch("/api/second");
+      const res = await fetch("/api/run-python");
       const data = await res.json();
       setOutput(data.output || data.error);
       setLoading(false);
@@ -22,7 +22,7 @@ export default function PythonPractice({ visitid, gssuhid, empid }) {
             {loading ? "Running Python..." : "Connect Python Page"}
           </h3>
     
-          {/* API ka data dikhane ke liye */}
+          {/* API */}
           {output && (
             <pre className="mt-4 p-2 bg-gray-200 whitespace-pre-wrap">{output}</pre>
           )}
