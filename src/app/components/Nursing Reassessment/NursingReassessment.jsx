@@ -11,7 +11,7 @@ const NursingReassessment = ({ visitid, gssuhid, empid, patientData }) => {
    const tabData = [
     {
       name: "first",
-      label: "Morning Shift",
+      label: "⬩ Morning Shift",
       emoji: "",
       content: (
         <MorningShift
@@ -24,7 +24,7 @@ const NursingReassessment = ({ visitid, gssuhid, empid, patientData }) => {
     },
     {
       name: "second",
-      label: "Evening Shift",
+      label: "⬩ Evening Shift",
       emoji: "",
       content: (
         <EveningShift
@@ -37,7 +37,7 @@ const NursingReassessment = ({ visitid, gssuhid, empid, patientData }) => {
     },
     {
       name: "third",
-      label: "Night Shift",
+      label: "⬩ Night Shift",
       emoji: "",
       content: (
         <NightShift

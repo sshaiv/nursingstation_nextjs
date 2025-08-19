@@ -13,7 +13,7 @@ const InitialAssessmentForm = ({ visitid, gssuhid, empid, patientData }) => {
    const tabData = [
     {
       name: "first",
-      label: "Adult",
+      label: "⬩ Adult",
       emoji: "",
       content: (
         <Adult
@@ -26,7 +26,7 @@ const InitialAssessmentForm = ({ visitid, gssuhid, empid, patientData }) => {
     },
     {
       name: "second",
-      label: "Pediatrics",
+      label: "⬩ Pediatrics",
       emoji: "",
       content: (
         <Pediatrics
@@ -39,7 +39,7 @@ const InitialAssessmentForm = ({ visitid, gssuhid, empid, patientData }) => {
     },
     {
       name: "third",
-      label: "ObsMedicine",
+      label: "⬩ ObsMedicine",
       emoji: "",
       content: (
         <ObsMedicine

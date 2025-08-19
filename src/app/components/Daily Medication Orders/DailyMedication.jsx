@@ -15,7 +15,7 @@ const DailyMedication = ({ visitid, gssuhid, empid, patientData }) => {
   const tabData = [
     {
       name: "first",
-      label: "IV Fluids , IV Antibiotics , SC INJ. etc",
+      label: "⬩ IV Fluids , IV Antibiotics , SC INJ. etc",
       emoji: "",
       content: (
         <IvFluids
@@ -29,7 +29,7 @@ const DailyMedication = ({ visitid, gssuhid, empid, patientData }) => {
     {
       name: "second",
       label:
-        "Other Medication (Oral , S/L , Nebulization , Rectal , Patches ,etc)",
+        "⬩ Other Medication (Oral , S/L , Nebulization , Rectal , Patches ,etc)",
       emoji: "",
         content: (
           <OtherMedication
@@ -42,7 +42,7 @@ const DailyMedication = ({ visitid, gssuhid, empid, patientData }) => {
     },
     {
       name: "third",
-      label: "SOS & STAT Medication",
+      label: "⬩ SOS & STAT Medication",
       emoji: "",
         content: (
           <SOSMedication
@@ -55,7 +55,7 @@ const DailyMedication = ({ visitid, gssuhid, empid, patientData }) => {
     },
     {
       name: "fourth",
-      label: "Investigations & Advice",
+      label: "⬩ Investigations & Advice",
       emoji: "",
         content: (
           <InvasiveLinesTubes
@@ -68,7 +68,7 @@ const DailyMedication = ({ visitid, gssuhid, empid, patientData }) => {
     },
     {
       name: "fifth",
-      label: "Daily Nutritional Assessment",
+      label: "⬩ Daily Nutritional Assessment",
       emoji: "",
         content: (
           <DailyAssessment

@@ -417,7 +417,8 @@ export default function VitalsTable({
             onDateChange={setSelectedDate}
             time={selectedTime}
             onTimeChange={(e) => setTime(e.target.value)}
-          /></div>
+          />
+          </div>
     
 
         {/* Performed By Input */}
