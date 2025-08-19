@@ -143,16 +143,34 @@ export default function DailyAssessment() {
             </thead>
             <tbody>
               {[
-                { score: 0, desc: "No signs of phlebitis" },
-                { score: 1, desc: "Possible first signs" },
-                { score: 2, desc: "Early stage" },
-                { score: 3, desc: "Medium stage" },
-                { score: 4, desc: "Advance stage" },
-                { score: 5, desc: "Severe stage" },
+                {
+                  score: 0,
+                  desc: "No signs of phlebitis [ I.V site appears healthy ]",
+                },
+                {
+                  score: 1,
+                  desc: "Possible first signs [ One of the following evident: * Slight pain near I.V site or Slight redness ]",
+                },
+                {
+                  score: 2,
+                  desc: "Early stage [ Two of the following evident: *  pain near I.V site *Erythem *Swelling]",
+                },
+                {
+                  score: 3,
+                  desc: "Medium stage [ All of the following evident: *  pain along path of cannula *Erythem *Induration]",
+                },
+                {
+                  score: 4,
+                  desc: "Advance stage [ All of the following evident & extensive: *pain along path of cannula *Erythem *Induration *Palpable venous cord]",
+                },
+                {
+                  score: 5,
+                  desc: "Severe stage [ All of the following evident & extensive: *pain along path of cannula *Erythem *Induration *Palpable venous cord *Pyrexia]",
+                },
               ].map((row) => (
                 <tr key={row.score}>
                   <td className="border p-2 text-center">{row.score}</td>
-                  <td className="border p-2">{row.desc}</td>
+                  <td className="border p-2">{formatDescription(row.desc)}</td>
                   {["M", "E", "N"].map((key) => (
                     <td className="border p-2 text-center" key={key}>
                       <input
@@ -180,3 +198,20 @@ export default function DailyAssessment() {
     </div>
   );
 }
+const formatDescription = (desc) => {
+  const parts = desc.split(/(\[.*?\])/g); // [] ke andar ka part alag karega
+  return parts.map((part, i) => {
+    if (part.startsWith("[") && part.endsWith("]")) {
+      return (
+        <span key={i} className="font-light text-gray-600">
+          {part}
+        </span>
+      );
+    }
+    return (
+      <span key={i} className="font-semibold">
+        {part}
+      </span>
+    );
+  });
+};
