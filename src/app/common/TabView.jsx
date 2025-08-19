@@ -6,8 +6,9 @@ export default function Tabs({ tabs, initialTab }) {
 
   return (
     <div className="w-full">
+      
       {/* Tab Bar */}
-      <ul className="flex w-full text-sm font-semibold text-gray-700 dark:text-gray-800">
+      <ul className="flex w-full text-xs font-semibold text-gray-700 dark:text-gray-800">
         {tabs.map(({ name, label, emoji }) => {
           const isActive = activeTab === name;
           return (
@@ -18,7 +19,7 @@ export default function Tabs({ tabs, initialTab }) {
                 className={`w-full flex items-center justify-center gap-1 px-3 py-2 border-b-2 ${
                   isActive
                     ? "border-blue-800 text-blue-800 font-bold"
-                    : "border-transparent hover:text-blue-500"
+                    : "border-transparent hover:text-gray-400"
                 } transition-colors duration-150`}
               >
                 <span className=" hidden sm:inline">{emoji}</span>

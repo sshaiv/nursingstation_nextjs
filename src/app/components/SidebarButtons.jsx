@@ -30,7 +30,8 @@ import NutritionalAssessmentProfile from "./Nutritional Assesment Profile/Nutrit
 import Consumables from "./Consumables/Consumables";
 import DummyInvestigation from "./Investigation/DummyInvestigation";
 import NursingReassessment from "./Nursing Reassessment/NursingReassessment";
-import PythonPractice from "./pythonpractice";
+import DailyMedication from "./Daily Medication Orders/DailyMedication";
+import ClinicalChart from "./Clinical Chart/ClinicalChart";
 
 const buttons = [
   {
@@ -129,12 +130,7 @@ const buttons = [
     shadow: "#89A8B2",
     icon: GiFizzingFlask,
   },
-  {
-    label: "-",
-    color: "#00809D",
-    shadow: "#89A8B2",
-    icon: GiFizzingFlask,
-  },
+
 ];
 
 export default function ButtonGrid({ visitid, gssuhid, empid, patientData }) {
@@ -263,9 +259,9 @@ export default function ButtonGrid({ visitid, gssuhid, empid, patientData }) {
       );
       setShowModal(true);
     } 
-    else if (label === "-") {
+    else if (label === "DAILY  MEDICATION SHEET") {
       setModalContent(
-        <PythonPractice
+        <DailyMedication
           visitid={visitid}
           gssuhid={gssuhid}
           empid={empid}
@@ -274,6 +270,18 @@ export default function ButtonGrid({ visitid, gssuhid, empid, patientData }) {
       );
       setShowModal(true);
     } 
+    else if (label === "CLINICAL CHART") {
+      setModalContent(
+        <ClinicalChart
+          visitid={visitid}
+          gssuhid={gssuhid}
+          empid={empid}
+          patientData={patientData}
+        />
+      );
+      setShowModal(true);
+    } 
+    
     else if (label === "xyz") {
       setModalContent(<div>Placeholder for Doctor Visit</div>);
       setShowModal(true);

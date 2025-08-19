@@ -29,12 +29,13 @@ export function Label({ children, htmlFor, ...props }) {
 // modal heading
 export function ModalHeading({ title, icon = '📋' }) {
   return (
-    <h4 className="font-semibold text-lg md:text-base text-purple-900 font-serif flex items-center justify-center gap-2">
+    <h4 className="font-semibold text-base md:text-lg text-purple-900 font-serif flex items-center justify-center gap-2">
       {typeof icon === 'string' ? <span>{icon}</span> : icon}
       {title}
     </h4>
   );
 }
+
 
 
 
