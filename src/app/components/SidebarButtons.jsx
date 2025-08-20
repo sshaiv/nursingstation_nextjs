@@ -33,6 +33,7 @@ import NursingReassessment from "./Nursing Reassessment/NursingReassessment";
 import DailyMedication from "./Daily Medication Orders/DailyMedication";
 import ClinicalChart from "./Clinical Chart/ClinicalChart";
 import Consents from "./Consents/Consents";
+import Angiography from "./Angiography/Angiography";
 
 const buttons = [
   {
@@ -133,6 +134,12 @@ const buttons = [
   },
     {
     label: "CONSENTS",
+    color: "#00809D",
+    shadow: "#89A8B2",
+    icon: GiFizzingFlask,
+  },
+    {
+    label: "ANGIOGRAPHY",
     color: "#00809D",
     shadow: "#89A8B2",
     icon: GiFizzingFlask,
@@ -287,9 +294,21 @@ export default function ButtonGrid({ visitid, gssuhid, empid, patientData }) {
         />
       );
       setShowModal(true);
-    }else if (label === "CONSENTS") {
+    }
+    else if (label === "CONSENTS") {
       setModalContent(
         <Consents
+          visitid={visitid}
+          gssuhid={gssuhid}
+          empid={empid}
+          patientData={patientData}
+        />
+      );
+      setShowModal(true);
+    } 
+    else if (label === "ANGIOGRAPHY") {
+      setModalContent(
+        <Angiography
           visitid={visitid}
           gssuhid={gssuhid}
           empid={empid}
