@@ -1,21 +1,18 @@
 import React, { useState } from "react";
 
-
 import { ActionButton } from "@/app/common/Buttons";
 import TableReuse from "@/app/common/TableReuse";
 import DateTimeInput from "@/app/common/DateTimeInput";
 import MedicineModal from "@/app/common/Modal/MedicineModal";
-
+import { getCurrentDate, getCurrentDateTime } from "@/app/utils/dateUtils";
 
 export default function OtherMedication() {
   // States
-  const [showMedicineNameModal, setShowMedicineNameModal] = useState(false);
   const [selectedDoctorId, setSelectedDoctorId] = useState(null);
   const [patientData, setPatientData] = useState(null);
 
   const [selectedDate, setSelectedDate] = useState("");
   const [time, setTime] = useState("");
-  const [medicineName, setMedicineName] = useState("");
   const [dose, setDose] = useState("");
   const [rateFreq, setRateFreq] = useState("");
   const [route, setRoute] = useState("");
@@ -26,41 +23,62 @@ export default function OtherMedication() {
   const [loading, setLoading] = useState(false);
   const [saveData, setSaveData] = useState([]);
   const [isValidToSave, setIsValidToSave] = useState(false);
+  const [showMedicineNameModal, setShowMedicineNameModal] = useState(false);
+
+  const [medicineName, setMedicineName] = useState("");
+  const [medicineData, setMedicineData] = useState(null);
+
+  const getCurrentTimeHHMM = () => {
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, "0");
+    const minutes = now.getMinutes().toString().padStart(2, "0");
+    return `${hours}:${minutes}`;
+  };
+
+  const [selectedTime, setSelectedTime] = useState(getCurrentTimeHHMM());
 
   // Handlers
-  const handleSelectMedicineName = (name) => {
-    setMedicineName(name);
+  const handleSelectMedicineName = (selected) => {
+    console.log("Medicine selected:", selected);
+    setMedicineData(selected);
+    setMedicineName(selected.CName);
     setShowMedicineNameModal(false);
   };
 
+  const CurrentDate = getCurrentDate();
+  const fullDateTime = getCurrentDateTime();
+
   const handleInsert = () => {
-    // Simple validation
     let newErrors = {};
-    if (!selectedDate || !time) newErrors.dateTime = "Date & Time required";
+    if (!selectedDate || !selectedTime)
+      newErrors.dateTime = "Date & Time required";
     if (!medicineName) newErrors.medicineName = "Medicine is required";
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
 
-    // Add entry
     const newEntry = {
-      date: `${selectedDate} ${time}`,
-      doctorName: "Dr. XYZ", // Replace with real doctor info
-      medicineName,
+      date: fullDateTime,
+
+      medicineId: medicineData.CID,
+      medicineName: medicineData.CName,
       dose,
       rateFreq,
       route,
       source: "local",
     };
-    setVitals((prev) => [...prev, newEntry]);
+    console.log("new entries: ", newEntry);
 
-    // Reset inputs
+    setVitals((prev) => [...prev, newEntry]);
+    setSaveData((prev) => [...prev, newEntry]);
+
+    // Reset
     setMedicineName("");
     setDose("");
     setRateFreq("");
     setRoute("");
     setSelectedDate("");
-    setTime("");
-    setIsValidToSave(true);
+    setSelectedTime(getCurrentTimeHHMM()); // reset to current time
+    setIsValidToSave(false);
   };
 
   const handleDeleteEntry = (index) => {
@@ -92,19 +110,16 @@ export default function OtherMedication() {
       <div className="border border-gray-100 rounded-lg p-2 text-xs">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 items-end">
           {/* Date & Time */}
-          <div className="flex flex-col w-full">
+          <div className="flex flex-col">
+            <label className="text-xs text-gray-700 font-medium mb-1">
+              Date & Time
+            </label>
             <DateTimeInput
               selectedDate={selectedDate}
               onDateChange={setSelectedDate}
-              time={time}
-              onTimeChange={(e) => setTime(e.target.value)}
-              label="Date & Time"
-              inputClassName="py-1 px-2 text-xs"
-              labelClassName="text-xs font-semibold mb-1"
+              time={selectedTime}
+              onTimeChange={(e) => setSelectedTime(e.target.value)}
             />
-            {errors.dateTime && (
-              <p className="text-red-500 mt-0.5">{errors.dateTime}</p>
-            )}
           </div>
 
           {/* Medicine Name */}
@@ -141,7 +156,9 @@ export default function OtherMedication() {
 
           {/* Rate / Freq */}
           <div className="flex flex-col w-full">
-            <label className="text-xs font-serif text-gray-700">Rate / Freq</label>
+            <label className="text-xs font-serif text-gray-700">
+              Rate / Freq
+            </label>
             <input
               type="text"
               value={rateFreq}
@@ -182,7 +199,7 @@ export default function OtherMedication() {
             <thead className="bg-blue-50 text-gray-800 font-semibold sticky top-0 z-10">
               <tr>
                 <TableReuse type="th">Date</TableReuse>
-               
+
                 <TableReuse type="th">Medicine</TableReuse>
                 <TableReuse type="th">Dose</TableReuse>
                 <TableReuse type="th">Rate Freq</TableReuse>
@@ -196,9 +213,12 @@ export default function OtherMedication() {
               {[...vitals].reverse().map((v, idx) => {
                 const actualIndex = vitals.length - 1 - idx;
                 return (
-                  <tr key={"vital-" + idx} className="hover:bg-gray-100 border-t">
+                  <tr
+                    key={"vital-" + idx}
+                    className="hover:bg-gray-100 border-t"
+                  >
                     <TableReuse>{v.date}</TableReuse>
-                
+
                     <TableReuse>{v.medicineName}</TableReuse>
                     <TableReuse>{v.dose}</TableReuse>
                     <TableReuse>{v.rateFreq}</TableReuse>
@@ -239,11 +259,7 @@ export default function OtherMedication() {
                   </tr>
                 ))
               ) : (
-                <tr>
-                  <td colSpan={7} className="py-4 text-center text-gray-500">
-                    No records found.
-                  </td>
-                </tr>
+                <tr></tr>
               )}
             </tbody>
           </table>

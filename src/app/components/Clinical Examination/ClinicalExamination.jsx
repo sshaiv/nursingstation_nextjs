@@ -10,7 +10,7 @@ const ClinicalExamination = ({ visitid, gssuhid, empid, patientData }) => {
   const tabData = [
     {
       name: "first",
-      label: "Clinical Examination",
+      label: "⬩ Clinical Examination",
       emoji: "🩺",
       content: (
         <StartPage
@@ -23,7 +23,7 @@ const ClinicalExamination = ({ visitid, gssuhid, empid, patientData }) => {
     },
     {
       name: "second",
-      label: "Present Ongoing Medication",
+      label: "⬩ Present Ongoing Medication",
       emoji: "💊",
       content: (
         <PresentMedication

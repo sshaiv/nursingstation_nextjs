@@ -1,5 +1,7 @@
 import { ActionButton } from "@/app/common/Buttons";
+import DateTimeInput from "@/app/common/DateTimeInput";
 import TableReuse from "@/app/common/TableReuse";
+import { getCurrentDate, getCurrentDateTime } from "@/app/utils/dateUtils";
 import React, { useState } from "react";
 // import DateTimeInput, ActionButton, TableReuse if you already have them
 
@@ -17,6 +19,16 @@ export default function InvasiveLinesTubes() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
+  const CurrentDate = getCurrentDate();
+  const fullDateTime = getCurrentDateTime();
+  const getCurrentTimeHHMM = () => {
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, "0");
+    const minutes = now.getMinutes().toString().padStart(2, "0");
+    return `${hours}:${minutes}`;
+  };
+
+  const [selectedTime, setSelectedTime] = useState(getCurrentTimeHHMM());
   // Insert new record
   const handleInsert = () => {
     const newErrors = {};
@@ -29,7 +41,7 @@ export default function InvasiveLinesTubes() {
     if (Object.keys(newErrors).length > 0) return;
 
     const newEntry = {
-      date: `${selectedDate} ${time}`,
+      date: fullDateTime,
       lineName,
       insertionDate,
       insertionSign,
@@ -67,20 +79,16 @@ export default function InvasiveLinesTubes() {
       {/* Input Section */}
       <div className=" text-xs">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 items-end">
-          {/* Date & Time */}
-          <div className="flex flex-col w-full">
-            <label className="text-xs font-semibold text-gray-700">
-              Date & Time *
-            </label>
-            <input
-              type="datetime-local"
-              value={selectedDate && time ? `${selectedDate}T${time}` : ""}
-              onChange={(e) => {
-                const [date, t] = e.target.value.split("T");
-                setSelectedDate(date);
-                setTime(t);
-              }}
-              className="py-1 px-2 text-xs border rounded"
+        {/* Date & Time */}
+        <div className="flex flex-col w-full">
+            <DateTimeInput
+              selectedDate={selectedDate}
+              onDateChange={setSelectedDate}
+              time={time}
+              onTimeChange={(e) => setTime(e.target.value)}
+              label="Date & Time"
+              inputClassName="py-1 px-2 text-xs"
+              labelClassName="text-xs font-semibold mb-1"
             />
             {errors.dateTime && (
               <p className="text-red-500 mt-0.5">{errors.dateTime}</p>

@@ -10,8 +10,8 @@ const NutritionalInitial = ({ visitid, gssuhid, empid, patientData }) => {
   const tabData = [
     {
       name: "first",
-      label: "First Page",
-      emoji: "📄",
+      label: "⬩ First Page",
+      emoji: "",
       content: (
         <StartPage
           visitid={visitid}
@@ -23,8 +23,8 @@ const NutritionalInitial = ({ visitid, gssuhid, empid, patientData }) => {
     },
     {
       name: "second",
-      label: "Next Page",
-      emoji: "➡️",
+      label: "⬩ Next Page",
+      emoji: "",
       content: (
         <SecondPage
           visitid={visitid}
