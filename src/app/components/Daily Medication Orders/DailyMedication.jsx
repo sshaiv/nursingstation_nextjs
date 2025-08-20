@@ -55,7 +55,7 @@ const DailyMedication = ({ visitid, gssuhid, empid, patientData }) => {
     },
     {
       name: "fourth",
-      label: "⬩ Investigations & Advice",
+      label: "⬩ Investigations & Advice ",
       emoji: "",
         content: (
           <InvasiveLinesTubes
