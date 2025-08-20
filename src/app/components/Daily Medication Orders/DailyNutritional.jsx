@@ -50,7 +50,7 @@ export default function DailyAssessment() {
   };
 
   return (
-    <div className="p-4 max-w-5xl mx-auto">
+    <div className="p-0 max-w-5xl mx-auto">
       {/* Button ko upar le aaye */}
       <div className="flex justify-end mb-4">
         <button
@@ -64,7 +64,7 @@ export default function DailyAssessment() {
       {assessments.map((form, idx) => (
         <div key={idx} className="border p-4 rounded-lg mb-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold">
+            <h2 className="text-lg text-red-300 font-semibold">
               Assessment (
               {form.date ? new Date(form.date).toLocaleString() : "Not Set"})
             </h2>
@@ -129,8 +129,18 @@ export default function DailyAssessment() {
             </div>
           </div>
 
+          {/* BRADEN SCALE  */}
+          <h2 className="text-sm font-bold mt-6">A. BRADEN SCALE</h2>
+          <div className="flex-1">
+            <textarea
+              value={form.braden}
+              onChange={(e) => handleChange(idx, "braden", e.target.value)}
+              className="border w-full p-2 rounded mt-1 resize-none h-24"
+            />
+          </div>
+
           {/* VIP Score */}
-          <h2 className="text-lg font-bold mt-6">B. V.I.P SCORE</h2>
+          <h2 className="text-sm font-bold mt-6">B. V.I.P SCORE</h2>
           <table className="w-full border mt-2 text-sm">
             <thead className="bg-gray-100">
               <tr>
@@ -193,11 +203,88 @@ export default function DailyAssessment() {
               ))}
             </tbody>
           </table>
+
+          {/* GLASGOW COMA SCALE */}
+          <h2 className="text-sm font-bold mt-6">C. GLASGOW COMA SCALE</h2>
+          <table className="w-full border mt-2 text-sm">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="border p-2 w-16">Score</th>
+                <th className="border p-2">Eye (E)</th>
+                <th className="border p-2">Verbal (V)</th>
+                <th className="border p-2">Motor (M)</th>
+                <th className="border p-2 w-16">M</th>
+                <th className="border p-2 w-16">E</th>
+                <th className="border p-2 w-16">N</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                { score: 6, eye: "", verbal: "", motor: "Obeys commands" },
+                {
+                  score: 5,
+                  eye: "",
+                  verbal: "Oriented to Time , place & person",
+                  motor: "Localizes pain",
+                },
+                {
+                  score: 4,
+                  eye: "Spontaneously",
+                  verbal: "Confused",
+                  motor: "Withdraws from pain",
+                },
+                {
+                  score: 3,
+                  eye: "To voice",
+                  verbal: "Inappropriate words",
+                  motor: "Abnormal flexion (decorticate)",
+                },
+                {
+                  score: 2,
+                  eye: "To pain",
+                  verbal: "Incomprehensible sounds",
+                  motor: "Abnormal extension (decerebrate)",
+                },
+                {
+                  score: 1,
+                  eye: "No response",
+                  verbal: "No response",
+                  motor: "No  response",
+                },
+              ].map((row, idx) => (
+                <tr key={idx}>
+                  <td className="border p-2 text-center">{row.score}</td>
+                  <td className="border p-2">{row.eye}</td>
+                  <td className="border p-2">{row.verbal}</td>
+                  <td className="border p-2">{row.motor}</td>
+                  {["M", "E", "N"].map((key) => (
+                    <td className="border p-2 text-center" key={key}>
+                      <input
+                        type="radio"
+                        name={`vip-${idx}-${key}`}
+                        value={row.score}
+                        checked={form.vip[key] === row.score}
+                        onChange={(e) =>
+                          handleScoreChange(
+                            idx,
+                            "vip",
+                            key,
+                            parseInt(e.target.value)
+                          )
+                        }
+                      />
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       ))}
     </div>
   );
 }
+
 const formatDescription = (desc) => {
   const parts = desc.split(/(\[.*?\])/g); // [] ke andar ka part alag karega
   return parts.map((part, i) => {

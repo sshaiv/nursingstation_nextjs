@@ -84,6 +84,7 @@ export default function VitalsTable({
       loadVitalData();
     }
   }, [visitid]);
+
   useEffect(() => {
     if (height && weight) {
       const h = parseFloat(height);
@@ -203,16 +204,7 @@ export default function VitalsTable({
       };
 
       const currentDateTime = getCurrentDateTime(true);
-      // console.log("Date + Time:", currentDateTime);
-
-      // const [hours, minutes] = selectedTime.split(":").map(Number);
-      // const combinedDateTime = new Date(selectedDate);
-      // combinedDateTime.setHours(hours);
-      // combinedDateTime.setMinutes(minutes);
-      // combinedDateTime.setSeconds(0);
-      // combinedDateTime.setMilliseconds(0);
-
-      // const formattedDateTime = format(combinedDateTime, "dd/MM/yyyy HH:mm");
+     
 
       const newVitalEntry = {
         Sno: 0,
@@ -235,9 +227,7 @@ export default function VitalsTable({
         Pulse_1: "",
         rr: rr || "",
         RR_1: " ",
-
         Headcircumference: Headcircumference || "",
-
         spo2: spo2 || "",
         SpPO2: " ",
         entempid: patientData.empid,
@@ -329,11 +319,11 @@ export default function VitalsTable({
         // Reload fresh data from API
         loadVitalData();
       } else {
-        toast.error("❌ Failed to save data: " );
+        toast.error("❌ Failed to save data: ");
       }
     } catch (error) {
       console.error("Error saving data:", error);
-      toast.error("❌ An error occurred while saving data: " );
+      toast.error("❌ An error occurred while saving data: ");
     }
   };
 
@@ -408,7 +398,7 @@ export default function VitalsTable({
       <div className="flex flex-wrap gap-2 mb-2">
         {/* Date & Time Input */}
 
-     <div className="flex flex-col">
+        <div className="flex flex-col">
           <label className="text-xs text-gray-700 font-medium mb-1">
             Date & Time
           </label>
@@ -418,8 +408,7 @@ export default function VitalsTable({
             time={selectedTime}
             onTimeChange={(e) => setTime(e.target.value)}
           />
-          </div>
-    
+        </div>
 
         {/* Performed By Input */}
         <div className="flex flex-col w-40">

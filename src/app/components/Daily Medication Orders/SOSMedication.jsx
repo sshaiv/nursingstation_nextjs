@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 
 import { ActionButton } from "@/app/common/Buttons";
@@ -5,13 +6,14 @@ import TableReuse from "@/app/common/TableReuse";
 import DateTimeInput from "@/app/common/DateTimeInput";
 import MedicineModal from "@/app/common/Modal/MedicineModal";
 import DoctorModal from "@/app/common/Modal/DoctorModal"; // ✅ Import DoctorModal
+import PerformedByModal from "@/app/common/Modal/PerformedByModal";
+import { getCurrentDate, getCurrentDateTime } from "@/app/utils/dateUtils";
 
-export default function SOSMedication() {
+export default function SOSMedication({ visitid, gssuhid, empid }) {
   // States
   const [showMedicineNameModal, setShowMedicineNameModal] = useState(false);
   const [isDoctorModalOpen, setDoctorModalOpen] = useState(false);
 
-  const [selectedDoctorId, setSelectedDoctorId] = useState(null);
   const [doctorName, setDoctorName] = useState("");
   const [patientData, setPatientData] = useState(null);
 
@@ -28,57 +30,96 @@ export default function SOSMedication() {
   const [loading, setLoading] = useState(false);
   const [saveData, setSaveData] = useState([]);
   const [isValidToSave, setIsValidToSave] = useState(false);
-
-
-    const [showPerformedByModal, setShowPerformedByModal] = useState(false);
+  const [showPerformedByModal, setShowPerformedByModal] = useState(false);
 
   const [performedBy, setPerformedBy] = useState("");
 
   const [performedByData, setPerformedByData] = useState(null);
 
-  // Handlers
-  const handleSelectMedicineName = (name) => {
-    setMedicineName(name);
-    setShowMedicineNameModal(false);
-  };
+  const [doctorData, setDoctorData] = useState(null);
+  const [selectedDoctorId, setSelectedDoctorId] = useState(null);
+  const [medicineData, setMedicineData] = useState(null);
 
   const handleSelectDoctor = (doctor) => {
-    setDoctorName(doctor.name);
-    setSelectedDoctorId(doctor.id);
+    console.log("Doctor in inv:", doctor);
+    let selectedDoc = doctor;
+    // If only ID was passed (e.g., from radio selection), find the full doctor object
+    if (typeof doctor === "string") {
+      selectedDoc = doctorOptions.find((doc) => doc.value === doctor);
+    }
+    //console.log("cvbnm", selectedDoc);
+    if (selectedDoc) {
+      setDoctorData(selectedDoc);
+      setDoctorName(selectedDoc.label || selectedDoc.CName);
+    }
+
+    setSelectedDoctorId(selectedDoc?.value || doctor);
+
     setDoctorModalOpen(false);
   };
 
+  // Handlers
+  const handleSelectMedicineName = (selected) => {
+    console.log("Medicine selected:", selected);
+    setMedicineData(selected);
+    setMedicineName(selected.CName);
+    setShowMedicineNameModal(false);
+  };
+
+  // When user selects from modal:
+  const handleSelectPerformedBy = (selected) => {
+    console.log("PerformedBy selected:", selected);
+    setPerformedByData(selected);
+    setPerformedBy(selected.CName);
+    // console.log("spb",performedBy.CName);
+
+    setShowPerformedByModal(false);
+  };
+
+  const CurrentDate = getCurrentDate();
+  const fullDateTime = getCurrentDateTime();
+  const getCurrentTimeHHMM = () => {
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, "0");
+    const minutes = now.getMinutes().toString().padStart(2, "0");
+    return `${hours}:${minutes}`;
+  };
+
+  const [selectedTime, setSelectedTime] = useState(getCurrentTimeHHMM());
+
   const handleInsert = () => {
-    // Simple validation
     let newErrors = {};
-    if (!selectedDate || !time) newErrors.dateTime = "Date & Time required";
+    if (!selectedDate || !selectedTime)
+      newErrors.dateTime = "Date & Time required";
     if (!medicineName) newErrors.medicineName = "Medicine is required";
-    if (!doctorName) newErrors.doctorName = "Doctor is required";
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
 
-    // Add entry
     const newEntry = {
-      date: `${selectedDate} ${time}`,
-      doctorName,
-      medicineName,
-      dose,
-      rateFreq,
+      date: fullDateTime,
+      doctorName: doctorData.CName,
+      doctorId: doctorData.CID,
+      medicineId: medicineData.CID,
+      medicineName: medicineData.CName,
+      dose,      
       route,
+      performedById:performedByData.CID,
+      performedBy:performedByData.CName,
       source: "local",
     };
-    setVitals((prev) => [...prev, newEntry]);
+    console.log("new entries: ", newEntry);
 
-    // Reset inputs
+    setVitals((prev) => [...prev, newEntry]);
+    setSaveData((prev) => [...prev, newEntry]);
+
+    // Reset
     setMedicineName("");
     setDose("");
     setRateFreq("");
     setRoute("");
     setSelectedDate("");
-    setTime("");
-    setDoctorName("");
-    setSelectedDoctorId(null);
-    setIsValidToSave(true);
+    setSelectedTime(getCurrentTimeHHMM()); // reset to current time
+    setIsValidToSave(false);
   };
 
   const handleDeleteEntry = (index) => {
@@ -107,18 +148,19 @@ export default function SOSMedication() {
       )}
 
       {/* Doctor Modal */}
+
       {isDoctorModalOpen && (
         <DoctorModal
           isOpen={isDoctorModalOpen}
           onClose={() => setDoctorModalOpen(false)}
           onSelectDoctor={handleSelectDoctor}
-          visitid={"someVisitId"}
-          gssuhid={"someUHID"}
-          empid={"someEmpId"}
+          visitid={visitid}
+          gssuhid={gssuhid}
+          empid={empid}
         />
       )}
 
-        {showPerformedByModal && (
+      {showPerformedByModal && (
         <PerformedByModal
           isOpen={showPerformedByModal}
           onSelect={handleSelectPerformedBy}
@@ -148,22 +190,23 @@ export default function SOSMedication() {
           </div>
 
           {/* Doctor */}
-          <div className="flex flex-col w-full">
-            <label className="text-xs font-serif text-gray-700">
-              Doctor *
-            </label>
+
+          <div className="flex flex-col min-w-[180px]">
+            <label className="text-xs text-gray-700 mb-1">Doctor</label>
             <input
               type="text"
               readOnly
               value={doctorName}
               onClick={() => setDoctorModalOpen(true)}
-              className={`cursor-pointer text-black border rounded text-xs bg-gray-100 hover:bg-gray-200 focus:outline-none py-1 px-2 ${
+              className={`cursor-pointer text-black border px-2 py-[6px]   h-[25px] rounded-md bg-gray-100 hover:bg-gray-200 focus:outline-none ${
                 errors.doctorName ? "border-red-500" : "border-gray-300"
               }`}
               placeholder="Select doctor"
             />
             {errors.doctorName && (
-              <p className="text-red-500 mt-0.5">{errors.doctorName}</p>
+              <p className="text-red-500 text-[10px] mt-[2px] ml-[2px]">
+                {errors.doctorName}
+              </p>
             )}
           </div>
 
@@ -199,8 +242,6 @@ export default function SOSMedication() {
             />
           </div>
 
-        
-
           {/* Route */}
           <div className="flex flex-col w-full">
             <label className="text-xs font-serif text-gray-700">Route</label>
@@ -213,29 +254,28 @@ export default function SOSMedication() {
             />
           </div>
 
-           {/* Performed By Input */}
-        <div className="flex flex-col w-40">
-          <label className="text-gray-500 font-semibold text-[12px] mb-[1px]">
-            Performed by *
-          </label>
-          <input
-            id="performedBy"
-            type="text"
-            value={performedBy}
-            readOnly
-            onClick={() => setShowPerformedByModal(true)}
-            className={`px-2 py-1 text-black text-xs border rounded-sm cursor-pointer bg-gray-100 hover:bg-gray-300 focus:outline-none ${
-              errors.performedBy ? "border-red-500" : "border-gray-300"
-            }`}
-            placeholder="Select PerformedBy"
-          />
-          {errors.performedBy && (
-            <p className="text-red-500 text-[10px] mt-[2px] ml-[2px]">
-              {errors.performedBy}
-            </p>
-          )}
-        </div>
-
+          {/* Performed By Input */}
+          <div className="flex flex-col w-40">
+            <label className="text-gray-500 font-semibold text-[12px] mb-[1px]">
+              Performed by *
+            </label>
+            <input
+              id="performedBy"
+              type="text"
+              value={performedBy}
+              readOnly
+              onClick={() => setShowPerformedByModal(true)}
+              className={`px-2 py-1 text-black text-xs border rounded-sm cursor-pointer bg-gray-100 hover:bg-gray-300 focus:outline-none ${
+                errors.performedBy ? "border-red-500" : "border-gray-300"
+              }`}
+              placeholder="Select PerformedBy"
+            />
+            {errors.performedBy && (
+              <p className="text-red-500 text-[10px] mt-[2px] ml-[2px]">
+                {errors.performedBy}
+              </p>
+            )}
+          </div>
         </div>
 
         {/* Insert & Posted Data Buttons */}
@@ -259,7 +299,7 @@ export default function SOSMedication() {
                 <TableReuse type="th">Doctor Name</TableReuse>
                 <TableReuse type="th">Medicine</TableReuse>
                 <TableReuse type="th">Dose</TableReuse>
-               
+
                 <TableReuse type="th">Route</TableReuse>
                 <TableReuse type="th">Nurse Sign.</TableReuse>
                 <TableReuse type="th">Action</TableReuse>
@@ -271,13 +311,17 @@ export default function SOSMedication() {
               {[...vitals].reverse().map((v, idx) => {
                 const actualIndex = vitals.length - 1 - idx;
                 return (
-                  <tr key={"vital-" + idx} className="hover:bg-gray-100 border-t">
+                  <tr
+                    key={"vital-" + idx}
+                    className="hover:bg-gray-100 border-t"
+                  >
                     <TableReuse>{v.date}</TableReuse>
                     <TableReuse>{v.doctorName}</TableReuse>
                     <TableReuse>{v.medicineName}</TableReuse>
                     <TableReuse>{v.dose}</TableReuse>
-                    <TableReuse>{v.rateFreq}</TableReuse>
                     <TableReuse>{v.route}</TableReuse>
+                    <TableReuse>{v.performedBy}</TableReuse>
+
                     <TableReuse>
                       <div className="flex justify-center space-x-2">
                         {v.source !== "api" && (
@@ -314,11 +358,7 @@ export default function SOSMedication() {
                   </tr>
                 ))
               ) : (
-                <tr>
-                  <td colSpan={7} className="py-4 text-center text-gray-500">
-                    No records found.
-                  </td>
-                </tr>
+                <tr></tr>
               )}
             </tbody>
           </table>
