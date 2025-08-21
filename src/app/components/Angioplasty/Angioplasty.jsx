@@ -6,6 +6,7 @@ import Select from "react-select";
 import SafetyChecklist from "../Angiography/SafetyChecklist";
 import ProcedureNotes from "../Angiography/ProcedureNotes";
 import CoronaryAngioplasty from "./CoronaryAngioplasty";
+import AnesthesiaConsentForm from "../Consents/consents/AnesthesiaConsentForm";
 
 export default function Angioplasty() {
   const [form, setForm] = useState({
@@ -360,8 +361,9 @@ export default function Angioplasty() {
           </div>
         </div>
       </div>
-      
+
       <CoronaryAngioplasty />
+     < AnesthesiaConsentForm />
       <SafetyChecklist />
       <ProcedureNotes />
     </div>
