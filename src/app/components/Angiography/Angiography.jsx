@@ -4,6 +4,8 @@ import { ModalHeading } from "@/app/common/text";
 import { useState } from "react";
 import Select from "react-select";
 import CoronaryAngiography from "./CoronaryAngiography";
+import SafetyChecklist from "./SafetyChecklist";
+import ProcedureNotes from "./ProcedureNotes";
 
 export default function Angiography() {
   const [form, setForm] = useState({
@@ -365,6 +367,9 @@ export default function Angiography() {
 
 
 <CoronaryAngiography />
+
+<SafetyChecklist />
+<ProcedureNotes />
     </div>
   );
 }

@@ -1,18 +1,28 @@
+import DateTimeInput from "@/app/common/DateTimeInput";
 import DigitalSignatureSection from "@/app/common/DigitalSignatureSection";
 import { useState } from "react";
 
 export default function CoronaryAngiography() {
   const [lang, setLang] = useState("hi");
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const getCurrentTimeHHMM = () => {
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, "0");
+    const minutes = now.getMinutes().toString().padStart(2, "0");
+    return `${hours}:${minutes}`;
+  };
+  const [selectedTime, setSelectedTime] = useState(getCurrentTimeHHMM());
 
   const hindiContent = (
-    <div className="space-y-4 mt-2 p-2 border">
+    <div className="space-y-4 mt-2 rounded-2xl border bg-white p-3 shadow-sm">
       {/* Header */}
       <h2 className="text-lg text-center font-semibold text-gray-700">
         कोरोनरी एन्जियोग्राफी हेतु सूचित सहमति पत्र
       </h2>
 
       {/* Instructions Text */}
-      <div className="bg-gray-50 p-3 rounded-md text-sm text-gray-700 max-h-60 overflow-y-auto">
+      <div className="bg-gray-50 p-3 rounded-md text-sm text-gray-700 max-h-96 overflow-y-auto">
         <p>
           हृदय की रक्त धमनियों की रचना एवं उसमें उपस्थित रुकावट (अथवा सिकुड़ने)
           को जानने के लिये कोरोनरी एन्जियोग्राफी की जाती है। इसके लिये दांयी
@@ -81,29 +91,35 @@ export default function CoronaryAngiography() {
           उपचार हेतु स्वीकृति देता/देती हूँ।
         </p>
 
-        <div className="grid grid-cols-2 gap-4 mt-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
           {/* Doctor Section */}
           <div className="flex flex-col space-y-1">
-            <DigitalSignatureSection title=" हस्ताक्षर, हृदय रोग चिकित्सक" />
-            <input
-              type="text"
-              className="border border-gray-300 rounded px-2 py-1 text-sm"
+            <DigitalSignatureSection title="Signature of Interventional Cardiologist" />
+            <DateTimeInput
+              selectedDate={selectedDate}
+              onDateChange={setSelectedDate}
+              time={selectedTime}
+              onTimeChange={setSelectedTime}
             />
             <input
-              type="datetime-local"
+              type="text"
+              placeholder="Name"
               className="border border-gray-300 rounded px-2 py-1 text-sm"
             />
           </div>
 
           {/* Patient Section */}
           <div className="flex flex-col space-y-1">
-            <DigitalSignatureSection title="मरीज के हस्ताक्षर" />
-            <input
-              type="text"
-              className="border border-gray-300 rounded px-2 py-1 text-sm"
+            <DigitalSignatureSection title="Patient's Signature" />
+            <DateTimeInput
+              selectedDate={selectedDate}
+              onDateChange={setSelectedDate}
+              time={selectedTime}
+              onTimeChange={setSelectedTime}
             />
             <input
-              type="datetime-local"
+              type="text"
+              placeholder="Name"
               className="border border-gray-300 rounded px-2 py-1 text-sm"
             />
           </div>
@@ -136,14 +152,14 @@ export default function CoronaryAngiography() {
   );
 
   const englishContent = (
-    <div className="space-y-4 mt-2 p-2 border">
+    <div className="space-y-4 mt-2 rounded-2xl border bg-white p-3 shadow-sm">
       {/* Header */}
       <h2 className="text-lg text-center font-semibold text-gray-700">
         INFORMED CONSENT FOR CORONARY ANGIOGRAPHY
       </h2>
 
       {/* Instructions Text */}
-      <div className="bg-gray-50 p-3 rounded-md text-sm text-gray-700 max-h-60 overflow-y-auto">
+      <div className="bg-gray-50 p-3 rounded-md text-sm text-gray-700 max-h-96 overflow-y-auto">
         <p>
           Coronary Angiography is done to show the anatomy and the extent of any
           disease in the coronary arteries, the vessels which supply the heart
@@ -212,18 +228,19 @@ export default function CoronaryAngiography() {
           during this procedure.
         </p>
 
-        <div className="grid grid-cols-2 gap-4 mt-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
           {/* Doctor Section */}
           <div className="flex flex-col space-y-1">
-            <DigitalSignatureSection title=" Signature of Interventional Cardiologist" />
-
-            <input
-              type="text"
-              placeholder="name"
-              className="border border-gray-300 rounded px-2 py-1 text-sm"
+            <DigitalSignatureSection title="Signature of Interventional Cardiologist" />
+            <DateTimeInput
+              selectedDate={selectedDate}
+              onDateChange={setSelectedDate}
+              time={selectedTime}
+              onTimeChange={setSelectedTime}
             />
             <input
-              type="datetime-local"
+              type="text"
+              placeholder="Name"
               className="border border-gray-300 rounded px-2 py-1 text-sm"
             />
           </div>
@@ -231,13 +248,15 @@ export default function CoronaryAngiography() {
           {/* Patient Section */}
           <div className="flex flex-col space-y-1">
             <DigitalSignatureSection title="Patient's Signature" />
-            <input
-              type="text"
-              placeholder="name"
-              className="border border-gray-300 rounded px-2 py-1 text-sm"
+            <DateTimeInput
+              selectedDate={selectedDate}
+              onDateChange={setSelectedDate}
+              time={selectedTime}
+              onTimeChange={setSelectedTime}
             />
             <input
-              type="datetime-local"
+              type="text"
+              placeholder="Name"
               className="border border-gray-300 rounded px-2 py-1 text-sm"
             />
           </div>
@@ -246,7 +265,12 @@ export default function CoronaryAngiography() {
         {/* Witness Section */}
         <div className="mt-4 flex flex-col space-y-1">
           <DigitalSignatureSection title="Signature of Relative/Witness" />
-
+          <DateTimeInput
+            selectedDate={selectedDate}
+            onDateChange={setSelectedDate}
+            time={selectedTime}
+            onTimeChange={setSelectedTime}
+          />
           <div className="grid grid-cols-3 gap-2">
             <input
               type="text"
@@ -263,10 +287,6 @@ export default function CoronaryAngiography() {
               placeholder="contact no."
               className="border border-gray-300 rounded px-2 py-1 text-sm"
             />
-            <input
-              type="datetime-local"
-              className="border border-gray-300 rounded px-2 py-1 text-sm col-span-3"
-            />
           </div>
         </div>
       </div>
@@ -274,19 +294,25 @@ export default function CoronaryAngiography() {
   );
 
   return (
-    <div className="p-4 border space-y-4">
+    <div className=" space-y-4">
       {/* Language toggle */}
       <div className="flex justify-end">
         <button
           onClick={() => setLang(lang === "hi" ? "en" : "hi")}
-          className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+          role="button"
+          className="inline-flex items-center justify-center h-10 px-4 text-sm font-medium text-[#36395a] bg-[#fcfcfd] rounded-md 
+             shadow-[0_2px_4px_rgba(45,35,66,0.2),0_7px_13px_-3px_rgba(45,35,66,0.15),inset_0_-3px_0_#d6d6e7]
+             transition duration-150 ease-in-out
+             hover:shadow-[0_4px_8px_rgba(45,35,66,0.3),0_7px_13px_-3px_rgba(45,35,66,0.2),inset_0_-3px_0_#d6d6e7] hover:-translate-y-0.5
+             focus:shadow-[inset_0_0_0_1.5px_#d6d6e7,0_2px_4px_rgba(45,35,66,0.4),0_7px_13px_-3px_rgba(45,35,66,0.3),inset_0_-3px_0_#d6d6e7]
+             active:shadow-[inset_0_3px_7px_#d6d6e7] active:translate-y-0.5"
         >
           {lang === "hi" ? "Switch to English" : "Switch to Hindi"}
         </button>
       </div>
 
       {/* Render content based on language */}
-      {lang === "hi" ? hindiContent : englishContent}
+      {lang === "hi" ? englishContent : hindiContent}
     </div>
   );
 }
