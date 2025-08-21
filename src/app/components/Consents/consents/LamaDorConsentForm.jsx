@@ -94,8 +94,9 @@ export default function LamaDorConsentForm() {
               <p className="flex w-full gap-2">
                 Relation: <InputLine className="inline-block w-48" />
               </p>
-              <p className="flex gap-2">
-                Tel.No.: <InputLine className="inline-block w-48" />
+             <p className="flex items-center w-full gap-2 mb-2">
+                <span className="whitespace-nowrap"> Tel. No.:</span>
+                <InputLine className="w-48" />
               </p>
             </div>
 
@@ -127,8 +128,9 @@ export default function LamaDorConsentForm() {
               <p className="flex w-full gap-2">
                 Address: <InputLine className="inline-block w-48" />
               </p>
-              <p className="flex w-full gap-2">
-                Tel.No.: <InputLine className="inline-block w-48" />
+              <p className="flex items-center w-full gap-2 mb-2">
+                <span className="whitespace-nowrap"> Tel. No.:</span>
+                <InputLine className="w-48" />
               </p>
             </div>
 
@@ -176,41 +178,42 @@ export default function LamaDorConsentForm() {
               placeholder="मरीज का नाम"
               className="inline-block w-64"
             />{" "}
-            ) अपनी स्वयं की इच्छा या मर्ज़ी से इलाज करने वाले चिकित्सक के परामर्श /
-            मना करने के बावजूद मरीज को डी.एन.एस. हॉस्पिटल से छुट्टी लेना /
-            करवाना चाहते हैं / हैं।
+            ) अपनी स्वयं की इच्छा या मर्ज़ी से इलाज करने वाले चिकित्सक के
+            परामर्श / मना करने के बावजूद मरीज की डी.एन.एस. हॉस्पिटल से छुट्टी
+            लेना / करवाना चाहते हैं / हूँ ।
           </p>
 
           <p>
             मुझे / मेरे परिजन को, चिकित्सक द्वारा बताया गया है कि मैं / मेरे
-            मरीज को कि (Diagnosis{" "}
+            मरीज जो कि (Diagnosis{" "}
             <InputLine placeholder="Diagnosis" className="inline-block w-64" />{" "}
-            ) बीमारी गंभीर है, उसका इलाज डी.एन.एस. हॉस्पिटल में ही जारी रहना
-            चाहिए।
+            ) बीमारी से ग्रसित है, उसका इलाज डी.एन.एस. हॉस्पिटल में ही जारी रखा
+            जाये ।
           </p>
 
           <p>
             मुझे / मेरे परिजन को मेरे चिकित्सक द्वारा अस्पताल छोड़ने की स्थिति
-            में होने वाले नुकसान के बारे में बताया गया है, फिर भी मैं / मेरे
-            परिजन को अपनी इच्छा अनुसार अस्पताल से ले जाना चाहते हैं। मैं / मेरे
-            परिजन डी.एन.एस. हॉस्पिटल, प्रशासन एवं इंटर्नल स्टाफ को किसी भी
-            प्रकार की चिकित्सकीय / प्रशासनिक जिम्मेदारियों / कारणों के कारण होने
-            वाले नुकसान के लिए किसी भी प्रकार से जिम्मेदार नहीं ठहराऊँगा /
-            ठहराऊँगी।
+            में होने वाले जोखिम के बारे में बता दिया गया है, फिर भी मैं / मेरे
+            परिजन मरीज को अपनी जोखिम पर अस्पताल से ले जाना चाहते हैं। मैं / मेरे
+            परिजन डी.एन.एस. हॉस्पिटल, प्रशासन एवं इलाज करने वाले चिकित्सक को इन
+            परिस्थितियों में अस्पताल छोड़ने के कारण मरीज को होने वाले नुकसान के
+            लिए किसी भी प्रकार से ज़िम्मेदार नहीं ठहराऊँगा / ठहराऊँगे |
           </p>
 
           {/* Signatures */}
           <div className="grid grid-cols-2 gap-6 mt-6">
             <div>
               <h4 className="font-semibold">रिश्तेदार के हस्ताक्षर</h4>
-              <p>
+              <DigitalSignatureSection />
+              <p className="flex w-full gap-2 mb-2">
                 नाम: <InputLine className="inline-block w-48" />
               </p>
-              <p>
+              <p className="flex w-full gap-2 mb-2">
                 रिश्ता: <InputLine className="inline-block w-48" />
               </p>
-              <p>
-                दूरभाष क्रमांक: <InputLine className="inline-block w-48" />
+              <p className="flex items-center w-full gap-2 mb-2">
+                <span className="whitespace-nowrap">दूरभाष क्रमांक:</span>
+                <InputLine className="w-48" />
               </p>
             </div>
 
@@ -218,37 +221,54 @@ export default function LamaDorConsentForm() {
               <h4 className="font-semibold">
                 मरीज के हस्ताक्षर (अथवा अंगूठे का निशान)
               </h4>
-              <p>
-                दिनांक व समय: <InputLine className="inline-block w-48" />
-              </p>
+              <DigitalSignatureSection />
+              <div className="flex gap-2 w-full my-2">
+                <label className="flex-shrink-0"> दिनांक व समय:</label>
+                <DateTimeInput
+                  selectedDate={selectedDate}
+                  onDateChange={setSelectedDate}
+                  time={selectedTime}
+                  onTimeChange={(e) => setTime(e.target.value)}
+                />
+              </div>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-6 mt-6">
             <div>
               <h4 className="font-semibold">गवाह के हस्ताक्षर</h4>
-              <p>
+               <DigitalSignatureSection />
+              <p className="flex w-full gap-2 mb-2">
                 नाम: <InputLine className="inline-block w-48" />
               </p>
-              <p>
+              <p className="flex w-full gap-2 mb-2">
                 पता: <InputLine className="inline-block w-48" />
               </p>
-              <p>
-                दूरभाष क्रमांक: <InputLine className="inline-block w-48" />
+             <p className="flex items-center w-full gap-2 mb-2">
+                <span className="whitespace-nowrap">दूरभाष क्रमांक:</span>
+                <InputLine className="w-48" />
               </p>
             </div>
 
             <div>
               <h4 className="font-semibold">चिकित्सक के हस्ताक्षर</h4>
-              <p>
+                <DigitalSignatureSection />
+              <p className="flex w-full gap-2 mb-2">
                 नाम: <InputLine className="inline-block w-48" />
               </p>
-              <p>
-                दिनांक व समय: <InputLine className="inline-block w-48" />
-              </p>
+              <div className="flex gap-2 w-full my-2">
+                <label className="flex-shrink-0"> दिनांक व समय:</label>
+                <DateTimeInput
+                  selectedDate={selectedDate}
+                  onDateChange={setSelectedDate}
+                  time={selectedTime}
+                  onTimeChange={(e) => setTime(e.target.value)}
+                />
+              </div>
             </div>
           </div>
 
+          <hr />
           <p className="text-xs mt-6">
             <b>* विशेष:</b> कृपया निम्न परिस्थितियों होने पर निजी सहायक / परिजन
             आवश्यक रूप से हस्ताक्षर करें

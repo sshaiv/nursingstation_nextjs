@@ -1,5 +1,3 @@
-
-
 import React, { useState } from "react";
 import Select from "react-select";
 
@@ -8,9 +6,9 @@ import ProcedureConsentForm from "./consents/ProcedureConsent";
 // import BloodConsent from "./consents/BloodConsent";
 // import MriConsent from "./consents/MriConsent";
 // import CtConsent from "./consents/CtConsent";
-// import HivConsent from "./consents/HivConsent";
-// import AnesthesiaConsent from "./consents/AnesthesiaConsent";
-// import RestraintConsent from "./consents/RestraintConsent";
+import HIVConsentForm from "./consents/HIVConsentForm";
+import AnesthesiaConsentForm from "./consents/AnesthesiaConsentForm";
+import RestraintConsentPages from "./consents/RestraintConsentPages";
 import LamaDorConsentForm from "./consents/LamaDorConsentForm";
 // import CathlabConsent from "./consents/CathlabConsent";
 // import CbgsConsent from "./consents/CbgsConsent";
@@ -41,12 +39,12 @@ const Consents = ({ visitid, gssuhid, empid, patientData }) => {
     //     return <MriConsent />;
     //   case "ct":
     //     return <CtConsent />;
-    //   case "hiv":
-    //     return <HivConsent />;
-    //   case "anesthesia":
-    //     return <AnesthesiaConsent />;
-    //   case "restraint":
-    //     return <RestraintConsent />;
+      case "hiv":
+        return <HIVConsentForm />;
+      case "anesthesia":
+        return <AnesthesiaConsentForm />;
+      case "restraint":
+        return <RestraintConsentPages />;
       case "lama":
         return <LamaDorConsentForm />;
     //   case "cathlab":
