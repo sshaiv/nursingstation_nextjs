@@ -34,6 +34,10 @@ import DailyMedication from "./Daily Medication Orders/DailyMedication";
 import ClinicalChart from "./Clinical Chart/ClinicalChart";
 import Consents from "./Consents/Consents";
 import Angiography from "./Angiography/Angiography";
+import Angioplasty from "./Angioplasty/Angioplasty";
+import CardiacSurgery from "./Cardiac Surgery/CardiacSurgery";
+import GeneralSurgery from "./General Surgery/GeneralSurgery";
+
 
 const buttons = [
   {
@@ -116,14 +120,15 @@ const buttons = [
     icon: FiCalendar,
   },
 
-
   {
     label: "ADVICE SURGERY",
     color: "#00809D",
     shadow: "#89A8B2",
     icon: GiScissors,
   },
-  { label: "IMPLANT", color: "#00809D", shadow: "#89A8B2", icon: FiPackage },
+  {
+     label: "IMPLANT", color: "#00809D", shadow: "#89A8B2", icon: FiPackage
+     },
   // { label: "Discharge Summary", color: "#1999A1", shadow: "#14767D", icon: FiCheckCircle },
   //{ label: "BugInvestigation", color: "#1999A1", shadow: "#14767D", icon: GiFizzingFlask },
   {
@@ -144,11 +149,28 @@ const buttons = [
     shadow: "#89A8B2",
     icon: GiFizzingFlask,
   },
+    {
+    label: "ANGIOPLASTY",
+    color: "#00809D",
+    shadow: "#89A8B2",
+    icon: GiFizzingFlask,
+  },
+    {
+    label: "CARDIAC SURGERY",
+    color: "#00809D",
+    shadow: "#89A8B2",
+    icon: GiFizzingFlask,
+  },
+ {
+    label: "GENERAL SURGERY",
+    color: "#00809D",
+    shadow: "#89A8B2",
+    icon: GiFizzingFlask,
+  },
 
 ];
 
 export default function ButtonGrid({ visitid, gssuhid, empid, patientData }) {
-  // console.log("btn m",patientData.Age);
 
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState(null);
@@ -231,7 +253,8 @@ export default function ButtonGrid({ visitid, gssuhid, empid, patientData }) {
         />
       );
       setShowModal(true);
-    } else if (label === "NUTRITIONAL ASSESSMENT  PROFILE") {
+    }
+     else if (label === "NUTRITIONAL ASSESSMENT  PROFILE") {
       setModalContent(
         <NutritionalAssessmentProfile
           visitid={visitid}
@@ -241,7 +264,8 @@ export default function ButtonGrid({ visitid, gssuhid, empid, patientData }) {
         />
       );
       setShowModal(true);
-    } else if (label === "NURSING INITIAL ASSESSMENT") {
+    } 
+    else if (label === "NURSING INITIAL ASSESSMENT") {
       setModalContent(
         <NutritionalInitial
           visitid={visitid}
@@ -309,6 +333,39 @@ export default function ButtonGrid({ visitid, gssuhid, empid, patientData }) {
     else if (label === "ANGIOGRAPHY") {
       setModalContent(
         <Angiography
+          visitid={visitid}
+          gssuhid={gssuhid}
+          empid={empid}
+          patientData={patientData}
+        />
+      );
+      setShowModal(true);
+    } 
+    else if (label === "ANGIOPLASTY") {
+      setModalContent(
+        <Angioplasty
+          visitid={visitid}
+          gssuhid={gssuhid}
+          empid={empid}
+          patientData={patientData}
+        />
+      );
+      setShowModal(true);
+    } 
+    else if (label === "CARDIAC SURGERY") {
+      setModalContent(
+        <CardiacSurgery
+          visitid={visitid}
+          gssuhid={gssuhid}
+          empid={empid}
+          patientData={patientData}
+        />
+      );
+      setShowModal(true);
+    } 
+    else if (label === "GENERAL SURGERY") {
+      setModalContent(
+        <GeneralSurgery
           visitid={visitid}
           gssuhid={gssuhid}
           empid={empid}

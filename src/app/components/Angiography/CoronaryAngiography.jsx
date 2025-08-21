@@ -94,7 +94,7 @@ export default function CoronaryAngiography() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
           {/* Doctor Section */}
           <div className="flex flex-col space-y-1">
-            <DigitalSignatureSection title="Signature of Interventional Cardiologist" />
+            <DigitalSignatureSection title="ह्रदय रोग चिकित्सक" />
             <DateTimeInput
               selectedDate={selectedDate}
               onDateChange={setSelectedDate}
@@ -110,7 +110,7 @@ export default function CoronaryAngiography() {
 
           {/* Patient Section */}
           <div className="flex flex-col space-y-1">
-            <DigitalSignatureSection title="Patient's Signature" />
+            <DigitalSignatureSection title="मरीज़ के हस्ताक्षर" />
             <DateTimeInput
               selectedDate={selectedDate}
               onDateChange={setSelectedDate}

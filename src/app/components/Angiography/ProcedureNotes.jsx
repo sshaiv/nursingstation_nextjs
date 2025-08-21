@@ -253,26 +253,25 @@ export default function ProcedureNotes() {
           </div>
         </div>
 
-         {/* Signatures Section */}
-       <div className="grid grid-cols-2 gap-6 mt-6 text-sm">
-       <div>
-          <DigitalSignatureSection title="Signature of Doctor" />
-          <div className="flex gap-2 w-full">
-            <label className="flex-shrink-0">Name :</label>
-            <input type="text" className="border-b w-full outline-none" />
+        {/* Signatures Section */}
+        <div className="grid grid-cols-2 gap-6 mt-6 text-sm">
+          <div>
+            <DigitalSignatureSection title="Signature of Doctor" />
+            <div className="flex gap-2 w-full">
+              <label className="flex-shrink-0">Name :</label>
+              <input type="text" className="border-b w-full outline-none" />
+            </div>
+            <div className="flex gap-2 w-full mt-2">
+              <label className="flex-shrink-0"> Time :</label>
+              <DateTimeInput
+                selectedDate={selectedDate}
+                onDateChange={setSelectedDate}
+                time={selectedTime}
+                onTimeChange={(e) => setTime(e.target.value)}
+              />
+            </div>
           </div>
-          <div className="flex gap-2 w-full mt-2">
-            <label className="flex-shrink-0"> Time :</label>
-            <DateTimeInput
-              selectedDate={selectedDate}
-              onDateChange={setSelectedDate}
-              time={selectedTime}
-              onTimeChange={(e) => setTime(e.target.value)}
-            />
-          </div>
-      
         </div>
-      </div>
       </div>
     </div>
   );
