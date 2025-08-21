@@ -285,7 +285,8 @@ export default function ButtonGrid({ visitid, gssuhid, empid, patientData }) {
           patientData={patientData}
         />
       );
-      setShowModal(true);}
+      setShowModal(true);
+    }
     else if (label === "NURSING REASSESSMENT") {
       setModalContent(
         <NursingReassessment
