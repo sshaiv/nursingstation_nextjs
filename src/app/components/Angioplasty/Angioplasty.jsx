@@ -363,7 +363,7 @@ export default function Angioplasty() {
       </div>
 
       <CoronaryAngioplasty />
-     < AnesthesiaConsentForm />
+      <AnesthesiaConsentForm />
       <SafetyChecklist />
       <ProcedureNotes />
     </div>

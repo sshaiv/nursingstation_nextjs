@@ -13,7 +13,8 @@ export default function DateTimeInput({ selectedDate, onDateChange, time, onTime
             const now = new Date();
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
-            onTimeChange({ target: { value: `${hours}:${minutes}` } });
+          onTimeChange({ target: { value: `${hours}:${minutes}` } });
+          // onTimeChange(`${hours}:${minutes}`); // use prop function only
         }
     }, [selectedDate, time, onDateChange, onTimeChange]);
 

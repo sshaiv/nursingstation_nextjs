@@ -49,7 +49,7 @@ export default function AnesthesiaConsentForm() {
             <input className="border-b border-dotted w-80 outline-none" />
           </div>
 
-          <h2 className="text-center text-3xl font-bold underline mb-4">
+          <h2 className="text-center text-lg font-bold underline mb-4">
             INFORMED CONSENT FOR ANESTHESIA SERVICES
           </h2>
 
@@ -420,7 +420,7 @@ export default function AnesthesiaConsentForm() {
             <input className="border-b border-dotted border-black w-80 outline-none" />
           </div>
 
-          <h2 className="text-center text-3xl font-bold underline mb-4">
+          <h2 className="text-center text-lg font-bold underline mb-4">
             एनेस्थिसिया (निश्चेतना) हेतु सूचित सहमति-पत्र
           </h2>
 
