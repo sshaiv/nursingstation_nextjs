@@ -4,8 +4,8 @@ import Select from "react-select";
 // Import all individual consent components
 import ProcedureConsentForm from "./consents/ProcedureConsent";
 // import BloodConsent from "./consents/BloodConsent";
-// import MriConsent from "./consents/MriConsent";
-// import CtConsent from "./consents/CtConsent";
+import MriConsentForm  from "./consents/MriConsentForm";
+import CtConsentForm from "./consents/CtConsentForm";
 import HIVConsentForm from "./consents/HIVConsentForm";
 import AnesthesiaConsentForm from "./consents/AnesthesiaConsentForm";
 import RestraintConsentPages from "./consents/RestraintConsentPages";
@@ -35,10 +35,10 @@ const Consents = ({ visitid, gssuhid, empid, patientData }) => {
         return <ProcedureConsentForm />;
     //   case "blood":
     //     return <BloodConsent />;
-    //   case "mri":
-    //     return <MriConsent />;
-    //   case "ct":
-    //     return <CtConsent />;
+      case "mri":
+        return <MriConsentForm />;
+      case "ct":
+        return <CtConsentForm />;
       case "hiv":
         return <HIVConsentForm />;
       case "anesthesia":
