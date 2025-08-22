@@ -1,3 +1,4 @@
+import SafetyChecklist from "../Angiography/SafetyChecklist";
 import AnesthesiaConsentForm from "../Consents/consents/AnesthesiaConsentForm";
 import CardiacAnaesthesiaRecord from "./AnaesthesiaRecord";
 import AnaesthesiaRecord from "./AnaesthesiaRecord";
@@ -14,7 +15,7 @@ export default function CardiacSurgery() {
       <PreOperativeOrders />
        <AnesthesiaConsentForm />
        <CardiacAnaesthesiaRecord />
-      
+       <SafetyChecklist />
     </>
   );
 }

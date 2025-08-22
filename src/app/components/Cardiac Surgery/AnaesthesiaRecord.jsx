@@ -337,7 +337,7 @@ export default function CardiacAnaesthesiaRecord() {
       <div className="mb-4">
         <h3 className="font-semibold underline">Instructions</h3>
         <textarea
-          className="w-full border rounded p-2"
+          className="w-full border rounded p-2 resize-none"
           rows={3}
           value={formData.instructions}
           onChange={(e) =>
@@ -432,7 +432,7 @@ export default function CardiacAnaesthesiaRecord() {
       <div className="mb-4">
         <h3 className="font-semibold underline">Premedication:nil orally</h3>
         <textarea
-          className="w-full border rounded p-2"
+          className="w-full border rounded p-2 resize-none"
           rows={3}
           value={formData.premedication}
           onChange={(e) =>
