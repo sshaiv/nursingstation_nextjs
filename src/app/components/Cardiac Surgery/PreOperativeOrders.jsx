@@ -95,7 +95,7 @@ export default function PreOperativeOrders() {
         ● Department of CTVS | Pre-Operative Orders
       </div>
 
-      <form className="space-y-4 p-4">
+      <div className="space-y-4 p-4">
         {/* Patient Details */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex gap-4">
           {renderTextInput("Patient Posted for", "patientPostedFor")}
@@ -143,7 +143,7 @@ export default function PreOperativeOrders() {
           {renderTextInput("Name", "surgeonName")}
        
         </div>
-      </form>
+      </div>
     </div>
   );
 }

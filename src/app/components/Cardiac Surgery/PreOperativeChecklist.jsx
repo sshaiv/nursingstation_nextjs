@@ -7,11 +7,11 @@ export default function PreOperativeChecklist() {
   const formRef = useRef(null);
 
   return (
-    <div className="max-w-6xl mx-auto p-6  ">
+    <div className="max-w-6xl mx-auto p-6">
       <ModalHeading title="Cardiac Surgery" className="text-[11px]" />
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto max-w-6xl">
         {/* Sheet */}
-        <form
+        <div
           ref={formRef}
           className="rounded-2xl bg-white p-4 shadow-lg print:shadow-none md:p-6"
         >
@@ -48,7 +48,7 @@ export default function PreOperativeChecklist() {
               }
             }
           `}</style>
-        </form>
+        </div>
       </div>
     </div>
   );
@@ -99,7 +99,9 @@ function PatientBlock() {
 function MarkSection() {
   return (
     <section className="sec">
-      <div className="text-sm font-light text-center mt-2">(Mark ☑️ where applicable)</div>
+      <div className="text-sm font-light text-center mt-2">
+        (Mark ☑️ where applicable)
+      </div>
       <div className="mt-2 grid grid-cols-1 gap-2">
         <Check label="Nil by Mouth since" withField />
         <Check
@@ -246,19 +248,6 @@ function GridSig() {
         time={selectedTime}
         onTimeChange={setSelectedTime}
       />
-    </div>
-  );
-}
-
-function SmallSig({ labels }) {
-  return (
-    <div className="mt-2 space-y-2">
-      {labels.map((l) => (
-        <label key={l} className="block">
-          <span className="text-xs text-neutral-700">{l}</span>
-          <div className="dotline" />
-        </label>
-      ))}
     </div>
   );
 }
