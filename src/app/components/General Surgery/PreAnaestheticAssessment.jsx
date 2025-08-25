@@ -114,7 +114,7 @@ export default function PreAnaestheticAssessment() {
       </div>
 
       {/* Diagnosis + Airway Assessment */}
-      <div className="grid grid-cols-2 gap-1 text-sm mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-1 text-sm mb-4">
         <div className="border p-3">
           <h2 className="font-semibold mb-2">Diagnosis</h2>
           <textarea className="w-full border h-40 resize-none "></textarea>
@@ -264,68 +264,87 @@ export default function PreAnaestheticAssessment() {
           <h2 className="font-semibold mt-3 mb-2">Physical Examination</h2>
 
           <div className="space-y-2 text-sm">
-            <label className="flex items-center space-x-2">
-              <span className="w-16">CNS:</span>
-              <input type="text" className="border rounded p-1 flex-1" />
-              <span>G.C:</span>
-              <input type="text" className="border rounded p-1 w-20" />
-              <span>P:</span>
-              <input type="text" className="border rounded p-1 w-20" />
-            </label>
-
-            <label className="flex items-center space-x-2">
-              <span className="w-16">Heart:</span>
-              <input type="text" className="border rounded p-1 flex-1" />
-              <span>B.P:</span>
-              <input type="text" className="border rounded p-1 w-20" />
-            </label>
-
-            <div className="flex items-center space-x-2">
-              <span className="w-16">Lungs:</span>
-              <input type="text" className="border rounded p-1 flex-1" />
-              <span>Temp:</span>
-              <input type="text" className="border rounded p-1 w-20" />
-            </div>
-
-            <div className="space-y-2 text-sm">
+            {/* CNS */}
+            <div className="grid grid-cols-2 gap-2">
               <label className="flex items-center space-x-2">
-                <span className="w-16">P.A.:</span>
-                <div className="flex flex-wrap gap-4">
-                  <label className="flex items-center space-x-1">
-                    <input type="checkbox" className="form-checkbox" />
-                    <span>Pale</span>
-                  </label>
-                  <label className="flex items-center space-x-1">
-                    <input type="checkbox" className="form-checkbox" />
-                    <span>Cyanosis</span>
-                  </label>
-                  <label className="flex items-center space-x-1">
-                    <input type="checkbox" className="form-checkbox" />
-                    <span>Clubbing</span>
-                  </label>
-                  <label className="flex items-center space-x-1">
-                    <input type="checkbox" className="form-checkbox" />
-                    <span>Edema</span>
-                  </label>
-                  <label className="flex items-center space-x-1">
-                    <input type="checkbox" className="form-checkbox" />
-                    <span>LN</span>
-                  </label>
-                </div>
+                <span className="w-16">CNS:</span>
+                <input type="text" className="border rounded w-20 p-1" />
+              </label>
+              <label className="flex items-center space-x-2">
+                <span>G.C:</span>
+                <input type="text" className="border rounded p-1 w-20" />
+              </label>
+              <label className="flex items-center space-x-2">
+                <span>P:</span>
+                <input type="text" className="border rounded p-1 w-20" />
               </label>
             </div>
 
-            <label className="flex items-center space-x-2">
-              <span className="w-16">Others:</span>
-              <input type="text" className="border rounded p-1 flex-1" />
-            </label>
+            {/* Heart */}
+            <div className="grid grid-cols-2 gap-2">
+              <label className="flex items-center space-x-2">
+                <span className="w-16">Heart:</span>
+                <input type="text" className="border rounded p-1 flex-1" />
+              </label>
+              <label className="flex items-center space-x-2">
+                <span>B.P:</span>
+                <input type="text" className="border rounded p-1 w-20" />
+              </label>
+            </div>
+
+            {/* Lungs */}
+            <div className="grid grid-cols-2 gap-2">
+              <label className="flex items-center space-x-2">
+                <span className="w-16">Lungs:</span>
+                <input type="text" className="border rounded p-1 flex-1" />
+              </label>
+              <label className="flex items-center space-x-2">
+                <span>Temp:</span>
+                <input type="text" className="border rounded p-1 w-20" />
+              </label>
+            </div>
+
+            {/* P.A. */}
+            <div>
+              <span className="w-16 inline-block">P.A.:</span>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-1">
+                <label className="flex items-center space-x-1">
+                  <input type="checkbox" className="form-checkbox" />
+                  <span>Pale</span>
+                </label>
+                <label className="flex items-center space-x-1">
+                  <input type="checkbox" className="form-checkbox" />
+                  <span>Cyanosis</span>
+                </label>
+                <label className="flex items-center space-x-1">
+                  <input type="checkbox" className="form-checkbox" />
+                  <span>Clubbing</span>
+                </label>
+                <label className="flex items-center space-x-1">
+                  <input type="checkbox" className="form-checkbox" />
+                  <span>Edema</span>
+                </label>
+                <label className="flex items-center space-x-1">
+                  <input type="checkbox" className="form-checkbox" />
+                  <span>LN</span>
+                </label>
+              </div>
+            </div>
+
+            {/* Others */}
+            <div className="grid grid-cols-2 gap-2">
+              <label className="flex items-center space-x-2">
+                <span className="w-16">Others:</span>
+                <input type="text" className="border rounded p-1 flex-1" />
+              </label>
+            </div>
           </div>
 
           <h2 className="font-semibold mt-3 mb-2">
             Pertinent Lab Investigations
           </h2>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 text-sm">
             <label className="flex items-center space-x-2">
               <span>Hb:</span>
               <input type="text" className="border rounded p-1 w-16" />
@@ -432,6 +451,8 @@ export default function PreAnaestheticAssessment() {
           />
         </div>
       </div>
+
+      {/*...................................Next Page....................... */}
       <h1 className="text-lg font-bold text-center text-gray-600">
         RECOVERY ROOM RECORD
       </h1>
@@ -451,7 +472,7 @@ export default function PreAnaestheticAssessment() {
           </label>
         </div>
 
-        <div className="grid grid-cols-5 gap-4 mt-2">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-5 gap-4 mt-2">
           <label className="flex items-center space-x-2">
             <span>Resp:</span>
             <input type="text" className="border rounded p-1 w-20" />
@@ -778,14 +799,7 @@ export default function PreAnaestheticAssessment() {
         <h2 className="font-semibold mb-2">Progress Notes</h2>
 
         {/* Top Input Row */}
-        <div className="grid grid-cols-3 gap-2 mb-3">
-          <input
-            type="text"
-            placeholder="Time"
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
-            className="border p-2 rounded"
-          />
+        <div className="grid grid-cols-4 gap-2 mb-3">
           <input
             type="text"
             placeholder="Progress Note"
@@ -800,15 +814,20 @@ export default function PreAnaestheticAssessment() {
             onChange={(e) => setInitial(e.target.value)}
             className="border p-2 rounded"
           />
+          <DateTimeInput
+            selectedDate={selectedDate}
+            onDateChange={setSelectedDate}
+            time={selectedTime}
+            onTimeChange={setSelectedTime}
+          />{" "}
+          {/* Insert Button */}
+          <button
+            onClick={handleInsert}
+            className="bg-blue-500 text-white px-3 py-1 rounded mb-3"
+          >
+            Insert
+          </button>
         </div>
-
-        {/* Insert Button */}
-        <button
-          onClick={handleInsert}
-          className="bg-blue-500 text-white px-3 py-1 rounded mb-3"
-        >
-          Insert
-        </button>
 
         {/* Table */}
         <table className="w-full border text-sm">
@@ -817,6 +836,7 @@ export default function PreAnaestheticAssessment() {
               <th className="border p-1">Time</th>
               <th className="border p-1">Progress Note</th>
               <th className="border p-1">Initial</th>
+              <th className="border p-1">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -825,11 +845,13 @@ export default function PreAnaestheticAssessment() {
                 <td className="border p-1">{row.time}</td>
                 <td className="border p-1">{row.note}</td>
                 <td className="border p-1">{row.initial}</td>
+                <td className="border p-1 text-red-600">delete</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
       {/* Discharge Section */}
       <div className="border p-4 text-sm">
         <h2 className="font-semibold mb-2">Discharged To</h2>
@@ -850,7 +872,7 @@ export default function PreAnaestheticAssessment() {
           <li>Dressing no active bleeding</li>
         </ul>
 
-        <div className="grid grid-cols-2 gap-4 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
           <label className="flex items-center space-x-2">
             <span>Anaesthesiologist Signature:</span>
             <input type="text" className="border rounded p-1 flex-1" />
@@ -861,17 +883,24 @@ export default function PreAnaestheticAssessment() {
               <span className="w-16">Name:</span>
               <input type="text" className="border rounded p-1 flex-1" />
             </label>
-            <label className="flex items-center mb-1">
-              <span className="w-16">Date:</span>
-              <input type="text" className="border rounded p-1 flex-1" />
-            </label>
+
             <label className="flex items-center">
               <span className="w-16">Time:</span>
-              <input type="text" className="border rounded p-1 flex-1" />
+              <DateTimeInput
+                selectedDate={selectedDate}
+                onDateChange={setSelectedDate}
+                time={selectedTime}
+                onTimeChange={setSelectedTime}
+              />
             </label>
           </div>
         </div>
       </div>
+
+      {/*...................................Next Page....................... */}
+      <h1 className="text-lg font-bold text-center text-gray-600">
+        ANAESTHESIA RECORD
+      </h1>
     </div>
   );
 }

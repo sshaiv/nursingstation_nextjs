@@ -37,14 +37,14 @@ export default function Investigations() {
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="">
       <div className="max-w-6xl mx-auto  p-8">
         {/* Heading */}
         <div className="text-sm font-semibold mt-2 font-serif text-gray-700">
           ● Investigations (Mention Date, when done)
         </div>
 
-        {/* Generate Inputs Dynamically */}
+        {/*  */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {fields.map((field) => (
             <div
