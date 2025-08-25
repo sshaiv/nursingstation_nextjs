@@ -3,13 +3,12 @@ import DigitalSignatureSection from "@/app/common/DigitalSignatureSection";
 import React, { useRef, useState, useEffect } from "react";
 
 export default function OperationNotes() {
-  const formRef = useRef(null);
-
+ 
   return (
     <div className="min-h-screen  md:p-2">
       <div className="mx-auto max-w-6xl">
         {/* Sheet */}
-        <form ref={formRef} className="  p-2">
+        <div  className="  p-2">
           <Header />
           <PatientHeader />
           <Signatures />
@@ -39,7 +38,7 @@ export default function OperationNotes() {
               }
             }
           `}</style>
-        </form>
+        </div>
       </div>
     </div>
   );

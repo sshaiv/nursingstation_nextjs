@@ -3,13 +3,12 @@ import DigitalSignatureSection from "@/app/common/DigitalSignatureSection";
 import React, { useRef, useState, useEffect } from "react";
 
 export default function SafetyChecklist() {
-  const formRef = useRef(null);
 
   return (
     <div className="min-h-screen  md:p-2">
       <div className="mx-auto max-w-6xl">
         {/* Sheet */}
-        <form ref={formRef} className="  p-2">
+        <div className="  p-2">
           <Header />
           <PatientHeader />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
@@ -51,7 +50,7 @@ export default function SafetyChecklist() {
               }
             }
           `}</style>
-        </form>
+        </div>
       </div>
     </div>
   );
