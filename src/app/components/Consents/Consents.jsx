@@ -10,6 +10,8 @@ import HIVConsentForm from "./consents/HIVConsentForm";
 import AnesthesiaConsentForm from "./consents/AnesthesiaConsentForm";
 import RestraintConsentPages from "./consents/RestraintConsentPages";
 import LamaDorConsentForm from "./consents/LamaDorConsentForm";
+import BloodConsent from "./consents/BloodConsent";
+import CathlabConsent from "./consents/CathlabConsent";
 // import CathlabConsent from "./consents/CathlabConsent";
 // import CbgsConsent from "./consents/CbgsConsent";
 
@@ -33,8 +35,8 @@ const Consents = ({ visitid, gssuhid, empid, patientData }) => {
     switch (selectedConsent?.value) {
       case "procedure":
         return <ProcedureConsentForm />;
-    //   case "blood":
-    //     return <BloodConsent />;
+      case "blood":
+        return <BloodConsent />;
       case "mri":
         return <MriConsentForm />;
       case "ct":
@@ -47,8 +49,8 @@ const Consents = ({ visitid, gssuhid, empid, patientData }) => {
         return <RestraintConsentPages />;
       case "lama":
         return <LamaDorConsentForm />;
-    //   case "cathlab":
-    //     return <CathlabConsent />;
+      case "cathlab":
+        return <CathlabConsent />;
     //   case "cbgs":
     //     return <CbgsConsent />;
       default:
