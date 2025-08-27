@@ -1,105 +1,492 @@
-<!DOCTYPE html>
+@using GSSHIMS.Control
+@{
+
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/MDI/Index.cshtml";
+}
+
+@*<!DOCTYPE html>
 <html>
-
 <head>
-    <title>Health Register</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-</head>
+    <meta charset="utf-8" />
+    <title>Dashboard</title>
+    <style>
 
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+        }
+        html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+        /* Navbar */
+        nav.navbar {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #eceaea;
+            height: 56px;
+        }
+
+        nav h5 {
+            font-weight: bold;
+            color: navy;
+            text-decoration: underline;
+        }
+
+        /* Layout */
+        .d-flex {
+            display: flex;
+            height: calc(100vh - 56px);
+             min-height: 0;
+        }
+
+        #mainContent {
+            padding: 20px;
+            flex-grow: 1;
+            overflow: auto;
+            min-height: 0;
+        }
+
+        /* SideNav Example Style */
+        #sidenav {
+            width: 200px;
+            background-color: #ffffff;
+            border-right: 1px solid #ccc;
+            padding: 20px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 10px;
+            margin-bottom: 5px;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+
+            .nav-link:hover {
+                background-color: #e0e0e0;
+            }
+
+        .active-link {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
 <body>
-    <div class="container" style="margin-top:3.5%;">
+
+    <!-- Top Navbar -->
+    <nav class="navbar">
+        <h5>Dashboard Menu</h5>
+    </nav>
+
+    <!-- Layout with SideNav and Main Content -->
+    <div class="d-flex">
+        @Html.Partial("_SideNavPartial")
+
+        <div id="mainContent">
+            @Html.Partial("dashboard_card")
+        </div>
+    </div>
+
+    <script>
+        function loadContent(viewName) {
+            fetch('/Dashboard/' + viewName)
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById('mainContent').innerHTML = html;
+                })
+                .catch(() => {
+                    document.getElementById('mainContent').innerHTML = "<p style='color:red;'>Error loading content.</p>";
+                });
+        }
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const links = document.querySelectorAll("#sidenav .nav-link");
+
+            links.forEach(link => {
+                link.addEventListener("click", function (e) {
+                    e.preventDefault();
+
+                    document.querySelectorAll('#sidenav .nav-link').forEach(l => {
+                        l.classList.remove('active-link');
+                    });
+
+                    this.classList.add('active-link');
+                    const viewName = this.getAttribute("data-view");
+                    localStorage.setItem("activeView", viewName);
+
+                    document.getElementById("mainContent").innerHTML = `<h2>${viewName} loaded</h2>`;
+                });
+            });
+
+            const lastView = localStorage.getItem("activeView");
+            if (lastView) {
+                const activeLink = [...document.querySelectorAll("#sidenav .nav-link")].find(link => link.getAttribute("data-view") === lastView);
+                if (activeLink) {
+                    activeLink.classList.add("active-link");
+                    document.getElementById("mainContent").innerHTML = `<h2>${lastView} loaded</h2>`;
+                }
+            } else {
+                const firstLink = document.querySelector("#sidenav .nav-link");
+                if (firstLink) {
+                    firstLink.classList.add("active-link");
+                    document.getElementById("mainContent").innerHTML = `<h2>Dashboard loaded</h2>`;
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>*@
+
+
+
+    <div class="container" style="margin-top:10vh;">
         <div class="panel" style="border:2px solid #003399; border-radius:5px;">
             <div class="panel-heading" style="background-color:#003399; color:#fff; font-weight:bold; font-size:16px;">
                 HEALTH REGISTER
             </div>
             <div class="panel-body">
-                <div class="col-md-12" style="margin-top:-10px;">
-                    <div class="col-md-8">
-                        <button class="btn btn-primary btn-sm" style="background-color:#285db5; margin-right:5px;"
-                            id="btnAdd" onclick="OnAdd()">
-                            <span class="glyphicon glyphicon-plus"></span> Add
-                        </button>
-                        <button class="btn btn-primary btn-sm" style="background-color:#285db5; margin-right:5px;"
-                            id="btnEdit" onclick="OnEdit()">
-                            <span class="glyphicon glyphicon-pencil"></span> Edit
-                        </button>
-                        <button class="btn btn-primary btn-sm" style="background-color:#285db5; margin-right:5px;"
-                            id="btnSave" onclick="OnSave()">
-                            <span class="glyphicon glyphicon-floppy-disk"></span> Save
-                        </button>
-                        <button class="btn btn-primary btn-sm" style="background-color:#285db5; margin-right:5px;"
-                            id="btnRefresh" onclick="OnRefresh()">
-                            <span class="glyphicon glyphicon-refresh"></span> Refresh
-                        </button>
-                        <button class="btn btn-primary btn-sm" style="background-color:red; margin-right:5px;"
-                            id="btnExit" onclick="OnExit()">
-                            <span class="glyphicon glyphicon-remove"></span> Exit
-                        </button>
+                <div class="col-md-12" style="margin-top:-10px; margin-bottom:15px;">
+
+                    <div class="row" style="margin:0; display:flex; flex-wrap:wrap; align-items:center;">
+
+                        <!-- Buttons Section -->
+                        <div class="col-xs-12 col-sm-8 col-md-9" style="display:flex; flex-wrap:wrap; align-items:center; margin-bottom:10px;">
+                            <button class="btn btn-primary btn-sm" style="background-color:#285db5; margin-right:5px;" id="btnAdd" onclick="OnAdd()">
+                                <span class="glyphicon glyphicon-plus"></span> Add
+                            </button>
+                            <button class="btn btn-primary btn-sm" style="background-color:#285db5; margin-right:5px;" id="btnEdit" onclick="OnEdit()">
+                                <span class="glyphicon glyphicon-pencil"></span> Edit
+                            </button>
+                            <button class="btn btn-primary btn-sm" style="background-color:#285db5; margin-right:5px;" id="btnSave" onclick="OnSave()">
+                                <span class="glyphicon glyphicon-floppy-disk"></span> Save
+                            </button>
+                            <button class="btn btn-primary btn-sm" style="background-color:#285db5; margin-right:5px;" id="btnRefresh" onclick="OnRefresh()">
+                                <span class="glyphicon glyphicon-refresh"></span> Refresh
+                            </button>
+                            <button class="btn btn-primary btn-sm" style="background-color:red; margin-right:10px;" id="btnExit" onclick="OnExit()">
+                                <span class="glyphicon glyphicon-remove"></span> Exit
+                            </button>
+                        </div>
+
+                        <!-- UHID Section -->
+                        <div class="col-xs-12 col-sm-4 col-md-3" style="display:flex; align-items:center; gap:5px;">
+                            <label style="margin:0; font-size:13px; white-space:nowrap;">UHID (Alt + u)</label>
+                            <div class="input-group input-group-sm" style="width:100%;">
+                                <input type="text" class="form-control form-control-readonly" id="txtUHID" onchange="getGSSUHID()">
+                                <span class="input-group-addon" id="btnSearch" onclick="openPatRegModal('btnSearch')" style="cursor:pointer; border:none;">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </span>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
-                <!-- Main Table -->
-                <div class="col-md-12" style="margin-top:10px;">
-                    <div id="Mainform">
-                        <div class="col-md-12" style="overflow-x:auto;">
-                            <table id="tblHealth" class="table table-bordered" style="border:1px solid #003399;">
-                                <thead
-                                    style="background-color:#003399; color:white; text-align:center; vertical-align:middle; font-size:12px;">
-                                    <tr>
-                                        <th rowspan="2">1. Department Works</th>
-                                        <th rowspan="2">2. Name of Hazardous process</th>
-                                        <th rowspan="2">3. Dangerous Process / Operation</th>
-                                        <th rowspan="2">4. Nature of Job or Occupation</th>
-                                        <th rowspan="2">5. Raw Materials, Products or By-products likely to be exposed
-                                            to</th>
-                                        <th rowspan="2">6. Date of Posting</th>
-                                        <th rowspan="2">7. Date of leaving / transfer to or transfer</th>
-                                        <th rowspan="2">8. Reasons for Discharge/ leaving or transfer</th>
-                                        <th colspan="4">9-12. Medical examination Results therefore</th>
-                                        <th colspan="4">If declared unfit for work</th>
-                                        <th rowspan="2">17. Signature with date of the factory Medical Officer / the
-                                            Certifying Surgeon</th>
-                                    </tr>
-                                    <tr>
-                                        <th>9. Date</th>
-                                        <th>10. Signs and Symptoms observed during Examination</th>
-                                        <th>11. Nature of Tests & Results thereof</th>
-                                        <th>12. Result Fit / Unfit</th>
-                                        <th>13. Period of Temporary withdrawal from that work</th>
-                                        <th>14. Reasons for such withdrawal</th>
-                                        <th>15. Date of Declaring him Unfit for that work</th>
-                                        <th>16. Date of issuing Fitness Certificate</th>
-                                    </tr>
-                                </thead>
 
-                                <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                <fieldset class="legend-border">
+                    <legend class="legend-border">
+                        REGISTRATION
+                    </legend>
+                    <div id="div1" class="col-md-12"
+                         style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px;">
+
+                        <div style="flex:1; min-width:120px; margin-right:10px;">
+                            <label>UHID <span class="glyphicon glyphicon-star" style="color:red;font-size:8px;"></span></label>
+                            <input type="text" id="txtMob" maxlength="10" style="margin-top:-3px;"
+                                   required onkeypress="return isNumber(event)"
+                                   onblur="checkMobNum(txtMob, 'msgMobNoReq'); return false;"
+                                   class="form-control" onfocus="TextboxFocus()" />
+                            <span id="msgMobNoReq"></span>
+                        </div>
+
+                        <div style="flex:1; min-width:120px; margin-right:10px;">
+                            <label>VISITID <span class="glyphicon glyphicon-star" style="color:red;font-size:8px;"></span></label>
+                            <input type="text" maxlength="10" style="margin-top:-3px;"
+                                   required onkeypress="return isNumber(event)"
+                                   onblur="checkMobNum(txtMob, 'msgMobNoReq'); return false;"
+                                   class="form-control" onfocus="TextboxFocus()" />
+                            <span id="msgMobNoReq"></span>
+                        </div>
+
+                        <div style="flex:1; min-width:120px; margin-right:10px;">
+                            <label>Title <span class="glyphicon glyphicon-star" style="color:red;font-size:8px;"></span></label>
+                            @Html.SelectOnChange("dlInitial", "class=form-control", "mastinitial", "initialid", "initial", "fillGender()")
+                        </div>
+
+                        <div style="flex:1; min-width:120px; margin-right:10px;">
+                            <label>First Name <span class="glyphicon glyphicon-star" style="color:red;font-size:8px;"></span></label>
+                            <input type="text" id="txtfname" class="form-control" style="margin-top:-3px;"
+                                   onkeypress="return isAlfaSpace(event)" required maxlength="35" onfocus="TextboxFocus()" />
+                        </div>
+
+                        <div style="flex:1; min-width:120px; margin-right:10px;">
+                            <label>Middle Name</label>
+                            <input type="text" id="txtmiddlename" class="form-control" style="margin-top:-3px;"
+                                   onkeypress="return isAlfaSpace(event)" required maxlength="35" onfocus="TextboxFocus()" />
+                        </div>
+
+                        <div style="flex:1; min-width:120px; margin-right:10px;">
+                            <label>Last Name <span class="glyphicon glyphicon-star" style="color:red;font-size:8px;"></span></label>
+                            <input type="text" id="txtlname" class="form-control" style="margin-top:-3px;"
+                                   onblur="chkDuplicateReg()" required maxlength="35" onfocus="TextboxFocus()" />
+                        </div>
+
+                        <div style="flex:1; min-width:120px; margin-right:10px;">
+                            <label>Mobile No <span class="glyphicon glyphicon-star" style="color:red;font-size:8px;"></span></label>
+                            <input type="text" id="txtMob" maxlength="10" style="margin-top:-3px;"
+                                   required onkeypress="return isNumber(event)"
+                                   onblur="checkMobNum(txtMob, 'msgMobNoReq'); return false;"
+                                   class="form-control" onfocus="TextboxFocus()" />
+                            <span id="msgMobNoReq"></span>
+                        </div>
+
+                    </div>
+                </fieldset>
+
+                <fieldset class="legend-border">
+                    <div style="margin-top:10px; padding:15px; display:flex; flex-wrap:wrap; gap:15px;">
+
+                        <!-- Example field -->
+                        <div style="display:flex; flex-direction:column; flex:1; min-width:180px;">
+                            <label>Dept Works</label>
+                            <input type="text" id="deptWorks" class="form-control" />
+                        </div>
+
+                        <div style="display:flex; flex-direction:column; flex:1; min-width:180px;">
+                            <label>Hazardous Pro.</label>
+                            <input type="text" id="hazardousPro" class="form-control" />
+                        </div>
+
+                        <div style="display:flex; flex-direction:column; flex:1; min-width:180px;">
+                            <label>Dangerous Pro./Oper.</label>
+                            <input type="text" id="dangerousPro" class="form-control" />
+                        </div>
+
+                        <div style="display:flex; flex-direction:column; flex:1; min-width:180px;">
+                            <label>Nature of Job/Occupation</label>
+                            <input type="text" id="natureJob" class="form-control" />
+                        </div>
+
+                        <div style="display:flex; flex-direction:column; flex:1; min-width:180px;">
+                            <label>Raw Materials/prod.</label>
+                            <input type="text" id="rawMaterials" class="form-control" />
+                        </div>
+
+                        <div style="display:flex; flex-direction:column; flex:1; min-width:180px;">
+                            <label>Date of Posting</label>
+                            <input type="text" id="datePosting" class="form-control" />
+                        </div>
+
+                        <div style="display:flex; flex-direction:column; flex:1; min-width:180px;">
+                            <label>Date of Transfer</label>
+                            <input type="text" id="dateTransfer" class="form-control" />
+                        </div>
+
+                        <div style="display:flex; flex-direction:column; flex:1; min-width:180px;">
+                            <label>Reasons for Discharge</label>
+                            <input type="text" id="reasonDischarge" class="form-control" />
+                        </div>
+
+                        <div style="display:flex; flex-direction:column; flex:1; min-width:180px;">
+                            <label>Date</label>
+                            <input type="text" id="examDate" class="form-control" />
+                        </div>
+
+                        <div style="display:flex; flex-direction:column; flex:1; min-width:180px;">
+                            <label>Signs & Symptoms observed</label>
+                            <input type="text" id="examSymptoms" class="form-control" />
+                        </div>
+
+                        <div style="display:flex; flex-direction:column; flex:1; min-width:180px;">
+                            <label>Nature of Tests & Results</label>
+                            <input type="text" id="examTests" class="form-control" />
+                        </div>
+
+                        <div style="display:flex; flex-direction:column; flex:1; min-width:180px;">
+                            <label>Result Fit</label>
+                            <input type="text"  id="examResult" class="form-control" />
+                        </div>
+                       
+
+                        <div style="display:flex; flex-direction:column; flex:1; min-width:180px;">
+                            <label>Period of Temp. withdrawal</label>
+                            <input type="text" id="examWithdrawalPeriod"  class="form-control" />
+                        </div>
+
+                        <div style="display:flex; flex-direction:column; flex:1; min-width:180px;">
+                            <label>Reasons for withdrawal</label>
+                            <input type="text" id="examWithdrawalReason" class="form-control" />
+                        </div>
+
+
+                        <div style="display:flex; flex-direction:column; flex:1; min-width:180px;">
+                            <label>Date Declared Unfit</label>
+                            <input type="text" id="examUnfitDate" class="form-control" />
+                        </div>
+
+                        <div style="display:flex; flex-direction:column; flex:1; min-width:180px;">
+                            <label>Date of Fitness Certificate</label>
+                            <input type="text" id="examFitnessCertDate" class="form-control" />
+                        </div>
+
+
+                        <div style="display:flex; flex-direction:column; flex:1; min-width:180px;">
+                            <label>Signature with date</label>
+                            <input type="text" id="signWithDate" class="form-control" />
+                        </div>
+                        @*.*@
+                   
+
+                        <!-- Button -->
+                        <div style="display:flex; align-items:flex-end; flex:1; min-width:120px;">
+                            <button type="button" class="btn btn-primary btn-sm"
+                                    style="background-color:#285db5; margin-right:5px;"
+                                    id="btnAdd" onclick="OnInsert()">
+                                <span class="glyphicon glyphicon-plus"></span> Insert
+                            </button>
                         </div>
                     </div>
-                </div>
-            </div>
+                </fieldset>
+
+
+
+                
+                    <!-- Main Table -->
+                    <div class="col-md-15" style="margin-top:10px;">
+                        <div id="Mainform">
+                            <div class="col-md-12" style="overflow-x:auto;">
+                                <table id="tblHealth" class="table table-bordered" style="border:1px solid #003399;">
+                                    <thead style="background-color:#003399; color:white; text-align:center; vertical-align:middle; font-size:12px;">
+                                        <tr>
+                                            <th rowspan="2">1. Department Works</th>
+                                            <th rowspan="2">2. Name of Hazardous process</th>
+                                            <th rowspan="2">3. Dangerous Process / Operation</th>
+                                            <th rowspan="2">4. Nature of Job or Occupation</th>
+                                            <th rowspan="2">
+                                                5. Raw Materials, Products or By-products likely to be exposed
+                                                to
+                                            </th>
+                                            <th rowspan="2">6. Date of Posting</th>
+                                            <th rowspan="2">7. Date of leaving / transfer to or transfer</th>
+                                            <th rowspan="2">8. Reasons for Discharge/ leaving or transfer</th>
+                                            <th colspan="4">9-12. Medical examination Results therefore</th>
+                                            <th colspan="4">If declared unfit for work</th>
+                                            <th rowspan="2">
+                                                17. Signature with date of the factory Medical Officer / the
+                                                Certifying Surgeon
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th>9. Date</th>
+                                            <th>10. Signs and Symptoms observed during Examination</th>
+                                            <th>11. Nature of Tests & Results thereof</th>
+                                            <th>12. Result Fit / Unfit</th>
+                                            <th>13. Period of Temporary withdrawal from that work</th>
+                                            <th>14. Reasons for such withdrawal</th>
+                                            <th>15. Date of Declaring him Unfit for that work</th>
+                                            <th>16. Date of issuing Fitness Certificate</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td></td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+</div>
         </div>
     </div>
-</body>
 
-</html>
+
+
+<script>
+    function OnInsert() {
+        debugger
+    
+    var deptWorks     = document.getElementById("deptWorks").value;
+    var hazardousPro  = document.getElementById("hazardousPro").value;
+    var dangerousPro  = document.getElementById("dangerousPro").value;
+    var natureJob     = document.getElementById("natureJob").value;
+    var rawMaterials  = document.getElementById("rawMaterials").value;
+    var datePosting   = document.getElementById("datePosting").value;
+    var dateTransfer = document.getElementById("dateTransfer").value;
+    var reasonDischarge = document.getElementById("reasonDischarge").value;
+    var examDate = document.getElementById("examDate").value;
+    var examSymptoms = document.getElementById("examSymptoms").value;
+    var examTests = document.getElementById("examTests").value;
+    var examResult = document.getElementById("examResult").value;
+    var examWithdrawalPeriod = document.getElementById("examWithdrawalPeriod").value;
+    var examWithdrawalReason = document.getElementById("examWithdrawalReason").value;
+    var examUnfitDate = document.getElementById("examUnfitDate").value;
+    var examFitnessCertDate = document.getElementById("examFitnessCertDate").value;
+    var signWithDate = document.getElementById("signWithDate").value;
+
+    // Reference table body
+    var table = document.getElementById("tblHealth").getElementsByTagName('tbody')[0];
+
+    // Create new row
+    var newRow = table.insertRow();
+
+    // Insert cells (only filling the first 8 columns with your form data)
+    newRow.insertCell(0).innerHTML = deptWorks;
+    newRow.insertCell(1).innerHTML = hazardousPro;
+    newRow.insertCell(2).innerHTML = dangerousPro;
+    newRow.insertCell(3).innerHTML = natureJob;
+    newRow.insertCell(4).innerHTML = rawMaterials;
+    newRow.insertCell(5).innerHTML = datePosting;
+    newRow.insertCell(6).innerHTML = dateTransfer;
+    newRow.insertCell(7).innerHTML = reasonDischarge;
+    newRow.insertCell(8).innerHTML = examDate;
+    newRow.insertCell(9).innerHTML = examSymptoms;
+    newRow.insertCell(10).innerHTML = examTests;
+    newRow.insertCell(11).innerHTML = examResult;
+    newRow.insertCell(12).innerHTML = examWithdrawalPeriod;
+    newRow.insertCell(13).innerHTML = examWithdrawalReason;
+    newRow.insertCell(14).innerHTML = examUnfitDate;
+    newRow.insertCell(15).innerHTML = examFitnessCertDate;
+    newRow.insertCell(16).innerHTML = signWithDate;
+  
+
+  
+    //  Clear fields after insert
+    document.getElementById("deptWorks").value = "";
+    document.getElementById("hazardousPro").value = "";
+    document.getElementById("dangerousPro").value = "";
+    document.getElementById("natureJob").value = "";
+    document.getElementById("rawMaterials").value = "";
+    document.getElementById("datePosting").value = "";
+    document.getElementById("dateTransfer").value = "";
+    document.getElementById("reasonDischarge").value = "";
+    document.getElementById("examFitnessCertDate").value = "";
+    document.getElementById("examUnfitDate").value = "";
+    document.getElementById("examWithdrawalReason").value = "";
+    document.getElementById("examWithdrawalPeriod").value = "";
+    document.getElementById("examResult").value = "";
+    document.getElementById("examTests").value = "";
+    document.getElementById("examSymptoms").value = "";
+    document.getElementById("examDate").value = "";
+    document.getElementById("signWithDate").value = "";
+
+}
+</script>
